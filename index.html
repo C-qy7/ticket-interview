@@ -1,0 +1,3321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>国际机票业务 · 面试学习助手</title>
+<style>
+:root{
+  --bg:#eef2f8; --card:#ffffff; --ink:#1e2c3c; --muted:#64748b;
+  --navy:#0e2a5c; --blue:#1d4ed8; --sky:#0ea5e9; --line:#e4eaf3;
+  --green:#15803d; --greenbg:#e8f7ee; --amber:#b45309; --amberbg:#fdf3e2;
+  --red:#b91c1c; --redbg:#fdeaea;
+  --shadow:0 1px 3px rgba(14,42,92,.05),0 5px 16px rgba(14,42,92,.06);
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;background:linear-gradient(180deg,#e9eff8 0%,var(--bg) 240px);color:var(--ink);line-height:1.7}
+.app{max-width:1120px;margin:0 auto;padding:0 16px 60px}
+header{background:linear-gradient(120deg,#0a1f47 0%,#16408f 55%,#0e6fb8 100%);color:#fff;border-radius:20px;padding:28px 28px 24px;margin:18px 0 14px;box-shadow:0 10px 28px rgba(14,42,92,.28)}
+header h1{font-size:23px;letter-spacing:.5px}
+header p{font-size:13px;opacity:.85;margin-top:6px}
+nav{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:7px;background:rgba(238,242,248,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:10px 2px 12px;margin:0 0 18px;border-bottom:1px solid rgba(228,234,243,.8)}
+nav button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 15px;border-radius:999px;cursor:pointer;font-size:13px;font-weight:600;transition:.15s;box-shadow:0 1px 2px rgba(14,42,92,.04)}
+nav button:hover{border-color:var(--sky);color:var(--blue);transform:translateY(-1px)}
+nav button.active{background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;border-color:transparent;box-shadow:0 3px 10px rgba(29,78,216,.35)}
+.tab{display:none}
+.tab.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:14px;box-shadow:var(--shadow)}
+h2.sec{font-size:18px;margin:26px 0 12px;color:var(--navy);padding-left:12px;border-left:4px solid var(--sky);line-height:1.45}
+h2.sec .sub{font-size:12.5px;color:var(--muted);font-weight:normal;margin-left:8px}
+.muted{color:var(--muted);font-size:13px}
+.badge{display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:999px;background:#e8f0fd;color:var(--blue);margin-left:6px;font-weight:600}
+.badge.blue{background:#e8f0fd;color:var(--blue)}
+.badge.amber{background:var(--amberbg);color:var(--amber)}
+.badge.red{background:var(--redbg);color:var(--red)}
+.badge.green{background:var(--greenbg);color:var(--green)}
+.term-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
+.term{padding:14px 16px}
+.term .t{font-size:16px;font-weight:700;color:var(--navy)}
+.term .e{font-size:12px;color:var(--sky);margin-bottom:6px}
+.term .s{font-size:13.5px}
+.term .w{font-size:12.5px;color:var(--amber);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.searchbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.searchbar input{flex:1;min-width:220px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;font-size:14px}
+.chip{padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:13px}
+.chip.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.acc-head{font-size:15.5px;font-weight:700;color:var(--navy);cursor:pointer;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-radius:10px;transition:background .15s}
+.acc-head:hover{background:#f4f8fd}
+.acc-body{display:none;padding:4px 16px 16px;border-top:1px solid var(--line);margin-top:10px}
+.acc.open .acc-body{display:block}
+.item{margin-bottom:12px}
+.item b{color:var(--navy)}
+.tip{margin-top:12px;background:var(--amberbg);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--amber)}
+.qa-q{font-size:15px;font-weight:700;cursor:pointer;padding:14px 16px}
+.qa-a{display:none;padding:2px 16px 16px;border-top:1px dashed var(--line)}
+.qa.open .qa-a{display:block}
+.lbl{display:inline-block;font-size:12px;font-weight:700;color:#fff;border-radius:6px;padding:2px 8px;margin-right:6px}
+.lbl-i{background:#7c3aed}.lbl-f{background:var(--blue)}.lbl-p{background:var(--green)}
+.qa-a ul{margin:8px 0 0 18px}
+.qa-a li{font-size:13.5px;margin-bottom:5px}
+.quote{background:#eef4ff;border-left:3px solid var(--blue);padding:8px 12px;border-radius:0 8px 8px 0;font-size:13px;margin-top:10px;color:var(--navy);font-weight:600}
+.btn{display:inline-block;border:none;border-radius:10px;padding:10px 20px;font-size:14px;cursor:pointer;font-weight:600;transition:.15s}
+.btn-p{background:var(--blue);color:#fff}
+.btn-p:hover{background:var(--navy)}
+.btn-o{border:1px solid var(--line);background:#fff;color:var(--ink)}
+.btn-o:hover{border-color:var(--sky);color:var(--blue)}
+.btn-g{background:var(--green);color:#fff}
+.btn-g:hover{filter:brightness(1.1)}
+.btn-a{background:var(--amberbg);color:var(--amber)}
+.btn-r{background:var(--redbg);color:var(--red)}
+.mock-q{font-size:16.5px;font-weight:700;color:var(--navy);line-height:1.8}
+.mock-timer{font-size:26px;font-weight:800;color:var(--blue);font-variant-numeric:tabular-nums;margin:10px 0}
+.mock-timer.timeup{font-size:15px;color:var(--red);line-height:1.6}
+.mock-status{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0;font-size:13px}
+.mock-status span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+.quiz-opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:10px;padding:12px 16px;margin-bottom:9px;font-size:14px;cursor:pointer;transition:.12s}
+.quiz-opt:hover{border-color:var(--sky)}
+.quiz-opt.correct{background:var(--greenbg);border-color:var(--green);color:var(--green);font-weight:600}
+.quiz-opt.wrong{background:var(--redbg);border-color:var(--red);color:var(--red);font-weight:600}
+.quiz-exp{background:var(--amberbg);border-radius:10px;padding:12px 16px;font-size:13.5px;color:var(--amber);margin-top:10px}
+.score-big{font-size:52px;font-weight:800;color:var(--navy);text-align:center}
+.progress{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin:10px 0}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--sky),var(--blue));border-radius:999px;transition:.3s}
+.calc-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.calc-row label{width:130px;font-size:13.5px;font-weight:600}
+.calc-row input[type=range]{flex:1;min-width:140px}
+.calc-row input[type=number]{width:110px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;font-size:14px}
+.calc-out{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:14px 0}
+.calc-out .box{background:#eef4ff;border-radius:10px;padding:12px;text-align:center}
+.calc-out .box .v{font-size:20px;font-weight:800;color:var(--navy)}
+.calc-out .box .k{font-size:12px;color:var(--muted)}
+.calc-note{font-size:13px;color:var(--muted);background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:10px}
+.sc-opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:10px;padding:11px 15px;margin-bottom:8px;font-size:13.5px;cursor:pointer}
+.sc-opt:hover{border-color:var(--sky)}
+.sc-opt.correct{background:var(--greenbg);border-color:var(--green)}
+.sc-opt.wrong{background:var(--redbg);border-color:var(--red)}
+.sc-exp{display:none;background:var(--amberbg);border-radius:10px;padding:12px 16px;font-size:13.5px;color:var(--amber);margin-top:8px}
+.sc-exp.show{display:block}
+.tl{position:relative;padding-left:26px;border-left:3px solid var(--sky);margin-left:10px}
+.tl .node{margin-bottom:18px;position:relative}
+.tl .node::before{content:'';position:absolute;left:-34px;top:5px;width:12px;height:12px;border-radius:50%;background:var(--sky);border:3px solid #fff;box-shadow:0 0 0 2px var(--sky)}
+.tl .node h4{font-size:15px;color:var(--navy);margin-bottom:4px}
+.tl .node p{font-size:13px;color:var(--muted);margin-bottom:2px}
+.plan-item{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13.5px}
+.plan-item:hover{background:#f7fafd}
+.plan-item input{margin-top:4px;width:16px;height:16px;cursor:pointer;flex-shrink:0}
+.plan-item.done span{text-decoration:line-through;color:var(--muted)}
+.weekbar{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.weekbar h3{font-size:15.5px;color:var(--navy)}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;margin:8px 0;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.tbl th,.tbl td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+.tbl th{background:#eef3fb;color:var(--navy);white-space:nowrap;font-weight:700}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr td:last-child,.tbl tr th:last-child{border-right:none}
+.tbl tr:nth-child(even) td{background:#fafcff}
+.tbl tr:hover td{background:#f3f7fe}
+.tbl td code{background:#eef4ff;border-radius:5px;padding:1px 6px;font-size:12.5px;color:var(--navy);font-family:Consolas,monospace}
+.pnrbox{background:linear-gradient(180deg,#0e2a5c,#0a1d40);color:#d7e4ff;border-radius:12px;padding:14px 18px;font-family:Consolas,monospace;font-size:13px;line-height:1.9;overflow-x:auto;margin:10px 0;white-space:pre;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06),0 6px 14px rgba(10,29,64,.22)}
+.carrier-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.carrier .chead{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.carrier .code{font-size:19px;font-weight:800;color:var(--navy);background:#eef4ff;border-radius:8px;padding:2px 10px}
+.carrier .cname{font-size:15px;font-weight:700}
+.carrier .crows{font-size:12.8px}
+.carrier .crows div{margin-bottom:4px}
+.carrier .crows b{color:var(--muted);font-weight:600}
+.carrier .tip{font-size:12.5px}
+.footer{margin-top:30px;text-align:center;font-size:12px;color:var(--muted)}
+/* ===== 退改签专题 ===== */
+.rule-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.rule-card .rhead{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.rule-card .rcode{font-size:16px;font-weight:800;color:#fff;background:linear-gradient(120deg,var(--navy),var(--blue));border-radius:8px;padding:2px 10px}
+.rule-card .rname{font-size:14.5px;font-weight:700;color:var(--navy)}
+.rule-card .rrows{font-size:12.8px}
+.rule-card .rrows div{margin-bottom:6px;display:flex;gap:6px;line-height:1.6}
+.rule-card .rrows b{color:var(--muted);font-weight:600;flex-shrink:0}
+.rtag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;font-weight:600}
+.rtag.y{background:var(--greenbg);color:var(--green)}
+.rtag.m{background:var(--amberbg);color:var(--amber)}
+.rtag.r{background:var(--redbg);color:var(--red)}
+.stepflow{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.stepflow .sf{flex:1;min-width:130px;background:#eef4ff;border-radius:10px;padding:10px 12px;font-size:12.8px;color:var(--navy);font-weight:700;text-align:center;position:relative;box-shadow:inset 0 0 0 1px #dbe7f8}
+.stepflow .sf small{display:block;font-weight:400;color:var(--muted);margin-top:2px;font-size:11.8px}
+.stepflow .sf::after{content:'→';position:absolute;right:-9px;top:50%;transform:translateY(-50%);color:var(--sky);z-index:1;font-size:13px}
+.stepflow .sf:last-child::after{content:none}
+/* ===== 通用可访问性 ===== */
+button:focus-visible,.chip:focus-visible,.acc-head:focus-visible,.qa-q:focus-visible,.plan-item:focus-within{outline:2px solid var(--sky);outline-offset:2px;border-radius:8px}
+.quiz-opt:disabled,.sc-opt:disabled{cursor:default}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:640px){ header h1{font-size:20px} .term-grid{grid-template-columns:1fr} .carrier-grid{grid-template-columns:1fr} .rule-grid{grid-template-columns:1fr} .stepflow .sf::after{content:none} header{border-radius:16px;padding:22px 18px} .card{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:16px 14px} .tbl{font-size:12px} .pnrbox,.codebox{font-size:12px} .term-scr{height:320px} .term-in input,.searchbar input,.calc-row input[type=number]{font-size:16px} .calc-row label{width:110px} .calc-row input[type=number]{width:96px} nav{padding:8px 2px 10px;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch} nav::-webkit-scrollbar{display:none} nav button{flex:0 0 auto} nav button{padding:7px 12px;font-size:12.5px} header p{font-size:12px}
+ #quizHome .btn{flex:1 1 44%} #quizHome .btn-o{flex:0 0 auto} }
+/* ===== ETERM / GDS 仿真终端 ===== */
+.lab-grid{display:grid;grid-template-columns:360px 1fr;gap:14px;align-items:start}
+.lab-task{position:sticky;top:calc(var(--navh,0px) + 12px);max-height:calc(100vh - var(--navh,0px) - 24px);overflow:auto}
+.lab-steps{margin:10px 0 4px}
+.lab-steps .st{display:flex;gap:8px;padding:5px 8px;border-radius:8px;align-items:flex-start;font-size:12.8px}
+.lab-steps .st.cur{background:#e8f0fd;font-weight:700;color:var(--navy)}
+.lab-steps .st.done{color:var(--muted)}
+.lab-steps .st .ic{flex-shrink:0;width:18px;text-align:center}
+.lab-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.lab-btns .btn{padding:8px 13px;font-size:12.5px}
+.term-wrap{border-radius:12px;overflow:hidden;border:1px solid #123;background:#081426;box-shadow:0 6px 18px rgba(14,42,92,.18)}
+.term-bar{display:flex;align-items:center;gap:10px;background:#0e2a5c;color:#9fc3ff;font-size:12px;padding:8px 14px}
+.term-bar b{color:#fff;font-size:13px}
+.term-bar .muted2{margin-left:auto;opacity:.7}
+.term-scr{height:460px;overflow-y:auto;padding:14px 16px;font-family:Consolas,"Courier New",monospace;font-size:13.5px;line-height:1.75;color:#d7e4ff;white-space:pre-wrap;word-break:break-word}
+.term-scr .echo{color:#8fd3ff;font-weight:600}
+.term-scr .sys{color:#d7e4ff}
+.term-scr .ok{color:#7ef0b2}
+.term-scr .warn{color:#ffd28f}
+.term-scr .err{color:#ff9a9a}
+.term-scr .task{color:#ffd28f;font-weight:700}
+.term-scr .hint{color:#9fc3ff}
+.term-scr .big{color:#7ef0b2;font-weight:700}
+.term-in{display:flex;align-items:center;gap:8px;background:#0a1a33;padding:10px 14px;border-top:1px solid #1c3a66}
+.term-in .prompt{color:#7ef0b2;font-family:Consolas,monospace;font-weight:700;font-size:15px}
+.term-in input{flex:1;background:transparent;border:none;outline:none;color:#e8f2ff;font-family:Consolas,"Courier New",monospace;font-size:14px;caret-color:#7ef0b2}
+.term-in input::placeholder{color:#4a648c}
+.codebox{background:#eef4ff;border:1px solid #dbe7f8;border-radius:8px;padding:8px 12px;font-family:Consolas,monospace;font-size:13px;color:var(--navy);margin:6px 0;white-space:pre-wrap;line-height:1.8}
+@media (max-width:900px){ .lab-grid{grid-template-columns:1fr} .lab-task{position:static;max-height:none} .term-scr{height:340px} }
+/* ===== 术语卡片抽查 / 生词本 ===== */
+.drill-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.drill-bar .chip{padding:7px 13px;font-size:12.5px}
+.drill-bar .chip.active{background:var(--amber);border-color:var(--amber);color:#fff}
+.drill{margin-bottom:14px}
+.drill-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.drill-term{font-size:30px;font-weight:800;color:var(--navy);letter-spacing:.5px;line-height:1.3}
+.drill-hint{font-size:13px;color:var(--muted);margin-top:6px}
+.drill-answer{display:none;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+.drill-answer.show{display:block}
+.drill-answer .e{color:var(--sky);font-size:13px;margin-bottom:6px}
+.drill-answer .s{font-size:14px;line-height:1.8}
+.drill-answer .w{margin-top:10px;font-size:13px;color:var(--amber);background:var(--amberbg);border-radius:8px;padding:8px 12px}
+.drill-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.term-card-btn{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:8px;padding:3px 10px;font-size:11.5px;cursor:pointer;margin-top:8px}
+.term-card-btn.on{background:var(--amberbg);color:var(--amber);border-color:#f0d9b5;font-weight:600}
+/* ===== 知识点掌握度 ===== */
+.topic-panel{margin-top:20px;padding-top:16px;border-top:1px dashed var(--line);text-align:left}
+.topic-panel:empty{display:none}
+.topic-panel h4{font-size:14px;color:var(--navy);margin-bottom:10px}
+.topic-row{display:grid;grid-template-columns:92px 1fr 132px;gap:10px;align-items:center;margin-bottom:7px;font-size:12.5px}
+.topic-name{color:var(--ink);font-weight:600}
+.topic-bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.topic-bar i{display:block;height:100%;border-radius:99px}
+.topic-val{color:var(--muted);text-align:right}
+@media (max-width:640px){ .topic-row{grid-template-columns:78px 1fr;gap:6px} .topic-val{grid-column:1 / -1;text-align:left;margin-top:-4px} .drill-term{font-size:24px} }
+/* ===== 打印速查表 ===== */
+.sheet h3{font-size:15px;color:var(--navy);margin:22px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--sky)}
+.sheet h2{font-size:19px;color:var(--navy);margin-bottom:2px}
+.sheet .sh-meta{font-size:11.5px;color:var(--muted);margin-bottom:6px}
+.sheet code,#printArea code{font-family:Consolas,"Courier New",monospace;font-size:.95em}
+.sheet h3:first-child{margin-top:6px}
+.sh-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 18px}
+.sh-term{font-size:12px;line-height:1.55;padding:2px 0;border-bottom:1px dotted var(--line)}
+.sh-term b{color:var(--navy)}
+.sh-term span{color:var(--muted);margin-left:6px}
+.sh-table{width:100%;border-collapse:collapse;font-size:11.5px}
+.sh-table th,.sh-table td{border:1px solid #d8e2ef;padding:4px 6px;text-align:left;vertical-align:top}
+.sh-table th{background:#eef3fb;color:var(--navy)}
+.sh-quote{font-size:12px;line-height:1.7;margin:3px 0;color:var(--ink)}
+.sh-quote b{color:var(--blue)}
+#printArea{display:none}
+@media print{
+  @page{size:A4;margin:12mm}
+  body.printing{background:#fff}
+  body.printing > *:not(#printArea){display:none!important}
+  body.printing #printArea{display:block!important;font-size:10.5pt;color:#000}
+  #printArea h2{font-size:16pt;margin:0 0 4pt}
+  #printArea h3{font-size:11.5pt;margin:10pt 0 4pt;border-bottom:1pt solid #999;color:#000}
+  #printArea .sh-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 10mm}
+  #printArea .sh-term{font-size:8.6pt;line-height:1.45;border-bottom:.3pt dotted #bbb}
+  #printArea .sh-table{width:100%;border-collapse:collapse;font-size:8.4pt}
+  #printArea .sh-table th,#printArea .sh-table td{border:.4pt solid #999;padding:2pt 3pt}
+  #printArea .sh-quote{font-size:9pt;line-height:1.5;margin:2pt 0}
+  #printArea .sh-meta{font-size:8pt;color:#666}
+  #printArea .sh-block{break-inside:avoid;page-break-inside:avoid}
+  #printArea tr{break-inside:avoid;page-break-inside:avoid}
+  #printArea thead{display:table-header-group}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header>
+  <h1>✈️ 国际机票业务 · 面试学习助手</h1>
+  <p>目标岗位：国际机票业务部门负责人 / 总监 · 术语 → 系统 → 航司 → 面试 → 实操 → 退改换开 · 全程无需联网</p>
+</header>
+
+<nav id="mainNav" aria-label="学习模块">
+  <button data-tab="terms" class="active">📖 术语词典</button>
+  <button data-tab="gds">💻 GDS与系统</button>
+  <button data-tab="carriers">✈️ 航司规则</button>
+  <button data-tab="system">🧠 知识体系</button>
+  <button data-tab="qa">💬 面试问答</button>
+  <button data-tab="mock">🎤 模拟面试</button>
+  <button data-tab="quiz">🎯 测验练习</button>
+  <button data-tab="practice">🧮 实操演练</button>
+  <button data-tab="eterm">🖥️ ETERM实操</button>
+  <button data-tab="gdslab">🌐 GDS模拟</button>
+  <button data-tab="chg">🔄 退改换开</button>
+  <button data-tab="plan">📅 学习计划</button>
+  <button data-tab="sheet">📄 速查表</button>
+</nav>
+
+<main>
+
+<!-- ============ 术语词典 ============ -->
+<section id="tab-terms" class="tab active">
+  <div class="card">
+    <p class="muted">岗位JD里的每个英文缩写，都能用一句话说清楚——这是面试「问答如流」的地基。建议先全部过一遍，再用「测验练习」检验。</p>
+    <div class="searchbar" style="margin-top:12px">
+      <input id="termSearch" type="text" placeholder="🔍 搜索术语（中文或英文）…">
+      <button class="chip active" data-cat="全部">全部</button>
+      <button class="chip" data-cat="系统与出票">系统与出票</button>
+      <button class="chip" data-cat="渠道与玩家">渠道与玩家</button>
+      <button class="chip" data-cat="结算与资金">结算与资金</button>
+      <button class="chip" data-cat="经营与数据">经营与数据</button>
+      <button class="chip" data-cat="政策与合规">政策与合规</button>
+    </div>
+    <div class="drill-bar">
+      <button class="btn btn-p" id="drillStart" style="padding:8px 16px;font-size:13px">🎴 卡片抽查</button>
+      <button class="chip" data-cat="生词本" id="weakChip">📕 生词本（0）</button>
+      <label class="muted" style="display:flex;align-items:center;gap:6px;font-size:12.5px;cursor:pointer">
+        <input type="checkbox" id="drillWeakOnly" style="width:15px;height:15px;cursor:pointer"> 只抽生词本
+      </label>
+      <span class="muted" id="drillStat" style="font-size:12.5px"></span>
+    </div>
+  </div>
+
+  <div class="card drill" id="drillCard" style="display:none">
+    <div class="drill-head">
+      <b id="drillTitle" style="color:var(--navy)">🎴 卡片抽查</b>
+      <span class="muted" id="drillProgress" style="font-size:12.5px"></span>
+      <button class="btn btn-o" id="drillClose" style="margin-left:auto;padding:6px 12px;font-size:12.5px">关闭</button>
+    </div>
+    <div id="drillBody"></div>
+  </div>
+
+  <div id="termGrid" class="term-grid"></div>
+</section>
+
+<!-- ============ GDS与系统 ============ -->
+<section id="tab-gds" class="tab">
+  <div class="card"><p class="muted">这一页是「行业硬技能」的深水区：三大GDS的操作指令与后台逻辑、NDC标准、ATPCO运价规则。管理者不必背全指令，但要能看懂指令、讲清逻辑——面试和带团队都用得上。</p></div>
+
+  <h2 class="sec">1️⃣ 三大GDS系统对比</h2>
+  <div class="card">
+    <table class="tbl">
+      <tr><th>系统</th><th>所属</th><th>强势市场</th><th>特点</th></tr>
+      <tr><td><b>Amadeus</b></td><td>欧洲（马德里）</td><td>欧洲、中东、亚洲</td><td>全球份额第一，国际业务最常用</td></tr>
+      <tr><td><b>Sabre</b></td><td>美国（得州）</td><td>美洲、亚洲部分</td><td>美国航司（AA等）直连深度好</td></tr>
+      <tr><td><b>Travelport</b></td><td>英国（旗下Galileo/Worldspan）</td><td>欧洲、美洲中小代理</td><td>第三大，报价灵活性高</td></tr>
+      <tr><td><b>中航信 TravelSky</b></td><td>中国</td><td>中国国内航线</td><td>国内出票必用，国际业务与三大GDS配合</td></tr>
+    </table>
+    <p class="muted">⚠️ 指令为通用教学格式，各版本/地区语法有差异，实际操作以所在公司系统手册为准。作为管理者，重点是理解指令背后的业务逻辑。</p>
+  </div>
+
+  <h2 class="sec">2️⃣ 核心操作指令速查 <span class="sub">看懂这些，你就知道团队每天在系统里干什么</span></h2>
+  <div id="gdsCmdList"></div>
+
+  <h2 class="sec">3️⃣ GDS后台逻辑（12条）<span class="sub">点开每条查看详解</span></h2>
+  <div id="backofficeList"></div>
+
+  <h2 class="sec">4️⃣ NDC深度：行业正在发生的变革</h2>
+  <div class="card">
+    <div class="item"><b>▸ NDC是什么：</b>IATA制定、基于XML的数据标准，让航司绕过传统GDS的旧式票价框架（EDIFACT+ATPCO），直接向渠道（代理/OTA/差旅公司）销售「票价+附加服务」（行李、选座、餐食），自己掌握定价权和客户数据。核心模型从「库存+计价」变为 <b>Offer（报价单）+ Order（订单）</b>。</div>
+    <table class="tbl">
+      <tr><th>对比项</th><th>传统GDS分销</th><th>NDC分销</th></tr>
+      <tr><td>内容来源</td><td>航司提交ATPCO→GDS统一分发</td><td>航司API实时动态报价</td></tr>
+      <tr><td>售卖内容</td><td>基本只有裸票价</td><td>票价+附加服务打包(Offer)</td></tr>
+      <tr><td>定价权</td><td>航司发布、渠道一致</td><td>航司可对渠道差异化定价</td></tr>
+      <tr><td>旅客数据</td><td>渠道掌握</td><td>航司拿回数据</td></tr>
+      <tr><td>对代理</td><td>一套系统查全网</td><td>需逐家接入或经聚合商</td></tr>
+    </table>
+    <div class="item" style="margin-top:10px"><b>▸ 航司现状：</b>英航BA、汉莎LH集团、法荷航AF-KLM、新航SQ、澳航QF、美联航UA、达美DL等均已上线NDC。<b>标志性事件：美航AA在2023年激进推进NDC，把部分票价内容撤出传统GDS，引发行业震动；汉莎LH早在2015年就对GDS出票收取每张约16欧元的「分销费DCC」。</b>理解这两个案例，面试谈NDC就有血有肉。</div>
+    <div class="item"><b>▸ 聚合商 Aggregator：</b>Travelfusion、Duffel、Verteil、Dohop等，帮代理一站式接入多家航司的NDC内容——代理不必逐一对接。快速切入NDC用聚合商，长期规模大再考虑直连自研。</div>
+    <div class="tip">💡 面试金句：NDC不是取代GDS，而是新增一条管道。代理的核心竞争力变成「谁能更快整合更多管道的内容」——多管道采价、比价、聚合能力。</div>
+  </div>
+
+  <h2 class="sec">5️⃣ ATPCO运价规则：定价的底层逻辑</h2>
+  <div class="card">
+    <div class="item"><b>▸ ATPCO的角色：</b>全球运价数据中枢。航司把运价+规则提交（file）给ATPCO，ATPCO标准化后分发给所有GDS和第三方系统。你在任何系统看到的公布票价，源头都是ATPCO。</div>
+    <div class="item"><b>▸ 运价的四种类型：</b></div>
+    <table class="tbl">
+      <tr><th>类型</th><th>说明</th><th>谁能看到</th></tr>
+      <tr><td>公布运价 Published</td><td>航司公开文件价</td><td>所有渠道一致</td></tr>
+      <tr><td>私价 Private(CAT35)</td><td>航司与大代理谈判的定向价格，file时指定仅某代理可见</td><td>仅谈判代理</td></tr>
+      <tr><td>净价 Net Fare</td><td>不含佣金的底价，代理自己加利润</td><td>按协议</td></tr>
+      <tr><td>促销价 Promo</td><td>限时限量的活动价</td><td>指定市场/渠道</td></tr>
+    </table>
+    <div class="item" style="margin-top:10px"><b>▸ 规则类别 Rule Categories 常用速查：</b></div>
+    <table class="tbl">
+      <tr><th>类别</th><th>管什么</th><th>实战意义</th></tr>
+      <tr><td>Cat 2</td><td>适用日期/时间</td><td>部分票价仅限周二三四出发</td></tr>
+      <tr><td>Cat 3</td><td>季节性</td><td>淡旺季不同价</td></tr>
+      <tr><td>Cat 4</td><td>适用航班/航线</td><td>限制特定航班号/转机点</td></tr>
+      <tr><td>Cat 5</td><td>提前购票天数(AP)</td><td>特价票需提前7/14/21天</td></tr>
+      <tr><td>Cat 6</td><td>最短停留</td><td>往返票至少停留X天</td></tr>
+      <tr><td>Cat 7</td><td>最长停留</td><td>最长X天/月</td></tr>
+      <tr><td>Cat 8</td><td>中途停留/转机</td><td>是否允许、次数限制</td></tr>
+      <tr><td>Cat 10</td><td>运价组合</td><td>不同运价能否拼往返</td></tr>
+      <tr><td>Cat 16</td><td>退改罚金</td><td>改签费/退票费条款（最常用）</td></tr>
+    </table>
+    <div class="item"><b>▸ 税费构成：</b>票价之外还有税项——<code>YQ/YR</code>=燃油附加费，<code>XT</code>=其他税种合计（机场税、安检税、离境税等）。报价时「票价+税费=总价」，税费同样影响竞争力。</div>
+    <div class="item"><b>▸ 运价构建术语：</b><code>NUC</code>中性货币单位（全球统一计价单位）、<code>ROE</code>汇率折算、<code>MPM</code>最大允许里程、<code>HIP</code>中间较高点检查、<code>BHC</code>回程检查、<code>CTM</code>环程最低价——国际联运票价的计价骨架。</div>
+    <div class="tip">💡 私价供应链逻辑（面试常考）：大代理向航司谈CAT35私价→比公布价低→低价冲量→销量达标拿「后返」→形成「私价+后返」的供应链模式。这就是为什么大代理能持续比小代理便宜——他们赚的是供应链的钱，不是单张票的差价。</div>
+  </div>
+</section>
+
+<!-- ============ 航司规则 ============ -->
+<section id="tab-carriers" class="tab">
+  <div class="card">
+    <p class="muted">36家国内外航司规则速查卡：类型、联盟、基地、分销渠道、行李、退改、值机、特别提示。⚠️ 航司政策经常变化，具体以官网最新政策为准——这里给你的是「规则框架和判断方法」。</p>
+    <div class="searchbar" style="margin-top:12px">
+      <input id="carSearch" type="text" placeholder="🔍 搜索航司（如 FR / Ryanair / 瑞安）…">
+      <button class="chip active" data-reg="全部">全部</button>
+      <button class="chip" data-reg="欧洲">欧洲</button>
+      <button class="chip" data-reg="美洲">美洲</button>
+      <button class="chip" data-reg="亚洲">亚洲</button>
+      <button class="chip" data-reg="中东">中东</button>
+      <button class="chip" data-reg="大洋洲">大洋洲</button>
+    </div>
+  </div>
+
+  <h2 class="sec">1️⃣ 先建立框架：LCC vs FSC <span class="sub">看懂类型，就懂了80%的规则</span></h2>
+  <div class="card">
+    <table class="tbl">
+      <tr><th>维度</th><th>全服务航司 FSC</th><th>低成本航司 LCC/ULCC</th></tr>
+      <tr><td>代表</td><td>LH、BA、SQ、CX、UA、EK</td><td>FR、U2、VY、W6、NK、F9、TR、AK</td></tr>
+      <tr><td>票价结构</td><td>多舱位等级，商务/经济分明</td><td>点对点单一舱位，裸票价极低</td></tr>
+      <tr><td>行李</td><td>通常含1件托运+手提</td><td>仅小件免费，托运/大件付费</td></tr>
+      <tr><td>退改政策</td><td>按运价规则，中高价票可退改</td><td>基础票基本不可退，改签收费</td></tr>
+      <tr><td>分销渠道</td><td>GDS全接入+NDC</td><td>官网直连为主，部分NDC/不进GDS</td></tr>
+      <tr><td>盈利来源</td><td>票价+常客+高端服务</td><td>辅营收费（行李/选座/餐饮/值机）</td></tr>
+      <tr><td>联程/中转</td><td>支持联程、联盟中转</td><td>点对点为主，不保障误机衔接</td></tr>
+    </table>
+    <div class="tip">💡 实操铁律：给旅客卖LCC票，必须主动讲清楚「行李要另买、基本不能退、值机在线上」——投诉90%来自信息不对称。卖FSC票则要会查运价规则的Cat 16退改条款。</div>
+  </div>
+
+  <h2 class="sec">2️⃣ 三大联盟速查</h2>
+  <div class="card">
+    <table class="tbl">
+      <tr><th>联盟</th><th>中文</th><th>代表成员</th><th>对你的意义</th></tr>
+      <tr><td>Star Alliance</td><td>星空联盟</td><td>汉莎LH、新航SQ、美联航UA、全日空NH、加航AC、土航TK、国航CA</td><td>联程组合、里程互通、常客权益</td></tr>
+      <tr><td>SkyTeam</td><td>天合联盟</td><td>法荷航AF-KLM、达美DL、大韩KE、东航MU</td><td>同上（南航CZ已于2019年1月退出）</td></tr>
+      <tr><td>oneworld</td><td>寰宇一家</td><td>英航BA、美航AA、国泰CX、澳航QF、日航JL、卡航QR、阿拉斯加AS</td><td>同上</td></tr>
+      <tr><td>非联盟</td><td>—</td><td>阿联酋EK、阿提哈德EY、南航CZ、海航HU及全部LCC</td><td>靠双边合作/代码共享，逐个谈</td></tr>
+    </table>
+    <p class="muted">联盟的意义：成员间代码共享、行李直挂、里程互通——组合产品（联程低价票）经常跨联盟/非联盟拼出来，这是产品设计的底层知识。</p>
+  </div>
+
+  <h2 class="sec">3️⃣ 航司规则速查卡 <span class="sub"><span id="carrierCount">36</span>家 · 按地区筛选</span></h2>
+  <div id="carrierGrid" class="carrier-grid"></div>
+</section>
+
+<!-- ============ 知识体系 ============ -->
+<section id="tab-system" class="tab">
+  <div class="card"><p class="muted">岗位五大能力维度全景。每一条都能作为面试话题展开——建议对照JD逐条自检，缺哪块补哪块。</p></div>
+  <div id="dimList"></div>
+</section>
+
+<!-- ============ 面试问答 ============ -->
+<section id="tab-qa" class="tab">
+  <div class="card"><p class="muted"><b id="qaTotal">16</b> 个高频面试问题，每题含：<b>考官意图</b>（他到底想听什么）、<b>答题框架</b>（按什么结构说）、<b>参考要点</b>（说什么内容）、<b>金句</b>（一句话收尾加分）。先自己想一遍再点开对照。</p></div>
+  <div id="qaList"></div>
+  <h2 class="sec">🙋 面试反问（向面试官提问）<span class="sub">问得好也能加分</span></h2>
+  <div class="card">
+    <ul style="margin-left:18px;font-size:13.5px">
+      <li style="margin-bottom:8px"><b>这个岗位目前团队规模和架构是怎样的？</b>——判断这个岗位是「守成」还是「开拓」，也体现你关心落地条件。</li>
+      <li style="margin-bottom:8px"><b>公司目前的主力航线、供应商结构和技术系统是什么？</b>——展现你已经在用「负责人视角」思考业务。</li>
+      <li style="margin-bottom:8px"><b>这个岗位第一年的核心目标是什么？考核哪几个指标？</b>——表明你目标导向、结果导向。</li>
+      <li style="margin-bottom:0"><b>公司对国际机票业务的三年规划是什么？</b>——体现你有长期战略思维。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 模拟面试 ============ -->
+<section id="tab-mock" class="tab">
+  <div class="card">
+    <p class="muted">模拟真实面试：随机抽题 → 限时思考 → <b>开口说出来</b> → 对照答案 → 标记掌握情况。进度保存在浏览器里。建议每天练 3-5 题，最终目标：全部标为「已掌握」。</p>
+    <div class="mock-status">
+      <span>✅ 已掌握：<b id="mMastered">0</b></span>
+      <span>🔁 需复习：<b id="mReview">0</b></span>
+      <span>⬜ 未开始：<b id="mTodo">0</b></span>
+    </div>
+    <div class="progress"><i id="mBar" style="width:0%"></i></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-p" id="mNext">🎲 随机抽题</button>
+      <button class="btn btn-o" id="mTimerBtn">⏱ 开始思考（2分钟）</button>
+      <button class="btn btn-o" id="mReveal">👁 显示参考答案</button>
+      <button class="btn btn-o" id="mReset" style="margin-left:auto">🔄 重置进度</button>
+    </div>
+  </div>
+  <div class="card" id="mockCard" style="display:none"></div>
+</section>
+
+<!-- ============ 测验练习 ============ -->
+<section id="tab-quiz" class="tab">
+  <div id="quizHome" class="card" style="text-align:center;padding:40px 20px">
+    <h2 style="color:var(--navy);margin-bottom:8px">📝 题库测验</h2>
+    <p class="muted" style="margin-bottom:10px">共 <b id="quizTotal">47</b> 道行业知识选择题（术语+系统+航司+经营），随机抽题、选项顺序也会打乱。历史最高分：<b id="quizBest">—</b></p>
+    <div class="muted" style="display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;font-size:12.5px;margin-bottom:16px">
+      <span>📕 错题本：<b id="wrongCount">0</b> 题（答错自动收录，答对自动移除）</span>
+      <button class="btn btn-o" id="wrongStart" style="padding:5px 12px;font-size:12.5px">🎯 只练错题</button>
+      <button class="btn btn-o" id="quizBestReset" style="padding:5px 12px;font-size:12.5px">清除最高分</button>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-p" data-n="10">快速热身 · 10题</button>
+      <button class="btn btn-p" data-n="20">标准练习 · 20题</button>
+      <button class="btn btn-p" data-n="30">完整模拟 · 30题</button>
+      <button class="btn btn-p" data-n="all" id="quizAllBtn">全题库 · 47题</button>
+    </div>
+    <p class="muted" style="margin-top:16px;font-size:12.5px">建议先「快速热身」，错题都会附解析。</p>
+    <div id="topicPanel" class="topic-panel"></div>
+  </div>
+  <div id="quizRun" style="display:none"></div>
+</section>
+
+<!-- ============ 实操演练 ============ -->
+<section id="tab-practice" class="tab">
+  <div class="card"><p class="muted">面试过了还要能干活。这里练的是「工作中的实操」：<b>P&amp;L经营测算</b>、<b>退改签计算</b>、<b>场景决策</b>、<b>PNR解读</b>、<b>运价规则解读</b>、<b>工作节奏</b>。</p></div>
+
+  <h2 class="sec">1️⃣ P&amp;L 经营测算器 <span class="sub">拖动滑杆，感受每个变量如何吃掉利润</span></h2>
+  <div class="card">
+    <div class="calc-row"><label>月 GMV（万元）</label><input type="range" id="cGmv" min="500" max="20000" step="100" value="5000"><input type="number" id="cGmvN" value="5000"></div>
+    <div class="calc-row"><label>采购成本率（%）</label><input type="range" id="cCost" min="85" max="99.5" step="0.1" value="96"><input type="number" id="cCostN" value="96" step="0.1"></div>
+    <div class="calc-row"><label>退票率（%）</label><input type="range" id="cRefund" min="0" max="15" step="0.5" value="2"><input type="number" id="cRefundN" value="2" step="0.5"></div>
+    <div class="calc-row"><label>固定费用（万元）</label><input type="range" id="cFee" min="0" max="500" step="5" value="40"><input type="number" id="cFeeN" value="40"></div>
+    <div class="calc-out">
+      <div class="box"><div class="v" id="oNetRev">—</div><div class="k">净收入（扣退票）</div></div>
+      <div class="box"><div class="v" id="oGp">—</div><div class="k">毛利（万元）</div></div>
+      <div class="box"><div class="v" id="oGpm">—</div><div class="k">毛利率</div></div>
+      <div class="box"><div class="v" id="oNp">—</div><div class="k">净利（万元）</div></div>
+    </div>
+    <div class="calc-note">
+      💡 <b>看懂这张表，你就理解了岗位JD里「P&amp;L负责」的含义：</b><br>
+      净收入 = GMV × (1 − 退票率)；毛利 = 净收入 − GMV × 采购成本率；净利 = 毛利 − 固定费用。<br>
+      试着把采购成本率从 96% 调到 95%——毛利直接翻倍。这就是为什么「供应链优化」是负责人的第一杠杆。再把退票率调高 5 个点——利润几乎被吃光，这就是为什么「退票率」是风控核心指标。<br>
+      <b>国际机票毛利率通常只有 2%-5%</b>：高流水、薄利润，任何浪费（盗刷、汇率、退票失控）都会被无限放大。
+    </div>
+  </div>
+
+  <div class="card">
+    <b>📝 自测题（先自己算，再点开答案）</b>
+    <p class="muted" style="margin-top:6px">某月 GMV 3000 万元，采购成本率 95%，退票率 3%，固定费用 25 万元。请问毛利和净利各是多少？毛利率约多少？</p>
+    <button class="btn btn-o" id="selftestBtn" style="margin-top:8px">点开答案</button>
+    <div id="selftestA" style="display:none" class="calc-note">
+      ✅ 净收入 = 3000 × (1 − 3%) = <b>2910 万元</b><br>
+      采购成本 = 3000 × 95% = 2850 万元<br>
+      毛利 = 2910 − 2850 = <b>60 万元</b>，毛利率 ≈ 60 ÷ 2910 ≈ <b>2.06%</b><br>
+      净利 = 60 − 25 = <b>35 万元</b><br>
+      结论：3000 万的流水最后只赚 35 万——这就是这个行业的真相，也是面试时谈「经营」的底气。
+    </div>
+  </div>
+
+  <h2 class="sec">2️⃣ 退改签计算器 <span class="sub">每天都会用到的实操计算</span></h2>
+  <div class="card">
+    <div class="calc-row" style="margin-bottom:14px">
+      <label>业务类型</label>
+      <label style="width:auto;font-weight:normal"><input type="radio" name="rcMode" value="refund" checked> 自愿退票</label>
+      <label style="width:auto;font-weight:normal"><input type="radio" name="rcMode" value="change"> 自愿改签</label>
+      <label style="width:auto;font-weight:normal"><input type="radio" name="rcMode" value="invol"> 非自愿退改</label>
+    </div>
+    <div class="calc-row"><label>原票价（元）</label><input type="number" id="rcBase" value="6200" style="width:160px"></div>
+    <div class="calc-row"><label>退票费（元）</label><input type="number" id="rcRefFee" value="800" style="width:160px"></div>
+    <div class="calc-row"><label>改签费（元）</label><input type="number" id="rcChgFee" value="600" style="width:160px"></div>
+    <div class="calc-row"><label>改签后新票价（元）</label><input type="number" id="rcNewFare" value="4200" style="width:160px"></div>
+    <div class="calc-note" id="rcOut" style="background:var(--amberbg);color:var(--amber);font-weight:600"></div>
+    <div class="calc-note">
+      💡 计算公式：<br>
+      自愿退票：应退金额 = 原票价 − 退票费（若退票费高于票价，实际退0）<br>
+      自愿改签：应付 = 改签费 + max(0, 新票价 − 原票价)；新票价更低时，差额多数航司不退（部分可退到EMD杂费凭证）<br>
+      非自愿（航班取消/时刻变更）：免费退票或免费改签，同航司改签更高舱位一般无需补差
+    </div>
+  </div>
+
+  <div class="card">
+    <b>📝 自测题（先自己算，再点开答案）</b>
+    <p class="muted" style="margin-top:6px">① 原票价3800，自愿退票，退票费800，退多少？ ② 原票价3800改签至4200，改签费600，付多少？ ③ 原票价4500改签至4000，改签费500，付多少？</p>
+    <button class="btn btn-o" id="rcTestBtn" style="margin-top:8px">点开答案</button>
+    <div id="rcTestA" style="display:none" class="calc-note">
+      ✅ ① 应退 = 3800 − 800 = <b>3000 元</b><br>
+      ② 应付 = 600 + (4200 − 3800) = <b>1000 元</b><br>
+      ③ 应付 = 500 + 0 = <b>500 元</b>，新票价低400元，差额不退（部分航司退到EMD）
+    </div>
+  </div>
+
+  <h2 class="sec">3️⃣ 场景决策演练 <span class="sub">11个真实业务案例，选完立即看解析</span></h2>
+  <div id="scenarioList"></div>
+
+  <h2 class="sec">4️⃣ PNR解读练习 <span class="sub">会读订座记录，是管理运营团队的基本功</span></h2>
+  <div class="card">
+    <p class="muted">下面是一张Amadeus风格的PNR（旅客订座记录）。先读懂它，再回答4个问题：</p>
+    <div class="pnrbox">--- TST RLR ---
+RP/PEK001/PEK001     14OCT26/0915Z   ABC123
+ 1. SMITH/JOHN MR
+ 2  CA931 Y 20JUL PEKFRA HK1  1345 1835
+ 3  LH1131 Y 22JUL FRALON HK1  0710 0805
+ 4 AP PEK 010-12345678
+ 5 TK TL20JUL/PEK001</div>
+    <div id="pnrQuiz"></div>
+  </div>
+
+  <h2 class="sec">5️⃣ 运价规则解读练习 <span class="sub">会读Cat条款，就敢谈退改签政策</span></h2>
+  <div class="card">
+    <p class="muted">某航司「上海-东京」往返票价规则摘要：<b>票价 BEE30，4600元</b>。规则：Cat 2 仅限周二/三/四出发；Cat 5 需提前7天购票；Cat 6 最短停留3天；Cat 16 改签费500元/次，退票费800元。请回答：</p>
+    <div id="fareQuiz"></div>
+  </div>
+
+  <h2 class="sec">6️⃣ 工作中的实操节奏 <span class="sub">负责人的日历长什么样</span></h2>
+  <div class="card"><div class="tl">
+    <div class="node"><h4>📆 每天（Daily）</h4>
+      <p>• 晨会看数据日报：昨日 GMV、订单量、毛利、退票率、投诉</p>
+      <p>• 扫描汇率、航司政策公告、签证动态（政策雷达）</p>
+      <p>• 处理异常：盗刷可疑单、价格倒挂、供应商断供、大额退款</p>
+      <p>• 与采购/运营碰头解决当日卡点；晚间简要复盘</p>
+    </div>
+    <div class="node"><h4>📆 每周（Weekly）</h4>
+      <p>• KPI 周报：对比月度目标找偏差、做归因</p>
+      <p>• 航线复盘会：逐条航线看「量、价、利、退票率」</p>
+      <p>• 竞对价格监测（OTA 比价报告）</p>
+    </div>
+    <div class="node"><h4>📆 每月（Monthly）</h4>
+      <p>• 月度 P&amp;L 分析：收入、成本、费用逐项拆解</p>
+      <p>• 供应商对账结算、账期管理</p>
+      <p>• 团队绩效评估与一对一辅导</p>
+    </div>
+    <div class="node"><h4>📆 每季度（Quarterly）</h4>
+      <p>• 预算滚动预测（re-forecast）</p>
+      <p>• 航司/大供应商拜访与谈判</p>
+      <p>• 组织架构与编制复盘</p>
+    </div>
+    <div class="node"><h4>📆 每年（Yearly）</h4>
+      <p>• 年度预算与 3-5 年商业计划（BP）</p>
+      <p>• 航司年度大协议谈判</p>
+      <p>• 组织调整与人才盘点</p>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ 学习计划 ============ -->
+<section id="tab-plan" class="tab">
+  <div class="card">
+    <p class="muted">按顺序推进的 30 天备战计划（勾选进度保存在浏览器）。每天投入 1-2 小时即可。保底完成：<b>术语全掌握 → 测验80分+ → 模拟面试全绿</b>。</p>
+    <div class="progress"><i id="planBar" style="width:0%"></i></div>
+    <p class="muted" id="planPct">已完成 0 / 0 项</p>
+  </div>
+  <div id="planList"></div>
+  <div class="card" style="text-align:center">
+    <button class="btn btn-r" id="planReset">🔄 重置学习计划进度</button>
+  </div>
+
+  <div class="card">
+    <div class="weekbar"><h3>💾 进度备份</h3><span class="badge amber">本机保存 · 建议定期导出</span></div>
+    <p class="muted">勾选进度、模拟面试标记、最高分、错题本都只存在<b>这台电脑的浏览器</b>里；换电脑、换浏览器或清理浏览器数据会丢失。导出一份 JSON 就能随时恢复。</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center">
+      <button class="btn btn-o" id="exportBtn">📤 导出进度</button>
+      <button class="btn btn-o" id="importBtn">📥 导入进度</button>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+      <button class="btn btn-r" id="clearAllBtn" style="margin-left:auto">🗑 清空全部进度</button>
+    </div>
+    <p class="muted" id="storeInfo" style="margin-top:10px;font-size:12px"></p>
+  </div>
+</section>
+
+<!-- ============ ETERM 系统实操 ============ -->
+<section id="tab-eterm" class="tab">
+  <div class="card">
+    <div class="weekbar"><h3>🖥️ ETERM（中航信系统）从零到精通</h3><span class="badge green">国内机票团队核心工具</span></div>
+    <p>ETERM 是<b>中国民航旅客订座系统</b>的客户端，后端是中国航信（TravelSky）订座主机。国内所有代理出国内机票、以及国际票的国内段都靠它。面试"国际机票"岗位：<b>会 ETERM = 上岗就能干活</b>。本页从零教你：概念 → 代码表 → 全部常用指令 → 18步完整出票流程的真实仿真模拟。</p>
+    <div class="tip">💡 <b>学习方法：</b>先看完 ①~④ 的教程（约30分钟），再到 ⑥ 实战模拟器把完整流程敲一遍；最后开「自由练习」把每条指令练熟。全部指令均可在模拟器里亲手执行。</div>
+  </div>
+
+  <h2 class="sec">① 从零认识 ETERM <span class="sub">小白先看这里</span></h2>
+  <div class="card acc">
+    <div class="acc-head">▸ 什么是 ETERM？它和三大 GDS 什么关系？</div>
+    <div class="acc-body">
+      <p><b>一句话：</b>eTerm 是订座系统的"窗口"。营业员在输入区敲指令、回车，主机在回显区返回结果——真实工作界面就是一个蓝底黑字终端，和本页 ⑥ 的模拟器长得一模一样。</p>
+      <p><b>ETERM 管什么：</b>中国航司（国航CA/东航MU/南航CZ/海航HU…）的航班、国内航线、以及 BSP 国内结算的国际票。<b>三大GDS管什么：</b>境外航司在国际航线的分销。<b>实际工作中两套系统并用</b>——国际机票最常见的打法是"ETERM 订国内段 + GDS 订国际段"拼成一个行程，面试时说出这一点非常加分。</p>
+      <p><b>面试怎么答：</b>问"你会订票吗"→ 答"会。ETERM 从 AV 查航班、SS 订座、NM/CT/TK 建 PNR、@ 封口拿记录编号、PAT:A/QTE 查运价、FN/FC/FP 输价、ETDZ 出票、DETR 验票，全流程都熟练；GDS 的 Amadeus/Galileo/Sabre 基本指令也会"。</p>
+    </div>
+  </div>
+  <div class="card acc">
+    <div class="acc-head">▸ 界面长什么样？指令语法规则（核心！）</div>
+    <div class="acc-body">
+      <p><b>界面：</b>上方是指令输入区（有 <b>&gt;</b> 提示符），下方是系统回显区。所有操作 = 输入指令 → 回车 → 读回显。没有鼠标菜单，一切靠指令。</p>
+      <p><b>指令语法 6 条规则（背下来）：</b></p>
+      <div class="codebox">1. 基本格式：指令:参数　参数之间用 / 分隔　例：AV:H/PEKPVG/20OCT
+2. 城市用三字码（PEK=北京、PVG=上海浦东），航司用二字码（CA=国航）
+3. 日期格式 DDMMM：20OCT=10月20日（JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC）
+4. 大小写均可，习惯全部大写
+5. 修改 PNR 后必须 @ 封口才生效；不想保存输 IG 忽略
+6. 冒号后参数顺序不能乱、少一个 / 就会报 FORMAT（格式错误）</div>
+      <p><b>核心术语（面试高频）：</b></p>
+      <table class="tbl">
+        <tr><th style="width:150px">术语</th><th>含义</th></tr>
+        <tr><td>封口（End Transaction）</td><td>指令 <b>@</b>，把本次修改保存进主机。不封口 = 没保存！</td></tr>
+        <tr><td>记录编号（PNR）</td><td>封口后系统给的 6 位编号（如 H4J8KL），这张票的"订单号"</td></tr>
+        <tr><td>工作号（SI）</td><td>营业员登录账号，所有操作都记在工作号名下（出问题可追责）</td></tr>
+        <tr><td>Office</td><td>营业员所属营业场所（如 PEK001），决定出票结算关系</td></tr>
+        <tr><td>票号（TKTN）</td><td>出票后生成的 13 位票号（如 999-1234567890），前3位是航司票证代码</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h2 class="sec">② 三大代码表 <span class="sub">不背代码，寸步难行</span></h2>
+  <div class="card acc">
+    <div class="acc-head">▸ 城市三字码表（国内 + 国际）</div>
+    <div class="acc-body">
+      <table class="tbl">
+        <tr><th>代码</th><th>城市/机场</th><th>代码</th><th>城市/机场</th><th>代码</th><th>城市/机场</th></tr>
+        <tr><td>PEK</td><td>北京首都</td><td>PKX</td><td>北京大兴</td><td>TSN</td><td>天津滨海</td></tr>
+        <tr><td>SHA</td><td>上海虹桥</td><td>PVG</td><td>上海浦东</td><td>NKG</td><td>南京禄口</td></tr>
+        <tr><td>CAN</td><td>广州白云</td><td>SZX</td><td>深圳宝安</td><td>HGH</td><td>杭州萧山</td></tr>
+        <tr><td>CTU</td><td>成都双流</td><td>TFU</td><td>成都天府</td><td>XMN</td><td>厦门高崎</td></tr>
+        <tr><td>CKG</td><td>重庆江北</td><td>KMG</td><td>昆明长水</td><td>FOC</td><td>福州长乐</td></tr>
+        <tr><td>XIY</td><td>西安咸阳</td><td>WUH</td><td>武汉天河</td><td>CSX</td><td>长沙黄花</td></tr>
+        <tr><td>TAO</td><td>青岛胶东</td><td>DLC</td><td>大连周水子</td><td>TNA</td><td>济南遥墙</td></tr>
+        <tr><td>HRB</td><td>哈尔滨太平</td><td>SHE</td><td>沈阳桃仙</td><td>CGQ</td><td>长春龙嘉</td></tr>
+        <tr><td>URC</td><td>乌鲁木齐地窝堡</td><td>LXA</td><td>拉萨贡嘎</td><td>HET</td><td>呼和浩特白塔</td></tr>
+        <tr><td>HAK</td><td>海口美兰</td><td>SYX</td><td>三亚凤凰</td><td>NNG</td><td>南宁吴圩</td></tr>
+        <tr><td>CGO</td><td>郑州新郑</td><td>KWL</td><td>桂林两江</td><td>NGB</td><td>宁波栎社</td></tr>
+        <tr><td>KWE</td><td>贵阳龙洞堡</td><td>KHN</td><td>南昌昌北</td><td>HFE</td><td>合肥新桥</td></tr>
+        <tr><td>TYN</td><td>太原武宿</td><td>SJW</td><td>石家庄正定</td><td>WUX</td><td>无锡硕放</td></tr>
+        <tr><td>YNT</td><td>烟台蓬莱</td><td>WEH</td><td>威海大水泊</td><td>LHW</td><td>兰州中川</td></tr>
+        <tr><td>INC</td><td>银川河东</td><td>XNN</td><td>西宁曹家堡</td><td>HKG</td><td>香港</td></tr>
+        <tr><td>MFM</td><td>澳门</td><td>TPE</td><td>台北桃园</td><td>ICN</td><td>首尔仁川</td></tr>
+        <tr><td>NRT</td><td>东京成田</td><td>HND</td><td>东京羽田</td><td>KIX</td><td>大阪关西</td></tr>
+        <tr><td>SIN</td><td>新加坡樟宜</td><td>BKK</td><td>曼谷素万那普</td><td>KUL</td><td>吉隆坡</td></tr>
+        <tr><td>DXB</td><td>迪拜</td><td>DOH</td><td>多哈</td><td>IST</td><td>伊斯坦布尔</td></tr>
+        <tr><td>FRA</td><td>法兰克福</td><td>CDG</td><td>巴黎戴高乐</td><td>AMS</td><td>阿姆斯特丹</td></tr>
+        <tr><td>LHR</td><td>伦敦希思罗</td><td>MAD</td><td>马德里</td><td>FCO</td><td>罗马</td></tr>
+        <tr><td>MUC</td><td>慕尼黑</td><td>ZRH</td><td>苏黎世</td><td>JFK</td><td>纽约肯尼迪</td></tr>
+        <tr><td>LAX</td><td>洛杉矶</td><td>SFO</td><td>旧金山</td><td>ORD</td><td>芝加哥</td></tr>
+        <tr><td>YYZ</td><td>多伦多</td><td>YVR</td><td>温哥华</td><td>SYD</td><td>悉尼</td></tr>
+        <tr><td>MEL</td><td>墨尔本</td><td>AKL</td><td>奥克兰</td><td></td><td></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card acc">
+    <div class="acc-head">▸ 航司二字码表 + 票证代码（票号前3位）</div>
+    <div class="acc-body">
+      <table class="tbl">
+        <tr><th>代码</th><th>航空公司</th><th>票证代码</th><th>代码</th><th>航空公司</th><th>票证代码</th></tr>
+        <tr><td>CA</td><td>中国国航</td><td>999</td><td>MU</td><td>中国东航</td><td>781</td></tr>
+        <tr><td>CZ</td><td>中国南航</td><td>784</td><td>HU</td><td>海南航空</td><td>880</td></tr>
+        <tr><td>ZH</td><td>深圳航空</td><td>479</td><td>MF</td><td>厦门航空</td><td>731</td></tr>
+        <tr><td>3U</td><td>四川航空</td><td>876</td><td>SC</td><td>山东航空</td><td>324</td></tr>
+        <tr><td>HO</td><td>吉祥航空</td><td>018</td><td>9C</td><td>春秋航空</td><td>089</td></tr>
+        <tr><td>KN</td><td>中联航</td><td>822</td><td>GS</td><td>天津航空</td><td>826</td></tr>
+        <tr><td>FM</td><td>上海航空</td><td>774</td><td>JD</td><td>首都航空</td><td>898</td></tr>
+        <tr><td>BK</td><td>奥凯航空</td><td>866</td><td>G5</td><td>华夏航空</td><td>987</td></tr>
+        <tr><td>8L</td><td>祥鹏航空</td><td>859</td><td>PN</td><td>西部航空</td><td>847</td></tr>
+        <tr><td>EU</td><td>成都航空</td><td>811</td><td>AQ</td><td>九元航空</td><td>902</td></tr>
+        <tr><td>NS</td><td>河北航空</td><td>836</td><td>KY</td><td>昆明航空</td><td>833</td></tr>
+        <tr><td>TV</td><td>西藏航空</td><td>088</td><td>DZ</td><td>东海航空</td><td>893</td></tr>
+        <tr><td>AA</td><td>美国航空</td><td>001</td><td>UA</td><td>美联航</td><td>016</td></tr>
+        <tr><td>DL</td><td>达美航空</td><td>006</td><td>AC</td><td>加拿大航空</td><td>014</td></tr>
+        <tr><td>BA</td><td>英国航空</td><td>125</td><td>LH</td><td>汉莎航空</td><td>220</td></tr>
+        <tr><td>AF</td><td>法国航空</td><td>057</td><td>KL</td><td>荷兰皇家航空</td><td>074</td></tr>
+        <tr><td>TK</td><td>土耳其航空</td><td>235</td><td>EK</td><td>阿联酋航空</td><td>176</td></tr>
+        <tr><td>QR</td><td>卡塔尔航空</td><td>157</td><td>EY</td><td>阿提哈德航空</td><td>607</td></tr>
+        <tr><td>SQ</td><td>新加坡航空</td><td>618</td><td>CX</td><td>国泰航空</td><td>160</td></tr>
+        <tr><td>NH</td><td>全日空</td><td>205</td><td>JL</td><td>日本航空</td><td>131</td></tr>
+        <tr><td>KE</td><td>大韩航空</td><td>180</td><td>OZ</td><td>韩亚航空</td><td>988</td></tr>
+        <tr><td>TG</td><td>泰国航空</td><td>217</td><td>MH</td><td>马来西亚航空</td><td>232</td></tr>
+        <tr><td>QF</td><td>澳洲航空</td><td>081</td><td>NZ</td><td>新西兰航空</td><td>086</td></tr>
+        <tr><td>LX</td><td>瑞士航空</td><td>724</td><td>OS</td><td>奥地利航空</td><td>257</td></tr>
+        <tr><td>SU</td><td>俄罗斯航空</td><td>555</td><td>BR</td><td>长荣航空</td><td>695</td></tr>
+      </table>
+      <p class="muted">注：票证代码为教学参考值，以航司实际为准。面试常考：票号 999 开头=国航、781=东航、784=南航。</p>
+    </div>
+  </div>
+  <div class="card acc">
+    <div class="acc-head">▸ 舱位代码表（RBD）+ 折扣示意</div>
+    <div class="acc-body">
+      <table class="tbl">
+        <tr><th>舱位</th><th>含义</th><th>舱位</th><th>含义</th><th>舱位</th><th>含义</th></tr>
+        <tr><td>F</td><td>头等舱全价</td><td>A</td><td>头等舱折扣</td><td>C</td><td>公务舱全价</td></tr>
+        <tr><td>D</td><td>公务舱折扣</td><td>J</td><td>豪华公务舱</td><td>Z</td><td>公务舱特价</td></tr>
+        <tr><td>Y</td><td>经济舱全价</td><td>B</td><td>经济舱 9 折*</td><td>M</td><td>经济舱 85 折*</td></tr>
+        <tr><td>H</td><td>经济舱 8 折*</td><td>K</td><td>经济舱 75 折*</td><td>L</td><td>经济舱 7 折*</td></tr>
+        <tr><td>Q</td><td>经济舱 65 折*</td><td>G</td><td>经济舱 6 折*</td><td>V</td><td>经济舱 55 折*</td></tr>
+        <tr><td>S</td><td>经济舱 5 折*</td><td>U</td><td>经济舱 45 折*</td><td>T</td><td>经济舱 4 折*</td></tr>
+        <tr><td>E</td><td>经济舱 35 折*</td><td>X</td><td>经济舱 3 折*</td><td>N</td><td>经济舱 25 折*</td></tr>
+      </table>
+      <p class="muted">* 折扣比例为教学示意，各航司规则不同。<b>核心规律：Y 舱全价改签退票最宽松；折扣越低的舱位，退改限制越多、手续费越高。</b>面试常考："客人要便宜但可能改期，推什么舱位？"→ 中折舱位（如 H/K/L），既便宜又有一定灵活性。</p>
+    </div>
+  </div>
+
+  <h2 class="sec">③ 指令模块详解 <span class="sub">每个指令：格式 → 参数 → 示例 → 输出解读</span></h2>
+  <div class="card acc">
+    <div class="acc-head">▸ 模块一：航班查询（AV / DS / SK / FF / DSG）</div>
+    <div class="acc-body">
+      <p><b>AV = Availability（可用座位查询）—— 最常用指令，没有之一。</b></p>
+      <table class="tbl">
+        <tr><th style="width:220px">格式</th><th>说明</th></tr>
+        <tr><td><code>AV:PEKPVG</code></td><td>查当天北京→上海全部直达航班（基础格式）</td></tr>
+        <tr><td><code>AV:H/PEKPVG/20OCT</code></td><td>H=按起飞时刻排序显示，指定日期（最常用）</td></tr>
+        <tr><td><code>AV:RA/PEKPVG/20OCT</code></td><td>RA=按到达时刻排序</td></tr>
+        <tr><td><code>AV:PEKPVG/20OCT/0900</code></td><td>查指定时刻（9点）前后航班</td></tr>
+        <tr><td><code>AV:CA/PEKPVG</code></td><td>只查国航（航司过滤）</td></tr>
+        <tr><td><code>AV:MU/PEKPVG/20OCT</code></td><td>航司+日期组合过滤</td></tr>
+      </table>
+      <p><b>怎么读 AV 回显（重点）：</b></p>
+      <div class="pnrbox">AV:H/PEKPVG/20OCT
+20OCT(SUN) PEKPVG
+1 CA1501 PEKPVG 1105 1350 738 0^B S E
+  F4 A4 P2 J2 C2 D2 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 U9 S9 T9 E9
+2 MU5183 PEKPVG 0800 1020 333 0 M
+  F4 A2 P0 J9 C9 D9 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 U9 S9 T9 E9
+3 HU7605 PEKPVG 1930 2210 789 0 M
+  F4 A4 P0 J2 C2 D2 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 U9 S9 T9 E9</div>
+      <p>① <b>行号 1/2/3</b> = 订座时要引用的序号（SS 指令用）；② 航班号 CA1501 = 国航1501；③ 1105 1350 = 起飞11:05 落地13:50；④ 738 = 波音737-800机型；⑤ <b>第二行是舱位余座表</b>：Y9 = Y舱有9个以上座位，P0 = P舱关舱无座；⑥ 0^B = 有餐食。</p>
+      <p><b>其他查询指令：</b></p>
+      <table class="tbl">
+        <tr><th style="width:200px">指令</th><th>作用与示例</th></tr>
+        <tr><td><code>DS:PEKPVG/20OCT</code></td><td>班期时刻：显示该航线哪些天有航班。回显里 <b>1234567</b>=每天都有；<b>1357</b>=周一/三/五/日</td></tr>
+        <tr><td><code>SK:PEKPVG</code></td><td>最新时刻表（查询当前执行时刻）</td></tr>
+        <tr><td><code>FF:CA1501/20OCT</code></td><td>航班经停信息：STOP:0 = 直飞；有经停会显示经停城市</td></tr>
+        <tr><td><code>DSG:C/PEKPVG</code></td><td>按指定舱位（C舱）查班期</td></tr>
+      </table>
+      <p class="muted">面试场景：客人要"10月20日北京飞上海下午的航班"→ AV:H/PEKPVG/20OCT，看行号、看 Y 舱余座，报价前先确认有座。</p>
+    </div>
+  </div>
+  <div class="card acc">
+    <div class="acc-head">▸ 模块二：建立订座 PNR（SS / NM / CT / TK / OSI / RMK / @）</div>
+    <div class="acc-body">
+      <p><b>SS = Sell Seat（订座）。格式：SS:航班号/舱位/日期/航段/NN人数</b></p>
+      <div class="codebox">SS:CA1501/Y/20OCT/PEKPVG/NN1
+→ 系统回显：1. CA1501 Y 20OCT PEKPVG RR1 1105 1350 738 E 0R</div>
+      <p>参数逐个拆：CA1501=航班号，Y=舱位（从AV的舱位行选一个有座的），20OCT=日期，PEKPVG=航段，<b>NN1=申请1个座位</b>（NN是行动代码，1是人数）。回显中 <b>RR=直接确认、HK=已确认</b>——看到这两个就是订上了。</p>
+      <table class="tbl">
+        <tr><th style="width:220px">指令</th><th>格式与说明</th></tr>
+        <tr><td><code>SD:1</code></td><td>查看第1个航段（订完立即 SD:1 检查舱位/日期/时刻对不对）</td></tr>
+        <tr><td><code>NM:1ZHANG/SAN</code></td><td>姓名：人数+<b>姓/名</b>（姓在前！）。儿童加 CHD、婴儿加 INF（如 NM:1ZHANG/SANCHD）</td></tr>
+        <tr><td><code>CT:PEK/13800138000</code></td><td>联系组：城市/电话（留旅客本人或代办人电话）</td></tr>
+        <tr><td><code>TK:TL/1200/20OCT/PEK</code></td><td>出票时限：TL/时间/日期/城市。<b>时限内不出票，座位可能被系统取消</b>——面试高频考点</td></tr>
+        <tr><td><code>OSI:CA VIP</code></td><td>航司备注（航司端可见，如备注特殊服务）</td></tr>
+        <tr><td><code>RMK:MP/内容</code></td><td>内部备注（航司不可见，给自己人看）</td></tr>
+        <tr><td><code>@</code></td><td>封口保存！系统返回 6 位记录编号（如 H4J8KL）</td></tr>
+      </table>
+      <p><b>完整建立流程示例（可到模拟器亲手敲）：</b></p>
+      <div class="pnrbox">&gt; AV:H/PEKPVG/20OCT          ← 查航班，记下行号1
+&gt; SS:CA1501/Y/20OCT/PEKPVG/NN1   ← 订Y舱1座
+&gt; NM:1ZHANG/SAN              ← 姓名
+&gt; CT:PEK/13800138000          ← 电话
+&gt; TK:TL/1200/20OCT/PEK        ← 出票时限
+&gt; @                          ← 封口！
+记录编号: H4J8KL                ← 记下编号，客人拿它出行</div>
+      <p class="muted">注意：NM/CT/TK 输入后系统不一定回显确认，以 @ 封口后 RT 提取看到的 PNR 内容为准。</p>
+    </div>
+  </div>
+  <div class="card acc">
+    <div class="acc-head">▸ 模块三：提取与修改（RT / XE / XEP / IG / H / ML）</div>
+    <div class="acc-body">
+      <table class="tbl">
+        <tr><th style="width:220px">指令</th><th>格式与说明</th></tr>
+        <tr><td><code>RT:H4J8KL</code></td><td>按记录编号提取 PNR（最常用）。也可按姓名提取：RT:ZHANG/SAN/20OCT</td></tr>
+        <tr><td><code>XE:1</code></td><td>取消第1个航段（改签第一步）。XE:PN=取消全部航段。<b>取消后必须 @ 封口</b></td></tr>
+        <tr><td><code>XEP:1</code></td><td>取消姓名项</td></tr>
+        <tr><td><code>IG</code></td><td>忽略：撤销本次未封口的修改，PNR 恢复上次封口状态（改错了救回来）</td></tr>
+        <tr><td><code>H</code></td><td>历史记录：显示谁、在什么时间、改了什么——售后纠纷查证利器</td></tr>
+        <tr><td><code>ML:H4J8KL</code></td><td>名单显示（需授权，团队名单核对用）</td></tr>
+      </table>
+      <p><b>改签标准流程（面试必背）：</b></p>
+      <div class="codebox">RT:记录编号 → XE:旧航段号 → SS:新航班/新舱位/新日期/NN1 → @ 封口
+例：RT:H4J8KL → XE:1 → SS:CA1501/B/21OCT/PEKPVG/NN1 → @</div>
+      <p class="muted">面试点：客人要改签，先 RT 提取确认原票状态，再取消旧段订新段，最后封口——"先取、再改、后封"六字诀。</p>
+    </div>
+  </div>
+  <div class="card acc">
+    <div class="acc-head">▸ 模块四：运价（PAT:A / QTE / XS FSG / XS FSD / FN / FC / FP）</div>
+    <div class="acc-body">
+      <table class="tbl">
+        <tr><th style="width:250px">指令</th><th>格式与说明</th></tr>
+        <tr><td><code>PAT:A</code></td><td>查询运价：显示该航段各舱位票价（在 PNR 打开状态下输入）</td></tr>
+        <tr><td><code>QTE:CA1501/Y/PEKPVG</code></td><td>精确计价：航班号/舱位/城市对 → 返回票价+税费+总价</td></tr>
+        <tr><td><code>XS FSG</code></td><td>显示票价组（航线/舱位/票价一览）</td></tr>
+        <tr><td><code>XS FSD</code></td><td>显示票价详情与规则条款（退改条件在这里查）</td></tr>
+        <tr><td><code>FN:FCNY1350.00/SCNY1350.00/C3.00/TCNY50.00CN/TCNY10.00YQ</code></td><td>票价组输入（出票前必输）</td></tr>
+        <tr><td><code>FC:PEK CA PVG 1350.00Y CNY1350.00END</code></td><td>票价计算行（运价横式）</td></tr>
+        <tr><td><code>FP:CASH,CNY</code></td><td>付款方式：CASH=现金 CHECK=支票 CC=信用卡，CNY=人民币</td></tr>
+      </table>
+      <p><b>FN 每个字段的含义（面试常考"FN 是什么"）：</b></p>
+      <div class="codebox">FN:FCNY1350.00/SCNY1350.00/C3.00/TCNY50.00CN/TCNY10.00YQ
+    └F=票价1350元 └S=实收1350元 └C=代理费率3% └T=税项：50元机场建设费(CN) + 10元燃油附加费(YQ)</div>
+      <p><b>QTE 输出解读：</b></p>
+      <div class="pnrbox">QTE:CA1501/Y/PEKPVG
+01 Y CNY1350.00
+TAX: CNY50.00CN CNY10.00YQ
+TOTAL: CNY1410.00
+→ 票价1350 + 税60 = 总价1410 元（客人问"多少钱"报 TOTAL）</div>
+      <p class="muted">面试点：客人的支付金额 = 票价 + 税费总和（TOTAL），不是只看票价；代理利润来自航司给的代理费率（FN 里的 C 字段）。</p>
+    </div>
+  </div>
+  <div class="card acc">
+    <div class="acc-head">▸ 模块五：出票与售后（ETDZ / DETR / TKTT / TRFD）</div>
+    <div class="acc-body">
+      <p><b>ETDZ = 电子客票出票。出票前检查清单（四确认）：</b></p>
+      <div class="codebox">1. FN / FC / FP 三件套齐全
+2. 在 TK 时限内（超时座位可能已取消）
+3. 姓名与证件完全一致（错一个字都不能登机）
+4. 舱位、日期、航段与客人确认的一致</div>
+      <table class="tbl">
+        <tr><th style="width:250px">指令</th><th>格式与说明</th></tr>
+        <tr><td><code>ETDZ:1</code></td><td>电子客票出票（PNR打开状态，数字1=打票机号）。成功后系统返回13位票号</td></tr>
+        <tr><td><code>DETR:TN/999-1234567890</code></td><td>按票号查电子客票（TN=Ticket Number）；加 <code>,H</code> 查历史版本</td></tr>
+        <tr><td><code>DETR:NI/110101199001011234</code></td><td>按证件号（身份证）查票——客人票丢了先查这个</td></tr>
+        <tr><td><code>DETR:NM/ZHANG/SAN</code></td><td>按姓名查票（显示该旅客名下全部客票）</td></tr>
+        <tr><td><code>TKTT:TN/999-1234567890</code></td><td>查询客票状态</td></tr>
+        <tr><td><code>TRFD:AM/1/D</code></td><td>退票：AM/航段号/D（需退票权限，手续费按运价规则 Cat16 计算）</td></tr>
+      </table>
+      <p><b>客票状态码（DETR 回显最后一行，面试常考）：</b></p>
+      <table class="tbl">
+        <tr><th>状态</th><th>含义</th><th>状态</th><th>含义</th></tr>
+        <tr><td>OPEN FOR USE</td><td>客票有效可用</td><td>USED</td><td>已使用</td></tr>
+        <tr><td>REFUNDED</td><td>已退票</td><td>EXCHANGED</td><td>已换开（改签后旧票作废换新票）</td></tr>
+      </table>
+      <div class="pnrbox">DETR:TN/999-1234567890
+ISSUED BY: AIR CHINA          ← 出票航司
+ORG/DST: PEK/PVG              ← 出发/目的地
+NAME: ZHANG/SAN               ← 旅客姓名
+FLIGHT: CA1501 Y 20OCT PEKPVG 1105 1350
+STATUS: OPEN FOR USE          ← 状态：有效可用 ✔</div>
+      <p class="muted">面试场景：客人说"票查不到/不能登机"→ 先 DETR:NI/身份证号 查票号和状态；OPEN FOR USE 却登不了机 = 证件与姓名不符，REFUNDED = 已退票。</p>
+    </div>
+  </div>
+
+  <h2 class="sec">④ 常见错误提示 <span class="sub">看懂系统报错</span></h2>
+  <div class="card acc">
+    <div class="acc-head">▸ ETERM 常见错误信息速查</div>
+    <div class="acc-body">
+      <table class="tbl">
+        <tr><th style="width:220px">报错</th><th>含义与对策</th></tr>
+        <tr><td>FORMAT</td><td>格式错误：参数顺序错或少斜杠。对照格式重输</td></tr>
+        <tr><td>NO NAME</td><td>PNR 无姓名：补 NM 后封口</td></tr>
+        <tr><td>PROTECT</td><td>舱位受保护：该舱位不可售，换舱位</td></tr>
+        <tr><td>SEATS</td><td>无座位：该舱位关舱，AV 重新选有座的舱位</td></tr>
+        <tr><td>UNABLE TO SELL</td><td>无法订座：航班限制销售（如包机/航班取消）</td></tr>
+        <tr><td>CHECK CONTINUITY</td><td>航段不连续：前后航段衔接不上，检查行程顺序</td></tr>
+        <tr><td>TIME</td><td>超时限：出票时限已过，需重新订座或申请延长</td></tr>
+        <tr><td>CONTACT ELEMENT MISSING</td><td>缺联系组：补 CT 后封口</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h2 class="sec">⑤ 指令速查总表 <span class="sub">一页速查全部常用指令</span></h2>
+  <div id="etermCmdList"></div>
+
+  <h2 class="sec">⑥ 实战模拟器 <span class="sub">18步走完真实出票全流程</span></h2>
+  <div class="card">
+    <p>这是按真实 ETERM 工作流设计的<b>仿真终端</b>：左边是任务清单，右边是终端窗口。按顺序完成 18 个任务（登录→查航班→订座→建PNR→封口→查运价→输价→出票→验票），卡住了点「💡 提示」或「📝 给我答案」。完成后可切换「🎮 自由练习」随便敲指令复习。</p>
+    <div class="tip">⚠️ 教学提示：模拟器的回显为<b>教学演示数据</b>，指令格式与真实系统一致，但真实系统部分输入无回显（以 RT 提取结果为准）。</div>
+  </div>
+  <div id="etermLab"></div>
+
+  <div class="card">
+    <div class="weekbar"><h3>🎤 面试金句：怎么把 ETERM 讲出彩</h3></div>
+    <div class="quote">"我熟悉 ETERM 完整工作流：AV 查航班选舱位、SS 订座建 PNR、@ 封口取记录编号、PAT:A/QTE 算运价、ETDZ 出票、DETR 验票。改签退票的流程我也清楚：改签先 RT 提取、XE 取消旧段、SS 订新段再封口；退票用 TRFD，手续费按运价规则 Cat16 收。"</div>
+    <p class="muted">再补一句加分项："出票前我会四确认——运价三件套齐全、在 TK 时限内、姓名与证件一致、航段无误；客人报查不到票，我先用 DETR:NI 按身份证号查状态。"</p>
+  </div>
+</section>
+
+<!-- ============ GDS 三大系统模拟 ============ -->
+<section id="tab-gdslab" class="tab">
+  <div class="card">
+    <div class="weekbar"><h3>🌐 三大 GDS 系统实操</h3><span class="badge blue">国际业务必备</span></div>
+    <p>GDS（全球分销系统）是国际机票的"基础设施"。三大系统：<b>Amadeus（1A，全球份额第一）</b>、<b>Sabre（1S，美国第一）</b>、<b>Galileo（1G，Travelport 旗下）</b>。国际机票团队日常就是"ETERM 出国内段 + GDS 出国际段"组合工作。本页给每个系统配了：完整指令表 + 真实订票流程仿真模拟器。</p>
+    <div class="tip">⚠️ <b>教学提示：</b>三个模拟器为教学仿真环境，指令为通用教学格式、回显为演示数据；各系统指令会随版本更新，入职后以公司培训手册为准。</div>
+  </div>
+
+  <h2 class="sec">1️⃣ Amadeus（1A）<span class="sub">全球第一 · 欧洲起家 · 指令简洁</span></h2>
+  <div class="card">
+    <p>Amadeus 由法航/汉莎/伊比利亚航空 1987 年创立，全球份额第一，国内大代理的国际票团队几乎必用。指令风格：<b>指令代码 + 参数连写</b>，没有冒号。订座流程：查航班 AN → 订座 SS → 姓名 NM → 电话 AP → 时限 TKTL → 封口 ET → 提取 RT → 计价 FXP → 出票 TTP。</p>
+    <table class="tbl">
+      <tr><th style="width:220px">指令</th><th>说明</th></tr>
+      <tr><td><code>JI1001AB/SU</code></td><td>登录：JI工作号/密码（SU=默认密码格式）；退出用 JO</td></tr>
+      <tr><td><code>AN20OCTPEKFRA</code></td><td>可用航班查询：AN日期城市对；加 /ACA 只查国航、/Y 只查Y舱</td></tr>
+      <tr><td><code>SN20OCTPEKFRA</code></td><td>航班时刻表查询</td></tr>
+      <tr><td><code>DO1</code></td><td>查看可用列表第1行的航班详情（机型/经停/餐食）</td></tr>
+      <tr><td><code>SS1Y1</code></td><td>订座：SS行号舱位人数（第1行Y舱1人），回显 HK=确认</td></tr>
+      <tr><td><code>NM1ZHANG/SAN MR</code></td><td>姓名：NM人数姓/名 称谓（MR先生/MS女士/CHD儿童）</td></tr>
+      <tr><td><code>AP PEK 13800138000</code></td><td>电话；邮箱用 APE- EMAIL@XX.COM</td></tr>
+      <tr><td><code>TKTL20OCT</code></td><td>出票时限（TKOK=无时限）；收到自 RF ZHANG</td></tr>
+      <tr><td><code>ET</code></td><td>封口保存（End Transaction），返回6位记录编号；ER=封口并提取</td></tr>
+      <tr><td><code>RT2ABC3D</code></td><td>提取PNR；XE1=取消元素1；IG=忽略修改；RH=历史记录</td></tr>
+      <tr><td><code>FQD PEKFRA</code></td><td>运价显示（查询某航线票价）</td></tr>
+      <tr><td><code>FXP</code></td><td>对PNR整体计价（返回票价+税费+总价）；TQT=查看计价记录(TST)</td></tr>
+      <tr><td><code>TTP</code></td><td>出电子票；TWD/TKT125-1234567890=查验电子客票</td></tr>
+    </table>
+    <p class="muted">面试点：Amadeus 出国际票 = AN 查舱位余座 → SS 订座 → ET 封口 → FXP 计价 → TTP 出票。记住"封口指令是 ET"。</p>
+  </div>
+  <div id="amaLab"></div>
+
+  <h2 class="sec">2️⃣ Galileo（1G）<span class="sub">Travelport 旗下 · 指令紧凑</span></h2>
+  <div class="card">
+    <p>Galileo 1987 年由美欧多家航司联合投资创立，现属 Travelport（与 Worldspan 合并后成为其主系统）——所以它既深度对接美籍航司，在欧洲中转市场也很强。指令风格紧凑：查询 A、订座 N、封口 E、提取用 <b>*</b>。流程：SON 登录 → A 查航班 → N1Y1 订座 → N. 姓名 → P. 电话 → E 封口 → * 提取 → FQ 计价 → TKP 出票。</p>
+    <table class="tbl">
+      <tr><th style="width:220px">指令</th><th>说明</th></tr>
+      <tr><td><code>SON/Z1PEK</code></td><td>登录（格式随公司配置变化）；退出 SOF</td></tr>
+      <tr><td><code>A20OCTPEKCAN</code></td><td>可用航班：A日期城市对</td></tr>
+      <tr><td><code>T20OCTPEKCAN</code></td><td>时刻表查询</td></tr>
+      <tr><td><code>N1Y1</code></td><td>订座：N行号舱位人数（第1行Y舱1人）</td></tr>
+      <tr><td><code>N.N1ZHANG/SAN MR</code></td><td>姓名：N.人数姓/名 称谓</td></tr>
+      <tr><td><code>P.PEK13800138000</code></td><td>电话：P.城市号码</td></tr>
+      <tr><td><code>T.TAU/</code></td><td>出票安排（Ticketing Arrangement）</td></tr>
+      <tr><td><code>E</code></td><td>封口保存，返回记录编号</td></tr>
+      <tr><td><code>*AB12CD</code></td><td>提取PNR；X1=取消元素1；I=忽略；*H=历史</td></tr>
+      <tr><td><code>FDPEKPVG-20OCT</code></td><td>运价显示</td></tr>
+      <tr><td><code>FQ</code></td><td>对PNR计价</td></tr>
+      <tr><td><code>TKP</code></td><td>出票（Ticket Print）</td></tr>
+    </table>
+    <p class="muted">面试点：Galileo 的特色是"点号字段"——姓名 N.、电话 P.、出票安排 T.，封口只有一个 E。提取指令是 *（星号）。</p>
+  </div>
+  <div id="galLab"></div>
+
+  <h2 class="sec">3️⃣ Sabre（1S）<span class="sub">美国第一 · 指令以数字开头</span></h2>
+  <div class="card">
+    <p>Sabre 源自美国航空，美国市场第一，美线/美洲航线团队必备。指令特色：<b>很多指令以数字开头</b>（1查航班、0订座、9电话、6封口）。流程：SI 登录 → 1 查航班 → 0Y1 订座 → 1姓名 → 9电话 → 6* 封口 → * 提取 → WP 计价。</p>
+    <table class="tbl">
+      <tr><th style="width:220px">指令</th><th>说明</th></tr>
+      <tr><td><code>SI1001AB/SU</code></td><td>登录：SI工作号/密码；退出 SOF</td></tr>
+      <tr><td><code>120OCTPEKSHA</code></td><td>可用航班：1日期城市对</td></tr>
+      <tr><td><code>1S20OCTPEKSHA</code></td><td>时刻表查询</td></tr>
+      <tr><td><code>0Y1</code></td><td>订座：0舱位行号（第1行Y舱1人）</td></tr>
+      <tr><td><code>1ZHANG/SAN MR</code></td><td>姓名：1姓/名 称谓</td></tr>
+      <tr><td><code>9PEK13800138000</code></td><td>电话：9城市号码</td></tr>
+      <tr><td><code>7TAW/</code></td><td>出票安排（Ticketing Arrangement）</td></tr>
+      <tr><td><code>6ZHANG</code></td><td>收到自：6姓名</td></tr>
+      <tr><td><code>6*</code></td><td>封口保存（E 亦可），返回记录编号</td></tr>
+      <tr><td><code>*AB12CD</code></td><td>提取PNR；XE1=取消元素；I=忽略；*H=历史</td></tr>
+      <tr><td><code>FQPEKSHA-20OCT</code></td><td>运价显示</td></tr>
+      <tr><td><code>WP</code></td><td>对PNR计价（Workbench Price）；PQ=查看计价记录</td></tr>
+    </table>
+    <p class="muted">面试点：Sabre 的"数字指令"是特色——1查、0订、9电话、6封口。美线团队常用，问"用过 Sabre 吗"时能背出 0Y1/6* 就过关。</p>
+  </div>
+  <div id="sabLab"></div>
+
+  <div class="card">
+    <div class="weekbar"><h3>🎤 面试金句：三大 GDS 对比</h3></div>
+    <div class="quote">"三大 GDS 我都会基础操作：Amadeus 用 AN 查航班、SS 订座、ET 封口、FXP/TTP 计价出票；Galileo 用 A/N 订座、E 封口、TKP 出票；Sabre 用 1 查航班、0 订座、6* 封口、WP 计价。三套系统流程一样——查询、订座、封口、计价、出票——只是指令长得不同，上手很快。"</div>
+  </div>
+</section>
+
+<!-- ============ 退改签与国际换开 ============ -->
+<section id="tab-chg" class="tab">
+  <div class="card">
+    <div class="weekbar"><h3>🔄 退改签与国际换开</h3><span class="badge red">票务核心 · 面试必考</span></div>
+    <p>出票只是开始——<b>票务岗位 70% 的日常工作在退改签</b>。本页从概念到实操全覆盖：改签（自愿变更）、退票（Refund）、国际换开（Reissue）、各航司规则框架、金额计算器，外加三套仿真终端实战。</p>
+    <div class="tip">⚠️ 所有规则与数字均为<b>教学参考值</b>（行业公开规则框架），真实业务以出票时运价规则（fare rules）为准——面试的正确答法永远是"以运价规则为准，按 Cat 16 条款执行"。</div>
+  </div>
+
+  <h2 class="sec">① 核心概念 <span class="sub">先把行话说对</span></h2>
+  <div class="card">
+    <table class="tbl">
+      <tr><th style="width:160px">概念</th><th>含义（面试高频）</th></tr>
+      <tr><td>自愿变更 (Voluntary)</td><td>旅客自身原因改期/退票 → 按运价规则收手续费</td></tr>
+      <tr><td>非自愿变更 (Involuntary)</td><td>航司原因（延误/取消/时刻变更）→ 免费改退，甚至可要求补偿</td></tr>
+      <tr><td>改签 (Change)</td><td>改日期/航班；票价不变仅收手续费；票价变化则走换开</td></tr>
+      <tr><td>换开 (Reissue)</td><td>原票作废换新票号，原票价值结转进新票（旧票状态 EXCHANGED）</td></tr>
+      <tr><td>退票 (Refund)</td><td>按规则扣手续费后，余额退回原支付渠道（状态 REFUNDED）</td></tr>
+      <tr><td>Cat 16</td><td>运价规则第16类条款 = 退改签罚则，所有手续费的依据都在这里</td></tr>
+      <tr><td>EMD</td><td>电子多用途凭证：换开产生的残值/服务费出成 EMD 给旅客</td></tr>
+      <tr><td>ADM</td><td>航司对代理的罚单（错退/错收/超时限出票等操作错误）——老票务谈 ADM 管控非常加分</td></tr>
+      <tr><td>No-show</td><td>误机：旅客未乘机，多数航司 no-show 后退改费更高、部分票直接作废</td></tr>
+      <tr><td>客票有效期</td><td>一般自出票日起 1 年；退票须在有效期内办理</td></tr>
+    </table>
+  </div>
+
+  <h2 class="sec">② 改签实操 <span class="sub">同舱改期 + 跨舱换开</span></h2>
+  <div class="card acc">
+    <div class="acc-head">▸ 改签完整流程与金额计算</div>
+    <div class="acc-body">
+      <p><b>ETERM 改签流程（六字诀：先取、再改、后封）：</b></p>
+      <div class="stepflow">
+        <div class="sf">RT 提取<small>RT:H4J8KL</small></div>
+        <div class="sf">取消旧段<small>XE:1</small></div>
+        <div class="sf">订新航段<small>SS:航班/舱位/新日期/NN1</small></div>
+        <div class="sf">封口<small>@</small></div>
+        <div class="sf">验票<small>DETR 查状态</small></div>
+      </div>
+      <p><b>金额计算两条路：</b></p>
+      <div class="codebox">① 同舱改期（票价不变）：只收改签手续费（如 CNY200），票号不变，改完 PNR 即生效
+② 跨舱/票价变化：必须换开——新票价 − 原票价 + 改签手续费 = 应收金额
+   例：原票1350 → 改B舱2430，手续费200 → 应收 2430−1350+200 = CNY1280</div>
+      <p class="muted">面试点："客人要改期怎么办"→ 先查原票状态（DETR）→ 查新航班（AV）→ 比价（PAT:A/QTE）→ 报价（差额+手续费）→ 客人确认后 RT→XE→SS→@。<b>先报价再操作！</b></p>
+    </div>
+  </div>
+
+  <h2 class="sec">③ 退票实操 <span class="sub">手续费梯度 + TRFD</span></h2>
+  <div class="card acc">
+    <div class="acc-head">▸ 退票流程、手续费逻辑与红线</div>
+    <div class="acc-body">
+      <p><b>退票流程：验票 → 查规则 → 算应退 → 退票 → 复核</b></p>
+      <div class="stepflow">
+        <div class="sf">验票<small>DETR:TN/票号 查状态</small></div>
+        <div class="sf">查规则<small>XS FSD 看 Cat16</small></div>
+        <div class="sf">算应退<small>票价−退票手续费</small></div>
+        <div class="sf">执行退票<small>TRFD:AM/1/D</small></div>
+        <div class="sf">复核<small>DETR 显示 REFUNDED</small></div>
+      </div>
+      <p><b>手续费梯度逻辑（教学示意）：</b>起飞前越早退越便宜，起飞后退最贵；舱位越高越宽松。</p>
+      <div class="codebox">例（教学示意）：
+Y舱  起飞前24h以上免费退 → 24h内退10% → 起飞后20%
+H舱  起飞前24h以上退20% → 24h内退30% → 起飞后50%
+特价E舱 不退不改（或只退税费）</div>
+      <p><b>红线（面试加分）：</b>① 退票前必须确认是否<b>非自愿</b>（航变免费退，收错费会吃 ADM）；② no-show 后退票费率更高或不可退；③ 国际票退票周期长（需航司结算），要提前管理旅客预期；④ 已用部分航段的客票按"半程使用"规则计算残值。</p>
+    </div>
+  </div>
+
+  <h2 class="sec">④ 国际换开专题 <span class="sub">Reissue · 票务天花板技能</span></h2>
+  <div class="card acc">
+    <div class="acc-head">▸ 什么是换开？何时必须换开？</div>
+    <div class="acc-body">
+      <p><b>换开（Reissue）= 原票作废、新票生成，原票价值（票价部分）结转进新票。</b>换开后：旧票状态变 EXCHANGED，新票是全新 13 位票号，票面标注 EXCHANGED FROM 原票号。</p>
+      <p><b>何时必须换开（对照何时只需改 PNR）：</b></p>
+      <table class="tbl">
+        <tr><th style="width:240px">场景</th><th>处理方式</th></tr>
+        <tr><td>同舱位改日期</td><td>改 PNR 即可，票号不变（部分航司收手续费）</td></tr>
+        <tr><td>升舱/降舱、票价变化</td><td>必须换开：补差价+手续费，出新票号</td></tr>
+        <tr><td>改航线（目的地变化）</td><td>必须换开（原票价值可部分结转）</td></tr>
+        <tr><td>换航司</td><td>一般需退旧票重开（部分联盟内可换开）</td></tr>
+        <tr><td>国际票改期（多数航司）</td><td>换开：国际票普遍按 Reissue 处理</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card acc">
+    <div class="acc-head">▸ 换开四要素 + 金额计算案例 + Amadeus 指令流</div>
+    <div class="acc-body">
+      <p><b>换开四要素（面试答这个结构直接封神）：</b></p>
+      <div class="stepflow">
+        <div class="sf">原票价值<small>FO行：原票号+原票价</small></div>
+        <div class="sf">新票价<small>FXP 重新计价</small></div>
+        <div class="sf">手续费<small>Cat16 罚则</small></div>
+        <div class="sf">差额/残值<small>补收 or 出EMD</small></div>
+      </div>
+      <p><b>核心公式：应收 = 新票价 − 原票价 + 换开手续费</b></p>
+      <div class="codebox">案例1（补差）：原票4680改期，新票价5380，手续费200
+  → 应收 5380−4680+200 = CNY900 → 收钱后换开，出新票号
+案例2（残值）：原票4680改到更低价航班，新票价3980，手续费200
+  → 3980−4680+200 = −500 → 应退 CNY500 → 出 EMD 凭证给旅客
+案例3（特价票）：原票是特价E舱（不退不改）→ 换开不划算 → 建议退了税费重买</div>
+      <p><b>Amadeus 换开指令流（教学参考）：</b></p>
+      <div class="codebox">RT2ABC3D（提取原PNR）→ XE1（取消旧段）→ SS1Y1（订新段）→ ET（封口）
+→ FXP（新票价）→ FO125-1234567890PEK20OCT16/4680.00（输入原票价值FO行）
+→ TTP/EXCH（换开出票）→ 新票号生成 → TWD 验证 EXCHANGED FROM</div>
+      <p class="muted">⚠️ 换开是票务中最容易吃 ADM 的操作：FO 行票号/金额录错、手续费算错、非自愿变更误收手续费——都会被航司开罚单。老票务经验：换开前先打印原票记录、双人复核 FO 行、留存报价沟通记录。</p>
+    </div>
+  </div>
+
+  <h2 class="sec">⑤ 各航司退改签规则 <span class="sub">教学参考 · 实际以运价规则为准</span></h2>
+  <div class="card"><p class="muted">以下为<b>教学参考值</b>（行业公开规则框架），真实规则随舱位/航线/出票日期变化。面试正确姿势："我不会背死数字，但我懂规则结构——查 fare rules 的 Cat 16 条款，按退改费梯度给客人报价。"</p></div>
+  <div id="chgRuleGrid" class="rule-grid"></div>
+
+  <h2 class="sec">⑥ 退改签金额计算器 <span class="sub">动手算一遍就懂了</span></h2>
+  <div class="card">
+    <div class="calc-row"><label>原票价（元）</label><input type="number" id="chgOld" value="1350"></div>
+    <div class="calc-row"><label>新票价（元）</label><input type="number" id="chgNew" value="1800"></div>
+    <div class="calc-row"><label>改签/换开手续费（元）</label><input type="number" id="chgFee" value="200"></div>
+    <div class="calc-row"><label>退票手续费（元）</label><input type="number" id="chgRefFee" value="300"></div>
+    <div class="calc-out">
+      <div class="box"><div class="v" id="chgOutEx">?</div><div class="k">换开应收<br>（新票价−原票价+手续费）</div></div>
+      <div class="box"><div class="v" id="chgOutEmd">?</div><div class="k">残值<br>（负数=应退/出EMD）</div></div>
+      <div class="box"><div class="v" id="chgOutRef">?</div><div class="k">退票应退<br>（原票价−退票手续费）</div></div>
+    </div>
+    <div class="calc-note" id="chgAdvice"></div>
+  </div>
+
+  <h2 class="sec">⑦ 实战模拟器 <span class="sub">三套流程亲手敲</span></h2>
+  <div class="card">
+    <p><b>场景A 同舱改期</b>（ETERM）：提取原票 → 取消旧段 → 订新段 → 封口 → 验票。<b>场景B 退票</b>（ETERM）：验票 → 查规则 → TRFD 退票 → 复核。<b>场景C 国际换开</b>（Amadeus）：改PNR → 计价 → 输FO行 → TTP/EXCH → 验证新票。</p>
+  </div>
+  <div id="etermChgLab"></div>
+  <div id="etermRefLab"></div>
+  <div id="amaChgLab"></div>
+
+  <h2 class="sec">⑧ 换开计算小测 <span class="sub">面试最爱考的算术</span></h2>
+  <div id="reissueQuiz"></div>
+
+  <div class="card">
+    <div class="weekbar"><h3>🎤 面试金句：退改签</h3></div>
+    <div class="quote">"退改签我先分清自愿还是非自愿：航司原因的延误取消，旅客免费改退，这个钱不能收错；自愿变更就查运价规则 Cat 16——同舱改期收手续费，票价变了走换开：新票价减原票价加手续费，补差或出 EMD 残值。退票按梯度扣费，特价舱不退不改的，先跟客人说清楚再操作。"</div>
+    <p class="muted">再补一句加分项："我特别关注 ADM 管控：换开前双人复核 FO 行、非自愿变更绝不收手续费、所有报价都留文字记录——这样代理不会被航司开罚单。"</p>
+  </div>
+</section>
+
+<!-- ============ 打印速查表 ============ -->
+<section id="tab-sheet" class="tab">
+  <div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap">
+    <div>
+      <div class="weekbar"><h3>📄 速查表（打印版）</h3><span class="badge green">面试前一天带一张纸</span></div>
+      <p class="muted" style="margin-top:4px">术语、常用指令、退改换开公式、17 家航司退改、面试金句，整理成约 6 页 A4（可以只打印需要的部分）。点右侧按钮直接打印，或「另存为 PDF」放进手机/平板。</p>
+    </div>
+    <button class="btn btn-p" id="printBtn" style="padding:12px 22px">🖨️ 打印 / 存为 PDF</button>
+  </div>
+  <div class="card">
+    <div id="sheetBody" class="sheet"></div>
+  </div>
+</section>
+
+</main>
+
+<div class="footer">国际机票业务 · 面试学习助手 v2.1 | 内容更新 2026-10 | 数据仅保存在本机浏览器 | 航司政策以官网最新为准 | 祝面试顺利 ✈️</div>
+</div>
+
+<div id="printArea"></div>
+
+<script>
+/* ================= 数据：术语 ================= */
+var TERMS = [
+{t:'GDS',e:'Global Distribution System 全球分销系统',c:'系统与出票',
+ s:'机票的「全球批发市场」软件。航司把座位库存接入，全球持牌代理通过它查询航班、订座、出票。',
+ w:'你的团队每天都在GDS上出票，不懂它等于不懂生产线。'},
+{t:'Amadeus',e:'阿玛迪斯（欧洲GDS）',c:'系统与出票',
+ s:'全球份额第一的GDS，欧洲起源，国际航线使用最广。',
+ w:'国际票务团队最常用的出票系统，面试提到它说明你真干过。'},
+{t:'Sabre',e:'萨博（美国GDS）',c:'系统与出票',
+ s:'美国最大的GDS，美洲航线强势，大量美国航司直连。',
+ w:'和Amadeus并称国际两大系统。'},
+{t:'Travelport',e:'Galileo / Worldspan 母公司',c:'系统与出票',
+ s:'第三大GDS，旗下有Galileo和Worldspan两个系统。',
+ w:'与Amadeus、Sabre并称「国际三大GDS」——面试常考。'},
+{t:'中航信 TravelSky',e:'中国民航信息集团',c:'系统与出票',
+ s:'中国的GDS，垄断国内航线分销。',
+ w:'做国际业务时与三大GDS配合使用；国内票走中航信。'},
+{t:'NDC',e:'New Distribution Capability 新分销能力',c:'系统与出票',
+ s:'IATA制定的数据标准：让航司绕过传统GDS的旧式票价框架，直接向渠道分销「机票+附加服务」（行李、选座、餐食），自己掌握定价权和客户数据。',
+ w:'行业最热趋势考点。大意：航司想开「直营店」，代理必须学会整合NDC内容。'},
+{t:'ATPCO',e:'Airline Tariff Publishing Company 航空运价发布公司',c:'系统与出票',
+ s:'运价的「总数据源」：全球航司把运价和规则提交给它，它统一分发给所有GDS和销售系统。',
+ w:'所有系统里的票价都源自ATPCO，是定价工作的底层依据。'},
+{t:'运价规则',e:'Fare Rules',c:'系统与出票',
+ s:'每张票价的「使用说明书」：能不能退、能不能改、改签费多少、停留限制、适用日期等。',
+ w:'退改签业务全部围绕它展开，团队必须有人吃透。'},
+{t:'联运',e:'Interline',c:'系统与出票',
+ s:'一张票由两家以上航司共同承运，如国航(上海-法兰克福)+汉莎(法兰克福-伦敦)。需要航司间有联运协议，票价按协议分摊结算。',
+ w:'懂联运=懂组合产品，很多低价票就是靠联运拼出来的。'},
+{t:'出票时限',e:'TTL / Ticketing Time Limit',c:'系统与出票',
+ s:'订座成功后必须在规定时间内完成出票付款，否则座位被系统自动取消。',
+ w:'运营时效指标，TTL管理好=订单成功率高。'},
+{t:'ADM',e:'Agency Debit Memo 代理借记单',c:'系统与出票',
+ s:'代理违规操作（错误退票、滥用规则、违规出票）被航司开的「罚单」。',
+ w:'ADM率是运营质量指标，也是风控和成本的隐形杀手。'},
+{t:'PNR',e:'Passenger Name Record 旅客订座记录',c:'系统与出票',
+ s:'一个订座对应一个六位字母数字码，相当于机票业务的「订单号」。',
+ w:'日常沟通全部围绕PNR，售后、退改、投诉都以它定位。'},
+{t:'OTA',e:'Online Travel Agency 在线旅行社',c:'渠道与玩家',
+ s:'网上卖机票的平台。国内：携程、飞猪、去哪儿、同程；国际：Expedia、Booking、Agoda。',
+ w:'既是你的对标对象（排名、流量、定价），也可能是你的渠道或对手。'},
+{t:'TMC',e:'Travel Management Company 商旅管理公司',c:'渠道与玩家',
+ s:'服务企业客户的差旅管理公司：签企业协议、月结、差旅政策管控。如携程商旅、中航嘉信。',
+ w:'企业客户是稳定量和利润的来源，TMC是主要玩家类型。'},
+{t:'Consolidator',e:'批发商 / 集采商',c:'渠道与玩家',
+ s:'凭采购量大从航司拿到优惠协议价，再批发给小代理和OTA，赚差价。',
+ w:'你的上游供应商很多就是它——供应链谈判的主要对象。'},
+{t:'代理费',e:'Commission 佣金',c:'渠道与玩家',
+ s:'航司给代理的销售佣金，传统是票价的3%-9%。',
+ w:'行业已普遍「零佣金」，要能说出代理转型后的赚钱方式。'},
+{t:'大客户协议',e:'Corporate Agreement',c:'渠道与玩家',
+ s:'企业客户与航司/代理签的定向优惠协议：保证量换折扣价。',
+ w:'头部客户的护城河，签下大客户=锁定稳定毛利。'},
+{t:'包机',e:'Charter',c:'渠道与玩家',
+ s:'把整架飞机的座位包下来自己卖，盈亏自负。适合旺季和新航线试水。',
+ w:'高风险高回报的供应链玩法，考你风险意识。'},
+{t:'切位',e:'Block Space / Allotment',c:'渠道与玩家',
+ s:'按协议价预先买断固定数量座位（如每天30个），卖不完也付钱，卖得好利润高。',
+ w:'供应链核心玩法，「用风险换成本优势」，面试常问。'},
+{t:'B2B分销',e:'Business to Business',c:'渠道与玩家',
+ s:'供应商对同业的分销。机票货流：航司→批发商→代理→旅客，层层B2B。',
+ w:'把票批发给同业小代理，是快速起量的重要渠道。'},
+{t:'BSP',e:'Billing and Settlement Plan 开账与结算计划',c:'结算与资金',
+ s:'IATA的「结算中心」：代理出票收的钱先进BSP账户，按结算周期统一划给各航司。代理需交押金、受出票额度限制。',
+ w:'资金链安全的核心。BSP额度、押金、结算周期都要盯。'},
+{t:'IATA',e:'International Air Transport Association 国际航空运输协会',c:'结算与资金',
+ s:'全球航司的行业协会：定行业标准（BSP、NDC都是它制定的），颁发代理资质。',
+ w:'合规的源头，所有规则都从IATA来。'},
+{t:'Chargeback',e:'信用卡拒付',c:'结算与资金',
+ s:'持卡人向发卡行声称「不是我消费的/没收到服务」，银行强制从商家扣回票款。',
+ w:'国际机票是拒付重灾区，毛利薄，一笔拒付=白干很多单。'},
+{t:'黑卡盗刷',e:'Fraud / Stolen Card',c:'结算与资金',
+ s:'盗用他人信用卡购票，真持卡人发现后拒付或银行追回，出票方钱票两空。',
+ w:'风控第一课题：识别特征、出票前拦截。'},
+{t:'汇率风险',e:'FX Risk',c:'结算与资金',
+ s:'向旅客收人民币，向境外供应商/航司以美元欧元结算，汇率一动毛利就动。',
+ w:'每天盯汇率是负责人的日常，定价要预留缓冲。'},
+{t:'P&L',e:'Profit and Loss 损益表',c:'经营与数据',
+ s:'一张表：收入 − 成本 − 费用 = 利润。',
+ w:'部门负责人对这张表负责——「经营者」身份的考试卷。'},
+{t:'GMV',e:'Gross Merchandise Volume 总交易额',c:'经营与数据',
+ s:'卖了多少票的流水总额。注意：GMV ≠ 收入，它含供应商成本，还会被退票冲减。',
+ w:'汇报时绝不把GMV当收入，面试考这种常识。'},
+{t:'毛利',e:'Gross Margin',c:'经营与数据',
+ s:'收入 − 直接成本（主要是出票/采购成本）。行业毛利率常见2%-5%。',
+ w:'低毛利高流水，所以规模和风控都是生命线。'},
+{t:'净利',e:'Net Profit',c:'经营与数据',
+ s:'毛利 − 费用（人力、房租、市场、行政）。最后落到手里的钱。',
+ w:'谈经营结果时最终看净利。'},
+{t:'KPI',e:'Key Performance Indicator 关键绩效指标',c:'经营与数据',
+ s:'把战略拆成可追踪的数字：GMV、毛利、退票率、投诉率、渗透率……',
+ w:'面试必问「你怎么定KPI」，要能分层：结果指标+过程指标。'},
+{t:'航线渗透率',e:'Route Penetration',c:'经营与数据',
+ s:'某航线市场总量中你的份额。如某航线月客流10万人次，你出2万张，渗透率20%。',
+ w:'衡量单条航线竞争力的核心指标。'},
+{t:'客单价',e:'AOV / Average Order Value',c:'经营与数据',
+ s:'平均每单交易额。受航线结构、舱位结构影响。',
+ w:'提客单价=卖更贵的舱位和航线，是毛利杠杆之一。'},
+{t:'复购率',e:'Repurchase Rate',c:'经营与数据',
+ s:'老客户回头比例。出行是低频消费，个人复购率低是行业常态。',
+ w:'所以要靠企业商旅客户和会员运营提客户价值。'},
+{t:'退票率',e:'Refund Rate',c:'经营与数据',
+ s:'退票订单占比。健康值通常低于8%，过高说明政策问题（竞对更宽松）或服务问题。',
+ w:'退票吃收入、吃毛利、还带来资金压力，是风控核心指标。'},
+{t:'转化率',e:'Conversion Rate',c:'经营与数据',
+ s:'访问/询价 → 成交的比例。流量运营的核心指标。',
+ w:'投放效率的衡量标准。'},
+{t:'O&D',e:'Origin & Destination 出发地-目的地',c:'经营与数据',
+ s:'分析市场的基本单位：不是看「某航司」，而是看「某条出发地-目的地市场」的供需和价格。',
+ w:'航线分析的标准口径。'},
+{t:'淡旺季',e:'Peak / Off-peak Season',c:'经营与数据',
+ s:'暑期、国庆、春节、圣诞是旺季；3月、11月是传统淡季。',
+ w:'运力投放、采购、定价全部围绕淡旺季周期做规划。'},
+{t:'双边航空协议',e:'Bilateral Air Service Agreement',c:'政策与合规',
+ s:'两国政府间的协定：决定两国间能飞哪些航线、多少班次、由哪些航司承运。',
+ w:'地缘政治（断航、制裁）直接影响供给，要实时跟踪。'},
+{t:'自愿/非自愿退改',e:'Voluntary / Involuntary Change',c:'政策与合规',
+ s:'自愿=旅客自己要改，按运价规则收改签费；非自愿=航司原因（航班取消、时刻变更），一般免费。',
+ w:'分清二者是运营基本功，搞错了会被开ADM罚款。'},
+{t:'超售',e:'Overbooking',c:'政策与合规',
+ s:'航司按历史no-show率多卖座位，赌部分旅客不来，偶发「没座位」纠纷。',
+ w:'遇到超售纠纷要知道怎么安抚旅客、协助改签保障。'}
+];
+
+/* ================= 数据：GDS指令 ================= */
+var GDS_CMDS = [
+{sys:'Amadeus',full:'阿玛迪斯 · 全球份额第一',cmds:[
+ {c:'AN20JULPEKFRA',d:'查询7月20日 北京→法兰克福 的可用航班和舱位（Availability）'},
+ {c:'SN20JULPEKFRA',d:'查询时刻表/班期（Schedule）'},
+ {c:'DO1',d:'查看第1行航班详情（时刻、机型、餐食）'},
+ {c:'SS1Y2',d:'从显示第2行订1个Y舱座位（Sell）'},
+ {c:'NM1SMITH/JOHN MR',d:'录入旅客姓名（MR为称谓）'},
+ {c:'AP PEK 010-12345678',d:'录入联系电话'},
+ {c:'APE- EMAIL@XX.COM',d:'录入邮箱（接收行程单）'},
+ {c:'TK OK',d:'确认出票状态；TKTL20JUL 设出票时限'},
+ {c:'ET',d:'保存并结束交易（End Transaction）'},
+ {c:'RT ABC123',d:'提取PNR（按记录编号）'},
+ {c:'FQD PEKFRA',d:'查询公布运价（Fare Quote Display）'},
+ {c:'FXP',d:'对PNR计价，自动匹配最低可用价'},
+ {c:'TQT',d:'查看计价记录TST（Transitional Stored Ticket）'},
+ {c:'TTP',d:'出电子票（Ticket）'},
+ {c:'XE1',d:'取消PNR第1个元素（如取消航段）'},
+ {c:'QEP1',d:'进入队列1处理（Queue Entry）'},
+ {c:'FQN1',d:'查看第1个运价的规则条款（Fare Quote Notes）'}
+]},
+{sys:'Sabre',full:'萨博 · 美国及美洲强势',cmds:[
+ {c:'1PEKFRA20JUL',d:'查询可用座位（第1种显示方式）'},
+ {c:'0Y2',d:'从显示第2行订1个Y舱座位'},
+ {c:'0.1SMITH/JOHN MR',d:'在姓名栏1录入旅客'},
+ {c:'9PEK010-12345678',d:'录入联系电话'},
+ {c:'7TAW/',d:'设置出票时限（Ticketing Arrangement）'},
+ {c:'E',d:'保存；ER 保存并提取'},
+ {c:'*ABC123',d:'提取PNR'},
+ {c:'WP',d:'计价（Fare Quote）；WPNC 计价并保存'},
+ {c:'PQ',d:'查看已保存的计价记录'},
+ {c:'RD*',d:'查看运价规则（Rule Display）'},
+ {c:'W¥EM',d:'出电子票并镜像（¥为键盘结束键）'},
+ {c:'XE2',d:'取消PNR第2个元素'},
+ {c:'QP/1',d:'把PNR放入队列1 / 进入队列处理'}
+]},
+{sys:'Galileo / Worldspan (Travelport)',full:'第三大GDS · 报价灵活',cmds:[
+ {c:'A20JULPEKFRA',d:'查询可用座位'},
+ {c:'N.SMITH/JOHN MR',d:'录入旅客姓名'},
+ {c:'S1Y2',d:'从显示第2行订1个Y舱座位'},
+ {c:'P.PEK*010-12345678',d:'录入联系电话'},
+ {c:'E',d:'保存PNR'},
+ {c:'*ABC123',d:'提取PNR'},
+ {c:'FQ',d:'计价'},
+ {c:'TKP',d:'出票（电子票指令以系统当前版本为准）'},
+ {c:'XI2',d:'取消PNR第2个元素'},
+ {c:'QP1',d:'进入队列1处理'}
+]}
+];
+
+/* ================= 数据：后台逻辑 ================= */
+var BACKOFFICE = [
+{n:'订座舱位 RBD（Reservation Booking Designator）',d:'26个舱位代码（F/C/Y/B/M/H/K/L…）是航司库存管理的「格子」，每个舱位有配额，卖完自动关舱。航班有没有票，看的不是「有没有座位」，而是「你要的舱位开没开」。'},
+{n:'舱位嵌套 Nested Inventory',d:'高舱位可以向下「借用」低舱位的配额。比如Y舱卖完，系统可能自动从B舱配额里给位。库存本质是树状嵌套结构，理解这点才能理解「为什么同一个航班不同价格都能出票」。'},
+{n:'订座舱位 ≠ 运价舱位',d:'订座舱位管「有没有位」，运价舱位管「卖多少钱」。一张票完全可能「用Y舱的位、按B舱的价格」出——这是票价计算的日常，不是系统错误。'},
+{n:'航段状态码',d:'HK=已确认、HL=候补、HN=需求（待申请）、HX=已取消、UN=未处理。看PNR先看状态码，团队审单效率翻倍。'},
+{n:'TTL出票时限',d:'订座≠成交。航司给每个订座一个出票deadline，超时未出票座位自动取消。运营团队靠「出票队列」盯守TTL——订单成功率的核心环节。'},
+{n:'PNR生命周期与五大要素',d:'PNR=姓名(NM)+航段(SS)+电话(AP)+出票(TK)+签注(RMK)。生命周期：创建→订座→计价→出票→使用→归档。售后、退改、投诉都以PNR为定位单位。'},
+{n:'联程段 Married Segments',d:'航司把两段绑定「同订同取消」，防止旅客只买便宜段（如只买长航线的前半段）。拆段销售会被开ADM。'},
+{n:'队列 Queue 管理',d:'系统自动把待出票、待清位、待退改的PNR放进不同队列，运营团队流水线处理。队列清空速度=团队执行力的直接体现。'},
+{n:'运价计算逻辑',d:'NUC中性货币单位计价 → ROE折算为本地货币 → 叠加税费(XT/YQ/YR) → 最终票价。任何系统显示的票价都是这条流水线的产物。'},
+{n:'Fare Basis 解读',d:'票价代码如「BEE30」：首位字母=订座舱位，后续字符代表票价类型/季节/停留限制等，各航司编码规则不同。团队必须有人会读Fare Basis。'},
+{n:'ADM/ACM 逻辑',d:'代理违规→航司开ADM借记单扣款；航司欠代理→ACM贷记单。ADM有争议可申诉（保留出票时点的运价证据是关键）。ADM率是运营质量指标。'},
+{n:'GDS费用逻辑（行业变革的钱逻辑）',d:'航司每卖一张GDS票要给GDS付「segment fee」，代理也要付交易使用费。航司为了省这笔钱+拿回数据，才推NDC和直连——理解钱，就理解了整个行业变革的方向。'}
+];
+
+/* ================= 数据：航司 ================= */
+var CARRIERS = [
+{code:'FR',name:'瑞安航空 Ryanair',region:'欧洲',type:'ULCC',alliance:'无联盟',base:'都柏林DUB、伦敦STN等',channel:'官网+NDC为主，不进传统GDS主流分销',bag:'仅1件40×25×20cm小件免费，登机箱/托运必须提前在线买',change:'基础票不可改，改签收改签费+差价，越晚越贵',refund:'低价票不退，仅退未使用税费；航变非自愿可全额退',checkin:'强制在线值机，机场柜台值机收费且可能被拒，迟到不候',tip:'欧洲最大ULCC；票价极低靠辅营收费盈利；随身仅小包、机场值机收费是投诉高发点；代理售后多需回官网办理'},
+{code:'AS',name:'阿拉斯加航空 Alaska Airlines',region:'美洲',type:'FSC',alliance:'寰宇一家',base:'西雅图SEA、安克雷奇ANC',channel:'Sabre为主+NDC',bag:'首件托运约$35起（提前在线更便宜），随身1件+个人物品',change:'主舱改签免改签费、只补差价；Saver/Basic 限制多',refund:'可退票种按规则退；美国DOT规则：起飞前7天以上购票，24小时内可免费取消',checkin:'在线/机场均可，国内建议提前24小时在线值机',tip:'2024年完成收购夏威夷航空HA；与AA深度代码共享，美线联程常与AA/寰宇成员组合；Mileage Plan里程计划口碑好'},
+{code:'VY',name:'伏林航空 Vueling',region:'欧洲',type:'LCC',alliance:'无联盟（IAG集团）',base:'巴塞罗那BCN',channel:'官网+部分GDS/NDC',bag:'基础票仅随身小包，登机箱/托运需另购',change:'收改签费+差价，票种等级越高越宽松；Basic限制多',refund:'Basic不退只退税费；Optima/TimeFlex 等票种按规则可退',checkin:'在线值机为主，机场柜台可能收费，选座/打印登机牌另收费',tip:'IAG旗下（与英航BA、伊比利亚IB同集团），欧洲内部网络密集；卖它必须提前讲清行李、选座、值机都要另收费'},
+{code:'U2',name:'易捷航空 easyJet',region:'欧洲',type:'LCC',alliance:'无联盟',base:'伦敦LTN/LGW',channel:'官网直连为主，传统GDS基本不接',bag:'小件免费，大件付费',change:'改签收费+补差价',refund:'低价票不退',checkin:'在线值机',tip:'欧洲第二大LCC；坚持直连销售，接入它要走官网/API'},
+{code:'W6',name:'维兹航空 Wizz Air',region:'欧洲',type:'ULCC',alliance:'无联盟',base:'布达佩斯BUD',channel:'官网+NDC',bag:'小件免费，其余付费',change:'基本不可改',refund:'基本不退',checkin:'在线值机',tip:'中东欧/巴尔干网络；会员订阅制Wizz Discount Club'},
+{code:'IB',name:'伊比利亚航空 Iberia',region:'欧洲',type:'FSC',alliance:'寰宇一家',base:'马德里MAD',channel:'GDS+NDC',bag:'多数票价含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'拉美航线强（西语市场）；与BA同属IAG集团'},
+{code:'BA',name:'英国航空 British Airways',region:'欧洲',type:'FSC',alliance:'寰宇一家',base:'伦敦LHR',channel:'GDS+NDC（NDC推进积极）',bag:'多数票价含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'曾对部分GDS渠道征收附加费，推动代理走NDC——行业标志性案例'},
+{code:'LH',name:'汉莎航空 Lufthansa',region:'欧洲',type:'FSC',alliance:'星空联盟',base:'法兰克福FRA、慕尼黑MUC',channel:'GDS+NDC',bag:'多数票价含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'2015年起对GDS出票收每张约16欧元「分销费DCC」，NDC渠道优先——面试谈行业变革必提'},
+{code:'AF',name:'法国航空 Air France',region:'欧洲',type:'FSC',alliance:'天合联盟',base:'巴黎CDG',channel:'GDS+NDC',bag:'多数票价含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'与荷航KL同属法荷航集团'},
+{code:'KL',name:'荷兰皇家航空 KLM',region:'欧洲',type:'FSC',alliance:'天合联盟',base:'阿姆斯特丹AMS',channel:'GDS+NDC',bag:'多数票价含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'欧洲中转枢纽AMS；与法航AF同集团，联程产品常用'},
+{code:'TK',name:'土耳其航空 Turkish Airlines',region:'欧洲',type:'FSC',alliance:'星空联盟',base:'伊斯坦布尔IST',channel:'GDS全接入',bag:'含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'通航国家数全球前列；伊斯坦布尔中转，符合条件提供免费中转住宿(STPC)是特色'},
+{code:'UA',name:'美联航 United Airlines',region:'美洲',type:'FSC',alliance:'星空联盟',base:'芝加哥ORD、丹佛DEN、旧金山SFO等',channel:'GDS+NDC（NDC积极）',bag:'国内线基础票无托运',change:'主舱免改签费',refund:'Basic不退',checkin:'在线/机场均可',tip:'美国三大之一；NDC渠道内容逐步丰富'},
+{code:'AA',name:'美国航空 American Airlines',region:'美洲',type:'FSC',alliance:'寰宇一家',base:'达拉斯DFW、夏洛特CLT、迈阿密MIA等',channel:'传统GDS+NDC',bag:'国内线基础票无托运',change:'主舱免改签费',refund:'Basic不退',checkin:'在线/机场均可',tip:'2023年激进推进NDC战略，部分内容撤出传统GDS，引发行业震动——重要考点'},
+{code:'DL',name:'达美航空 Delta Air Lines',region:'美洲',type:'FSC',alliance:'天合联盟',base:'亚特兰大ATL、底特律DTW等',channel:'GDS+NDC+直连',bag:'国内线基础票无托运',change:'主舱免改签费',refund:'Basic不退',checkin:'在线/机场均可',tip:'直连技术投入大，自建销售渠道能力强'},
+{code:'B6',name:'捷蓝航空 JetBlue',region:'美洲',type:'混合',alliance:'无联盟',base:'纽约JFK、波士顿BOS',channel:'Sabre+NDC',bag:'基础票无托运',change:'按票价类型',refund:'基础票不退',checkin:'在线/机场均可',tip:'2024年收购Spirit案被法院阻止；跨大西洋Mint商务舱是特色'},
+{code:'NK',name:'精神航空 Spirit Airlines',region:'美洲',type:'ULCC',alliance:'无联盟',base:'劳德代尔堡FLL',channel:'官网+OTA为主',bag:'几乎全部收费',change:'付费改签',refund:'基本不退',checkin:'在线值机',tip:'2024年申请破产保护，2025年与Frontier的合并谈判反复（是否完成以官方公告为准）'},
+{code:'F9',name:'边疆航空 Frontier Airlines',region:'美洲',type:'ULCC',alliance:'无联盟',base:'丹佛DEN',channel:'官网+NDC',bag:'付费',change:'付费改签',refund:'基本不退',checkin:'在线值机',tip:'基础票价+捆绑套餐模式；GoWild! Pass订阅制产品'},
+{code:'AC',name:'加拿大航空 Air Canada',region:'美洲',type:'FSC',alliance:'星空联盟',base:'多伦多YYZ、蒙特利尔YUL、温哥华YVR',channel:'GDS+NDC',bag:'多数票价含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'加拿大最大航司；北美-亚洲中转产品多'},
+{code:'WS',name:'西捷航空 WestJet',region:'美洲',type:'混合',alliance:'无联盟（与DL/AF-KLM等代码共享）',base:'卡尔加里YYC',channel:'GDS+NDC',bag:'基础票无托运',change:'按票价类型',refund:'基础票不退',checkin:'在线/机场均可',tip:'2023年收购Sunwing；加拿大国内双寡头之一'},
+{code:'SQ',name:'新加坡航空 Singapore Airlines',region:'亚洲',type:'FSC',alliance:'星空联盟',base:'新加坡SIN',channel:'GDS+NDC',bag:'多数票价含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'服务标杆；旗下LCC为酷航Scoot(TR)；KrisFlyer常客体系'},
+{code:'CX',name:'国泰航空 Cathay Pacific',region:'亚洲',type:'FSC',alliance:'寰宇一家',base:'香港HKG',channel:'GDS+NDC',bag:'多数票价含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'旗下LCC为香港快运HK Express(UO)；大湾区中转枢纽'},
+{code:'NH',name:'全日空 ANA',region:'亚洲',type:'FSC',alliance:'星空联盟',base:'东京HND/NRT',channel:'GDS+NDC',bag:'多数票价含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'旗下LCC为乐桃航空Peach(MM)；日本国内线常配合JR产品'},
+{code:'JL',name:'日本航空 Japan Airlines',region:'亚洲',type:'FSC',alliance:'寰宇一家',base:'东京HND/NRT',channel:'GDS+NDC',bag:'多数票价含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'旗下LCC为ZIPAIR(ZG)；日式服务口碑'},
+{code:'KE',name:'大韩航空 Korean Air',region:'亚洲',type:'FSC',alliance:'天合联盟',base:'首尔仁川ICN',channel:'GDS+NDC',bag:'多数票价含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'2024年获批收购韩亚OZ，合并后跻身全球前列；仁川中转北美强'},
+{code:'OZ',name:'韩亚航空 Asiana Airlines',region:'亚洲',type:'FSC',alliance:'天合联盟',base:'首尔仁川ICN',channel:'GDS+NDC',bag:'多数票价含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'被大韩航空KE收购整合中，政策以KE公告为准'},
+{code:'TR',name:'酷航 Scoot',region:'亚洲',type:'LCC',alliance:'无联盟（新航旗下）',base:'新加坡SIN',channel:'官网+GDS部分接入',bag:'小件免费，大件付费',change:'付费改签',refund:'低价票不退',checkin:'在线值机',tip:'东南亚/澳洲中长途LCC；与新航SQ同集团，可组合产品'},
+{code:'AK',name:'亚洲航空 AirAsia',region:'亚洲',type:'LCC',alliance:'无联盟',base:'吉隆坡KUL',channel:'官网+OTA聚合为主',bag:'小件免费，大件付费',change:'付费改签',refund:'低价票不退',checkin:'在线值机',tip:'亚洲最大LCC集团；含泰国亚航FD、印尼亚航QZ、长途亚航X(D7)等子公司，各子公司政策有差异'},
+{code:'CA',name:'中国国际航空 Air China',region:'亚洲',type:'FSC',alliance:'星空联盟',base:'北京PEK',channel:'GDS(中航信)+NDC',bag:'多数票价含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'国航系含深航ZH、山航SC；北京枢纽国际中转'},
+{code:'MU',name:'中国东方航空 China Eastern',region:'亚洲',type:'FSC',alliance:'天合联盟',base:'上海PVG',channel:'GDS(中航信)+NDC',bag:'多数票价含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'上海枢纽；与达美DL、法荷航联营跨太平洋'},
+{code:'CZ',name:'中国南方航空 China Southern',region:'亚洲',type:'FSC',alliance:'无联盟（2019年1月退出天合）',base:'广州CAN',channel:'GDS(中航信)+NDC',bag:'多数票价含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'退盟后以双边合作/代码共享为主，与AA/QF/BA等有合作；广州-澳新航线强'},
+{code:'HU',name:'海南航空 Hainan Airlines',region:'亚洲',type:'FSC',alliance:'无联盟',base:'海口HAK、北京',channel:'GDS(中航信)+NDC',bag:'多数票价含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'国际航线以欧美直飞为特色，非联盟靠双边合作'},
+{code:'EK',name:'阿联酋航空 Emirates',region:'中东',type:'FSC',alliance:'无联盟（合作广泛）',base:'迪拜DXB',channel:'GDS+NDC',bag:'含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'全宽体机队（A380/777）；迪拜中转高端市场；代理佣金政策传统较友好'},
+{code:'QR',name:'卡塔尔航空 Qatar Airways',region:'中东',type:'FSC',alliance:'寰宇一家',base:'多哈DOH',channel:'GDS+NDC',bag:'含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'Qsuite商务舱营销标杆；多哈中转欧亚澳网络强'},
+{code:'EY',name:'阿提哈德航空 Etihad',region:'中东',type:'FSC',alliance:'无联盟',base:'阿布扎比AUH',channel:'GDS+NDC',bag:'含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'非联盟，靠与各航司双边代码共享合作'},
+{code:'QF',name:'澳洲航空 Qantas',region:'大洋洲',type:'FSC',alliance:'寰宇一家',base:'悉尼SYD、墨尔本MEL',channel:'GDS+NDC',bag:'多数票价含1件托运',change:'按运价规则',refund:'按运价规则',checkin:'在线/机场均可',tip:'旗下LCC为捷星Jetstar(JQ)；澳洲-欧美长航线'},
+{code:'JQ',name:'捷星航空 Jetstar',region:'大洋洲',type:'LCC',alliance:'无联盟（澳航旗下）',base:'墨尔本MEL',channel:'官网+GDS部分接入',bag:'小件免费，大件付费',change:'付费改签',refund:'低价票不退',checkin:'在线值机',tip:'澳航集团的廉价品牌；澳洲/新西兰/亚洲网络；常与QF组合'}
+];
+
+/* ================= 数据：知识体系 ================= */
+var DIMS = [
+{title:'一、行业硬技能与专业知识（核心业务盘）',sub:'对应职责：业务全盘',
+ items:[
+  {n:'系统与出票技术',d:'熟悉GDS（Amadeus/Sabre/Travelport）操作与后台逻辑；懂NDC标准、ATPCO运价规则、联运规则、退改签政策。'},
+  {n:'OTA与航司生态',d:'懂携程/飞猪/Expedia等OTA的运营模式、排名算法、流量分配、供应链合作；掌握航司销售政策、代理费结构、大客户协议、包机/切位操作。'},
+  {n:'国际政策与签证',d:'实时追踪各国出入境政策、签证要求、双边航空协议、地缘政治影响、汇率波动。'},
+  {n:'供应链管理',d:'强B2B谈判能力，与航司、境外供应商、批发商（Consolidator）建立稳固合作。'}
+ ],
+ tip:'💡 面试怎么答：不要背定义，要讲场景。例如「我们曾通过换批发商把某航线采购价降了X%」——证明你真的用过这些知识。'},
+{title:'二、战略与经营管理（对应职责1、2）',sub:'从执行者到经营者',
+ items:[
+  {n:'战略解码与长期规划',d:'把公司战略转化为年度预算和3-5年商业计划（BP）；预判行业周期（淡旺季、疫情/突发事件对国际航线的影响）。'},
+  {n:'财务与预算（P&L负责）',d:'精通损益表管理，制定GMV、毛利、净利、转化率等预算指标；通过供应链优化、降低出票成本、提高资金周转率提升利润率。'},
+  {n:'数据驱动与KPI体系',d:'Excel高级功能、Tableau/PowerBI等BI工具；把宏观目标拆成微观KPI（航线渗透率、客单价、复购率、退票率）并建立追踪机制。'}
+ ],
+ tip:'💡 这是「业务骨干 → 部门负责人」的最大分水岭。面试前务必亲手做一份模拟年度预算，体会数字之间的勾稽关系。'},
+{title:'三、组织与团队管理（对应职责3）',sub:'从单打独斗到带兵打仗',
+ items:[
+  {n:'组织架构设计（OD）',d:'按业务发展阶段（初创/成长/成熟）动态调整部门架构：销售组、运营组、客服组、政策组等。'},
+  {n:'人才梯队建设',d:'建立招聘、培训、考核、晋升机制；培养航线经理、运营主管等核心骨干，避免核心人员流失造成业务断层。'},
+  {n:'绩效与激励机制',d:'设计合理的提成与奖金制度，激发团队战斗力，同时兼顾内部公平。'}
+ ],
+ tip:'💡 面试必问题「你怎么带团队」。答案要有制度思维（选、育、用、留），不能只讲「多沟通多关怀」。'},
+{title:'四、风控与合规（对应职责4）',sub:'资金密集行业，风控是生命线',
+ items:[
+  {n:'资金与财务风控',d:'防范信用卡拒付（Chargeback）、黑卡盗刷；建立客户信用体系防坏账；管理汇率风险及BSP结算资金链安全。'},
+  {n:'业务合规与政策风控',d:'确保符合IATA及各国航空监管规定；建立内部审计流程；防内部员工违规（私自改价、违规退改签）。'},
+  {n:'危机应对机制',d:'针对航班大面积延误、航司破产、战争/疫情等突发事件建立应急预案。'}
+ ],
+ tip:'💡 面试时主动讲风控的「数字意识」非常加分：毛利率2%-5%，一笔4万的盗刷损失，要卖80-200万的票才能赚回来。'},
+{title:'五、核心软实力与市场运营（对应职责5）',sub:'看不见的竞争力',
+ items:[
+  {n:'竞争情报与市场敏锐度',d:'持续监控竞对OTA/TMC/线下代理的动态、定价和市场活动；能根据市场变化（航司突然放低价、某国免签）在几小时内调整策略。'},
+  {n:'跨文化沟通与谈判',d:'与各国航司代表、供应商打交道；英语听说读写是加分项甚至必须项；懂跨文化商务谈判。'},
+  {n:'抗压能力与决策力',d:'行业受汇率、油价、国际局势影响波动极大，需要强心理素质和快速决断能力。'},
+  {n:'跨部门协同',d:'与财务、法务、IT（系统对接）、市场部高效协同，推动项目落地。'}
+ ],
+ tip:'💡 准备1-2个「压力场景下快速决策」的小故事，体现冷静与决断力。'}
+];
+
+/* ================= 数据：面试问答 ================= */
+var QA = [
+{q:'请谈谈你对国际机票业务的理解。',
+ i:'考察行业全景认知：产业链、盈利模式、行业特征，判断你是不是「懂行的人」。',
+ f:'按「产业链 → 盈利模式 → 行业特征 → 趋势」四层回答，60-90秒。',
+ p:['产业链：航司 → 批发商/供应商 → 代理/OTA → 旅客，每一层都在做「差价+服务」。',
+    '盈利模式：传统靠航司佣金（现普遍零佣金），现在靠批发差价、切位包机、服务费、增值产品。',
+    '行业特征：低毛利（2%-5%）、高流水、强资金属性；汇率、退改、盗刷都是利润杀手。',
+    '趋势：NDC、航司直连、自动化出票，代理从「渠道」转向「服务商」。'],
+ g:'国际机票本质是一门低毛利、高周转、强风控的供应链生意。'},
+{q:'你了解GDS和NDC吗？它们和OTA是什么关系？',
+ i:'考专业深度，看是否理解行业的技术底座和正在发生的变革。',
+ f:'三个名词各一句话解释 → 讲三者关系 → 讲对代理的影响和机会。',
+ p:['GDS是传统分销管道（Amadeus/Sabre/Travelport），航司把库存放进去，代理从中出票。',
+    'OTA是面向旅客的销售渠道（携程、Expedia），内部也在用GDS/直连采价。',
+    'NDC是IATA推的新标准，让航司绕过GDS直接向渠道分发「票价+附加服务」，夺回定价权。',
+    '影响：代理必须「多管道采价」（GDS+NDC+直连+批发商），比拼聚合和比价能力。',
+    '机会：谁能整合NDC独家内容，谁就有差异化票价和附加服务收入。'],
+ g:'GDS是管道，OTA是店面，NDC是航司要自己开直营店。'},
+{q:'如果让你明年把部门毛利提升20%，你会怎么做？',
+ i:'考经营思维：能否从多个杠杆系统性思考，而不是只会「多卖票」。',
+ f:'先声明「先拆解毛利构成，找最大杠杆」，再按量/价/成本/结构四个杠杆展开。',
+ p:['提量：渗透率低的高毛利航线投流量；开拓同业B2B分销渠道。',
+    '提价：优化定价策略、调整退改签规则、收出票服务费。',
+    '降成本：供应链比价换供应商、切位/包机锁定低价、降低ADM罚款率。',
+    '调结构：提高旺季、商务舱、高毛利航线的占比。'],
+ g:'毛利提升不是一道题，而是四个杠杆的组合。'},
+{q:'你怎么做年度预算和KPI体系？',
+ i:'考P&L管理和战略解码能力——从业务骨干到负责人的分水岭。',
+ f:'自上而下定目标 + 自下而上验证 → 拆解到航线/渠道/月份 → 配资源 → 建追踪。',
+ p:['目标：根据公司战略和历史数据，定GMV、毛利、净利、退票率等指标。',
+    '拆解：拆到航线、渠道、月份，淡旺季分开做。',
+    '配套：人力编制、市场费用、供应商政策跟着预算走。',
+    '追踪：月度滚动预测，偏差超5%要归因并调整。',
+    'KPI分层：结果指标（GMV/毛利/净利）+ 过程指标（渗透率/转化率/退票率/响应时效）。'],
+ g:'预算不是算出来的，是目标、资源、节奏三件事对齐出来的。'},
+{q:'如果让你从零搭建国际机票部门，你会怎么搭？',
+ i:'考组织设计和落地能力。',
+ f:'按业务环节划组 → 定编制和职责 → 定协作流程和KPI。',
+ p:['组别：产品/政策组（研究运价规则）、采购/供应链组（航司和供应商谈判）、运营组（出票退改）、客服组、风控组。',
+    '原则：初创期一人多岗，成熟期专业化分工，架构跟着业务规模走。',
+    '关键岗位先到位：航线经理/采购是命脉，客服决定口碑。',
+    '协作流程：下单→出票→售后要有SOP，用系统固化。'],
+ g:'架构设计的顺序：先定业务流，再定岗位，最后定人。'},
+{q:'遇到黑卡盗刷、拒付（Chargeback）怎么办？',
+ i:'考资金风控实操——国际机票的生命线。',
+ f:'三层防线：事前拦截 → 事中审核 → 事后申诉。',
+ p:['事前：风控规则引擎——大额单、单程票、深夜下单、卡国与航段不符等特征自动标记。',
+    '事中：可疑订单人工审核或3D验证后再出票。',
+    '事后：收到拒付通知，整理出票记录、行程单、IP等证据向卡组织申诉。',
+    '数字意识：毛利率2%-5%，一笔4万的盗刷损失，要卖80-200万的票才能赚回来。'],
+ g:'风控不创造利润，但一次失误就能吃掉一个月的利润。'},
+{q:'一家合作航司突然破产/停飞，你怎么处理？',
+ i:'考危机应对和预案能力。',
+ f:'三步：立即止损 → 客户处置 → 资金清算。',
+ p:['止损：立即停止该航司的销售和出票，盘点已售票量和票款敞口。',
+    '客户处置：优先改签他航，无法改签的退款，统一安抚话术。',
+    '资金清算：联系清算管理人、IATA，追回BSP结算款和押金。',
+    '复盘：日常就应控制对单一航司的依赖度，分散销售敞口。'],
+ g:'危机处理的第一原则：先稳客户，再追资金，最后复盘。'},
+{q:'你怎么和一家外航谈代理协议？',
+ i:'考B2B谈判与供应链能力。',
+ f:'备数据 → 亮筹码 → 谈结构 → 谈支持。',
+ p:['备数据：你能给它多少量、目标航线、增长空间，去之前算清楚。',
+    '筹码：用销量承诺换价格和后返（销售目标达成后季度返佣）。',
+    '结构：基础价 + 后返 + 市场支持（联合投放、培训）+ 大客户定向价。',
+    '姿态：谈判不是压价，是「用我的量换你的价和支持」，把盘子做大。'],
+ g:'好的供应链谈判，是让对方觉得你帮他完成了KPI。'},
+{q:'一条航线连续亏损，你怎么分析？',
+ i:'考数据驱动的诊断能力。',
+ f:'先拆漏斗（流量→询价→成交→退票），再拆利润（收入 vs 成本），定位后小步验证。',
+ p:['看漏斗：转化率低→价格/产品问题；退票率高→政策/服务问题。',
+    '看利润：客单价×票量=收入；采购价+退改损失=成本；逐项对比竞对和市场。',
+    '常见病因：采购价高于市场、竞对恶意低价、退票率失控、投放不足没有量。',
+    '开药方：定位一个环节，改价/换供应商/调政策各测两周，数据说话。'],
+ g:'亏损不是结论，是线索。拆到数据能说话为止。'},
+{q:'汇率大幅波动，对业务有什么影响，怎么应对？',
+ i:'考财务敏感度和对冲意识。',
+ f:'讲清结构性错配 → 四个应对措施。',
+ p:['错配结构：向旅客收人民币，向境外供应商/航司付美元欧元，汇率一动毛利就动。',
+    '定价缓冲：票价随汇率动态调整，或定价预留1%-2%汇率余量。',
+    '结算节奏：缩短账期、及时购汇、大额订单当天锁定汇率。',
+    '结构优化：与供应商谈人民币结算；收入成本尽量同币种。'],
+ g:'汇率是把钝刀子，每天割一点，月末才发现利润没了。'},
+{q:'你如何管理供应商（批发商）体系？',
+ i:'考供应链管理方法论。',
+ f:'分级 → 考核 → 制衡 → 迭代。',
+ p:['分级：核心供应商（保底供给）/一般供应商，资源向核心倾斜。',
+    '考核：价格竞争力、出票时效、退改响应、结算账期四个维度打分。',
+    '制衡：同航线至少两家供应商比价，防止被单一供应商绑架。',
+    '迭代：月度比价、季度复盘、末位淘汰或降级。'],
+ g:'供应商管理不是维护关系，是维护可替代性。'},
+{q:'团队核心骨干突然提离职，你怎么办？',
+ i:'考人才梯队和危机处理。',
+ f:'稳业务 → 谈挽留 → 找原因 → 防重演。',
+ p:['当天：立即启动AB角交接，业务不能断——这是第一原则。',
+    '挽留：一对一深谈了解真实诉求（钱/发展/环境），判断挽留空间。',
+    '找原因：是个人发展还是管理问题？后者要改。',
+    '防重演：关键岗位必须有备份；核心资源和供应商关系要文档化、公司化。'],
+ g:'留人靠机制，不靠感情。AB角和知识文档化才是底气。'},
+{q:'国际局势突变（断航、战争、疫情）对业务的影响和应对？',
+ i:'考宏观敏感度和预案体系。',
+ f:'影响链条 → 三级应对。',
+ p:['影响链条：供给端航班取消 → 需求端客流骤降 → 资金端集中退款+拒付。',
+    '快速反应：政策雷达（每天盯航司公告/签证政策），2小时内下架调整产品。',
+    '客户：非自愿退改政策快速明确，安抚优于拖延。',
+    '资金：控制退款节奏、保留现金储备，与航司确认非自愿全退。'],
+ g:'突发事件面前，反应速度就是利润。'},
+{q:'零佣金时代，代理靠什么赚钱？',
+ i:'考对行业商业模式变迁的理解。',
+ f:'老模式 → 新模式 → 结论。',
+ p:['老模式：航司按票价返佣3%-9%，代理靠佣金。',
+    '新模式：出票/退改服务费 + 批发差价（切位包机）+ 增值产品（保险、签证、贵宾厅）+ 企业商旅服务费。',
+    '结论：代理从「航司的销售渠道」转型为「旅客的服务商」，比拼供应链效率和服务溢价。'],
+ g:'零佣金淘汰的是只会卖票的代理，留下的是做服务和供应链的。'},
+{q:'业务团队怎么和IT/技术部门配合？',
+ i:'考跨部门协同和系统化思维。',
+ f:'业务提需求 → 技术建系统 → 数据反哺业务。',
+ p:['业务是需求方：自动出票机器人、风控规则、价格监控、退改自动化，都是业务痛点的技术解法。',
+    '负责人要懂底层逻辑：不用写代码，但要能说清业务流程和数据流。',
+    '节奏：小需求双周迭代；大系统（中台）立项时业务牵头。'],
+ g:'不会提需求的业务负责人，团队永远在重复劳动。'},
+{q:'请讲一个你最成功的业务案例。',
+ i:'考实战经验和表达结构化。',
+ f:'STAR法则：背景-任务-行动-结果，结果必须量化。',
+ p:['S背景：当时业务/市场处于什么状态。',
+    'T任务：要解决什么问题、目标是什么。',
+    'A行动：具体做了什么（体现岗位能力词：供应链、毛利、风控、团队）。',
+    'R结果：量化！「毛利提升X%、退票率下降X%、团队扩到X人」。',
+    '没有直接案例时：把最接近的经历翻译成岗位语言，哪怕是把某个流程效率提升了30%。'],
+ g:'面试官不记得你说了什么，只记得你的数字。'}
+];
+
+/* ================= 数据：测验（47题） ================= */
+var QUIZ = [
+{q:'GDS的中文全称是？',o:['全球分销系统','全球数据服务','航空结算系统','全球预订网站'],a:0,x:'Global Distribution System。它是航司与代理之间的「分销管道」：航司把座位库存接入，代理从中查询、订座、出票。'},
+{q:'以下哪个不属于国际三大GDS？',o:['Amadeus','Sabre','Travelport','中航信TravelSky'],a:3,x:'国际三大GDS指Amadeus、Sabre、Travelport（Galileo/Worldspan）。TravelSky中航信是中国国内航线的主导GDS。'},
+{q:'NDC（新分销能力）标准的推出方是？',o:['ATPCO','IATA','国际民航组织ICAO','欧盟委员会'],a:1,x:'NDC由IATA（国际航空运输协会）推出，目的是让航司绕过传统GDS的旧式票价框架，直接向渠道分销票价和附加服务。'},
+{q:'ATPCO的主要作用是？',o:['结算票款','发布和分发全球运价及规则','审批签证','分配航班时刻'],a:1,x:'ATPCO（航空运价发布公司）是运价的「总数据源」：航司把运价和规则提交给它，它统一分发给所有GDS和销售系统。'},
+{q:'BSP的核心职能是？',o:['航空安全检查','代理与航司之间的票款结算','行李托运服务','出入境管理'],a:1,x:'BSP（开账与结算计划）是IATA的「清算中心」：代理出票收的钱进入BSP账户，按结算周期统一划给各航司。代理需缴纳押金并受出票额度限制。'},
+{q:'「Chargeback」在机票业务中指？',o:['航班超售','信用卡拒付','代理违规罚款','汇率对冲操作'],a:1,x:'Chargeback=信用卡拒付：持卡人向银行否认交易，银行强制从商家扣回票款。国际机票是拒付重灾区。'},
+{q:'Consolidator（批发商）的角色是？',o:['面向旅客的在线平台','从航司拿协议价再批发给代理','机场地勤服务商','签证代理机构'],a:1,x:'批发商凭采购量大从航司拿到优惠协议价，再分销给中小代理和OTA，赚取差价。它是代理供应链的上游。'},
+{q:'GMV与净收入的关系是？',o:['完全相同','GMV是交易总额，含成本且会被退票冲减','GMV恒小于收入','两者无关'],a:1,x:'GMV是总交易流水，不等于收入：它包含付给供应商的成本，还要被退款冲减。汇报时不能把GMV当收入。'},
+{q:'毛利率的计算公式是？',o:['收入−全部费用','(收入−直接成本)÷收入','利润÷总成本','GMV÷利润'],a:1,x:'毛利=收入−直接成本（主要是出票/采购成本）；毛利率=毛利÷收入。国际机票行业毛利率常见2%-5%。'},
+{q:'「切位」（Block Space）的主要风险是？',o:['汇率波动','卖不完的座位也要付钱','签证政策变化','行李超重'],a:1,x:'切位=按协议价预先买断固定数量座位，卖不完损失自负；反之卖得好则利润更高。是典型的「风险换利润」。'},
+{q:'ADM（代理借记单）是什么？',o:['航空里程积分','航司对代理违规操作开出的罚单','登机牌的一种','航班时刻表'],a:1,x:'ADM=Agency Debit Memo。代理违规操作（错误退票、滥用规则等）会被航司开ADM扣款，ADM率是运营质量的重要指标。'},
+{q:'以下哪个是OTA？',o:['Amadeus','Expedia','IATA','BSP'],a:1,x:'Expedia是国际OTA。Amadeus是GDS，IATA是航协，BSP是结算计划。国内OTA代表：携程、飞猪。'},
+{q:'「非自愿退改」是指？',o:['旅客个人原因','航司原因（航班取消、时刻变更）导致','代理操作失误','旅客误机'],a:1,x:'非自愿（Involuntary）退改由航司原因引起，一般免费；自愿（Voluntary）退改按运价规则收改签费。分清二者是运营基本功，搞错了会被开ADM。'},
+{q:'国际机票行业典型毛利率水平约为？',o:['20%-30%','2%-5%','50%以上','10%-15%'],a:1,x:'国际机票是低毛利、高流水生意，毛利率常见2%-5%，所以「规模」和「风控」都是生命线。'},
+{q:'零佣金趋势下，代理的主要盈利来源转向？',o:['政府补贴','服务费与批发差价','航司佣金上涨','广告收入'],a:1,x:'大量航司取消代理佣金后，代理转向：出票/退改服务费、切位包机批发差价、保险签证等增值产品、企业商旅服务费。'},
+{q:'国际机票业务汇率风险的典型表现是？',o:['票价整体上涨','人民币收客、外币结算成本','燃油附加费调整','机场税费变化'],a:1,x:'向旅客收人民币，但向境外供应商/航司以美元欧元结算，汇率一动毛利就动。应对：动态定价、及时购汇锁汇、谈人民币结算。'},
+{q:'TMC（商旅管理公司）主要服务谁？',o:['个人旅客','企业客户','航司','机场'],a:1,x:'TMC服务企业客户的差旅：签企业协议、月结、差旅政策管控。如携程商旅、中航嘉信、美国运通GBT。'},
+{q:'订座后超过出票时限（TTL）未出票会怎样？',o:['自动升舱','座位被系统自动取消','票价自动降低','没有影响'],a:1,x:'TTL（Ticketing Time Limit）一到，未付款出票的订座会被取消。管理TTL是运营时效和订单成功率的关键。'},
+{q:'双边航空协议决定什么？',o:['行李额度标准','两国间航线、班次和承运人安排','机票统一定价','燃油附加费'],a:1,x:'双边航空协议是两国政府间的协定，决定两国之间能飞哪些航线、多少班次、由哪些航司承运。地缘政治变化直接影响供给。'},
+{q:'「航线渗透率」的含义是？',o:['航线飞行里程','你在该航线市场中的份额','航班准点率','飞机座位利用率'],a:1,x:'渗透率=你的销量÷该航线市场总量。如某航线月客流10万人次，你出票2万张，渗透率20%。它衡量单条航线的竞争力。'},
+{q:'机票行业复购率低的正确理解是？',o:['服务出了问题','行业常态（出行是低频消费）','只在淡季出现','说明定价过高'],a:1,x:'出行本身是低频消费，个人复购率低是行业常态。因此要靠会员运营、企业商旅客户（月结协议）和增值服务提升客户价值。'},
+{q:'包机与切位的主要区别是？',o:['没有区别','包机是包下整架飞机，切位是买断固定数量座位','切位规模更大','包机风险更小'],a:1,x:'包机=整架飞机座位包下自担盈亏，适合旺季和新航线试水；切位=买断固定数量座位（如每天30个），更灵活。二者都是「风险换成本优势」。'},
+{q:'P&L是指？',o:['人员编制表','损益表（利润表）','航班计划表','供应商名录'],a:1,x:'P&L=Profit and Loss损益表：收入−成本−费用=利润。部门负责人对这张表负责，是「经营者」身份的标志。'},
+{q:'航司超售（Overbooking）的原因是？',o:['订座系统故障','按历史no-show率多卖座位赌旅客不来','故意多收钱','政府政策要求'],a:1,x:'航司按历史「旅客订了不来」（no-show）的概率多卖座位以提升上座率，偶发超载纠纷。代理需安抚旅客并协助改签保障。'},
+{q:'供应链优化最直接的收益是？',o:['提高GMV','降低出票成本、提升毛利率','增加员工数量','减少航司数量'],a:1,x:'供应链（采购）优化直接降低出票成本——在毛利率只有2%-5%的行业里，采购价降1%可能意味着毛利翻倍。'},
+{q:'风控「事前拦截」主要针对什么？',o:['飞机机械故障','盗刷和欺诈订单','行李丢失','航班延误'],a:1,x:'事前拦截指在出票前识别盗刷/欺诈特征（大额、单程、深夜下单、卡国与行程不符等），从源头避免资金损失。'},
+{q:'PNR的含义是？',o:['旅客订座记录','机场三字码','航司二字码','签证类型'],a:0,x:'PNR=Passenger Name Record旅客订座记录，六位字母数字组合，一个订座对应一个PNR，相当于机票业务的「订单号」。'},
+{q:'以下哪个通常不是国际航线旺季？',o:['暑期（7-8月）','春节前后','3月中下旬','国庆前后'],a:2,x:'暑期、春节、国庆、圣诞都是旺季；3月、11月是传统淡季。运力投放、采购和定价都围绕淡旺季周期做规划。'},
+{q:'团队「AB角」制度的核心目的是？',o:['节省人力成本','关键岗位备份、防止人员流失造成业务断层','制造竞争氛围','轮岗培训'],a:1,x:'AB角=每个关键岗位有备份人选，核心资源和供应商关系公司化文档化，避免「人走业务断」。'},
+{q:'面试STAR法则中「A」代表？',o:['背景Situation','行动Action','结果Result','任务Task'],a:1,x:'STAR=Situation背景-Task任务-Action行动-Result结果。结果必须量化（提升了X%），这是面试讲故事的标准结构。'},
+{q:'以下哪个是Amadeus的可用座位查询指令？',o:['1PEKFRA20JUL','AN20JULPEKFRA','A20JULPEKFRA','以上都不是'],a:1,x:'AN20JULPEKFRA是Amadeus格式；1PEKFRA20JUL是Sabre格式；A20JULPEKFRA是Galileo格式。三大系统指令各不相同，但业务逻辑一致。'},
+{q:'PNR中航段状态码「HK」表示？',o:['候补','已确认','已取消','未处理'],a:1,x:'HK=Holds Confirmed已确认；HL=候补；HN=需求；HX=已取消；UN=未处理。看PNR先看状态码。'},
+{q:'RBD在机票业务中指什么？',o:['机场代码','订座舱位代码（如Y/B/M/H）','汇率','结算周期'],a:1,x:'RBD=Reservation Booking Designator订座舱位代码。26个舱位代码是航司库存管理的「格子」，每个舱位有配额。'},
+{q:'NDC分销与传统GDS分销最大的区别是？',o:['NDC更便宜','航司直接向渠道提供动态报价，含附加服务','NDC不需要代理','NDC只能官网使用'],a:1,x:'NDC的核心是航司直接向渠道分销「票价+附加服务」（Offer/Order模型），航司拿回定价权和旅客数据；代理需通过聚合商或直连接入。'},
+{q:'ATPCO规则类别Cat 16管什么？',o:['季节性','退改罚金（改签费/退票费）','提前购票天数','最长停留'],a:1,x:'Cat 16=退改罚金条款，是退改签业务最常查的规则类别。Cat 3=季节性，Cat 5=提前购票，Cat 7=最长停留。'},
+{q:'票价中「YQ/YR」通常指？',o:['机场建设费','燃油附加费','签证费','保险费'],a:1,x:'YQ/YR=燃油附加费，XT=其他税种合计。报价时「票价+税费=总价」。'},
+{q:'Ryanair（FR）是一家什么类型的航司？',o:['全服务航司','欧洲最大的低成本航司（ULCC）','中东豪华航司','航空联盟成员'],a:1,x:'Ryanair是爱尔兰的ULCC，欧洲最大低成本航司，票价极低靠辅营收费盈利，不进传统GDS主流分销。'},
+{q:'Alaska Airlines（AS）属于哪个联盟？',o:['星空联盟','天合联盟','寰宇一家','无联盟'],a:2,x:'AS于2021年加入寰宇一家（oneworld），与AA、BA、CX、QF等同联盟；2024年完成收购夏威夷航空HA。'},
+{q:'Vueling（VY）的母公司集团是？',o:['汉莎集团','IAG（国际航空集团）','法荷航集团','瑞安集团'],a:1,x:'VY是IAG旗下LCC，与英航BA、伊比利亚IB同集团，基地巴塞罗那。'},
+{q:'星空联盟的代表成员不包括？',o:['汉莎LH','新航SQ','达美DL','美联航UA'],a:2,x:'DL是天合联盟成员。星空代表：LH、SQ、UA、NH、AC、TK、CA；天合代表：AF-KLM、DL、KE、MU；寰宇代表：BA、AA、CX、QF、QR、JL、AS。'},
+{q:'LCC与FSC在退改政策上的典型差异是？',o:['LCC更灵活','LCC基础票价通常不可退、改签收费','两者无差异','FSC一律不可退'],a:1,x:'LCC裸票价极低，靠辅营收费，基础票基本不可退、改签收费；FSC按运价规则分层，中高价票可退改。'},
+{q:'对GDS出票收取「分销费DCC」的标志性案例来自？',o:['英航BA','汉莎LH','美航AA','达美DL'],a:1,x:'汉莎LH于2015年起对GDS出票收每张约16欧元分销费DCC，推动渠道走NDC——行业变革的标志性事件。'},
+{q:'2023年激进推进NDC、把部分内容撤出传统GDS的航司是？',o:['美联航UA','美国航空AA','达美DL','捷蓝B6'],a:1,x:'AA于2023年激进推进NDC战略，部分票价内容撤出传统EDIFACT渠道，引发行业震动——面试谈NDC趋势的经典案例。'},
+{q:'TTL在机票业务中指什么？',o:['行李额度','出票时限','票价有效期','值机时间'],a:1,x:'TTL=Ticketing Time Limit出票时限：订座后必须在规定时间内出票付款，否则座位被自动取消。'},
+{q:'NDC生态中Aggregator（聚合商）的角色是？',o:['出票结算机构','帮代理一站式接入多家航司NDC内容','机场服务商','签证代理'],a:1,x:'Travelfusion、Duffel、Verteil等聚合商帮代理快速接入多家航司NDC，避免逐一对接；规模大后再考虑直连自研。'},
+{q:'一张票「订座舱位Y、运价舱位B」说明？',o:['系统出错了','用了Y舱的位，按B舱的运价计价（正常现象）','不能出票','一定是候补状态'],a:1,x:'订座舱位管「有没有位」，运价舱位管「卖多少钱」，两者可以不同——这是票价计算的日常，不是错误。'},
+{q:'非自愿变更（航班取消）通常如何收费？',o:['收高额改签费','一般免费退改','收一半','按全价重新购票'],a:1,x:'非自愿（航司原因）退改一般免费，同航司改签更高舱位无需补差；自愿退改才按Cat 16收罚金。'}
+];
+
+/* 每题对应的知识点（顺序与 QUIZ 一致，用于「知识点掌握度」诊断） */
+var QUIZ_TOPICS = [
+ '系统与分销','系统与分销','系统与分销','系统与分销','结算与资金','风控与合规','渠道与供应链','经营与财务',
+ '经营与财务','渠道与供应链','风控与合规','渠道与供应链','运价与退改','经营与财务','经营与财务','结算与资金',
+ '渠道与供应链','系统与分销','航司与联盟','经营与财务','经营与财务','渠道与供应链','经营与财务','航司与联盟',
+ '渠道与供应链','风控与合规','系统与分销','经营与财务','团队与面试','团队与面试','系统与分销','系统与分销',
+ '系统与分销','系统与分销','运价与退改','运价与退改','航司与联盟','航司与联盟','航司与联盟','航司与联盟',
+ '运价与退改','系统与分销','系统与分销','系统与分销','系统与分销','系统与分销','运价与退改'
+];
+QUIZ.forEach(function(q,i){ q.k = QUIZ_TOPICS[i] || '其他'; });
+
+/* ================= 数据：场景案例（11个） ================= */
+var SCEN = [
+{q:'深夜23:50，系统进来一笔订单：莫斯科→纽约单程公务舱，票价4.2万元，付款卡为某东南亚国家发行的信用卡，持卡人姓名与乘机人姓名不一致，客户催促「马上出票，赶时间」。作为负责人，你会怎么处理？',
+ o:['立即出票，客户体验第一','暂停出票，触发人工审核（核对卡信息/3D验证）','先出票再补审核','直接拒绝该订单并拉黑'],
+ a:1,
+ x:'单程+高价值+深夜+第三国卡片+姓名不一致，是教科书级的盗刷特征组合。正确做法是出票前拦截、人工审核或要求3D安全验证，确认无误再出。机票毛利率2%-5%，这一单若被盗刷拒付，等于几百万流水白做。客户体验重要，但风控规则面前没有特例。'},
+{q:'「上海-曼谷」航线7月数据：月询价1万人次，转化率8%，客单价2800元，平均采购成本2650元，退票率15%，竞对同期均价2750元。这条航线的问题最可能出在哪？',
+ o:['流量太少，应加大投放','退票率异常偏高+价格高于竞对，先查退票原因和定价','采购成本过高，应换供应商','客单价太低，应提价'],
+ a:1,
+ x:'转化率8%尚可；客单价2800高于竞对2750（价格无优势）；采购成本2650对应毛利150元/张、毛利率约5.4%——但退票率15%异常偏高（行业健康值通常低于8%），退票直接冲回收入和毛利。所以第一优先是查退票率为何高（出票错误？政策苛刻？竞对退改更宽松？），同时评估是否跟价。先定位，再开药。'},
+{q:'合作航司突然宣布破产清算。你司已售出3200张该航司机票（票款约1200万元），BSP账户还有800万元待结算款。你的第一步行动是？',
+ o:['继续销售该航司机票挽回损失','立即停止销售并盘点已售票，同时联系清算管理人追索结算款和押金','先内部开会讨论一周','大幅降价促销快速回笼资金'],
+ a:1,
+ x:'第一步永远是「止血」：停止销售和出票，盘点已售票量和票款敞口；同时启动资金追索（BSP结算款、押金）和客户处置（改签他航或退款，统一话术）。拖延和继续卖都只会扩大敞口。日常管理就应控制对单一航司的依赖度。'},
+{q:'3月淡季来临，你负责的东南亚某航线历史数据显示3月客流环比下降40%。供应商报价：常规协议价3000元/位；切位方案（每天保底30个座位）2700元/位但卖不完自负。你的决策是？',
+ o:['大规模切位，成本低10%冲利润','小规模试切+动态定价，用数据验证后再放大','完全不切，只做协议价','3月停售该航线，4月再开'],
+ a:1,
+ x:'淡季切位是「用风险换成本」，但盲目大规模切位可能在客流下降40%时砸在手里。正确做法：先看历史3月最低销量数据，小规模试切（如每天10-15个）+动态定价（早鸟价、打包返程），验证动销后再决定是否放大；同时保留协议价保底供给。经营决策的通用逻辑：用数据设定安全垫，小步快跑。'},
+{q:'你上任3个月，运营主管（掌握核心供应商关系和关键操作流程）突然提离职，且已拿到竞对offer。你的处理顺序是？',
+ o:['涨薪50%无条件挽留','先稳住交接和备份（AB角），同时深谈了解诉求、判断挽留空间','直接拒绝并启动竞业限制','让他立刻离职，招新人重来'],
+ a:1,
+ x:'业务连续性第一：先启动AB角交接，把供应商关系和流程文档化，确保业务不断；再一对一深谈了解真实诉求（钱？发展？环境？），判断是否有挽留空间并给出针对性方案。单纯砸钱往往留不住已拿到offer的人。根本解法在日常：关键岗位AB角、核心资源公司化，不能只存在人脑里。'},
+{q:'竞对在你的主力航线突然降价15%，已持续3天。你怎么办？',
+ o:['立即全线跟价，绝不能被抢','小规模跟价试探+分析竞对是限时促销还是结构性降价','完全不理，坚持原价','向监管举报不正当竞争'],
+ a:1,
+ x:'先判断性质：限时促销（为活动冲量）不必全面跟，可局部跟价或用差异化产品（含行李/改签权益）应对；结构性降价（竞对拿到了更低成本，比如新私价）则要检视自己的供应链成本。盲目全线跟价=利润自残。三天内完成判断并行动，就是负责人应有的反应速度。'},
+{q:'旺季将至，BSP出票额度只剩15%，但销量正在激增。你的处理是？',
+ o:['停止销售保额度','立即向航司/结算方申请临时增额+优先保障高毛利订单+高峰订单分流其他渠道','找同行借用额度','降低票价减少需求'],
+ a:1,
+ x:'BSP额度是资金生命线。正确组合拳：1）立即申请临时增额（附销量预测数据）；2）订单分级——高毛利/大客户订单优先保证出票；3）部分订单分流到直连渠道或其他结算方式；4）补充押金提额。负责人要提前盯额度消耗曲线，旺季前2-3个月就该测算。'},
+{q:'某航司宣布3个月后其NDC渠道票价将比GDS渠道低5%。你的系统老旧，还没有NDC接入能力。怎么办？',
+ o:['忽略，继续用GDS','先通过聚合商（Travelfusion等）快速接入NDC，同时评估长期自研/中台方案','立即停售该航司','要求IT一个月内自研完成'],
+ a:1,
+ x:'时间窗口只有3个月，自研来不及。正确路径：先用聚合商快速接入NDC内容（成本低、上线快），保住价格竞争力；同步评估长期方案（量大了再直连/自研）。这就是「多管道采价」战略的落地节奏：先用现成工具，再建自有能力。'},
+{q:'暑期某航线历史需求增长60%，供应商切位价低于协议价12%，但要求预付30%定金。你的决策是？',
+ o:['全力切位，价格优势最大化','按历史销量的安全比例切位（如覆盖70%预测销量）+动态监控补仓','拒绝切位方案','全部切位并全额预付'],
+ a:1,
+ x:'切位=用风险换成本。安全比例切位（覆盖历史销量下限而非预测上限）是关键：需求不及预期时损失可控，超出预期时用协议价补仓。同时注意定金条款的现金流影响，并约定「不可抗力可退」条款。旺季供应链决策的本质：算清楚最坏情况下的亏损能否承受。'},
+{q:'收到航司一笔12万元ADM（代理借记单），称团队违规使用某特价。但你判断出票时该票价确实可用。怎么处理？',
+ o:['认罚了事','收集出票时点的运价证据+系统操作记录提交申诉，同时复核内部流程是否真有漏洞','与航司断交','把罚款转嫁给客户'],
+ a:1,
+ x:'ADM可以申诉：关键是出票时点的证据链（当时运价可查的截图、系统记录、PNR历史）。同时必须复核内部流程——航司开ADM通常有依据，可能是团队对规则理解有偏差，要举一反三整改。既不盲目认罚（吃利润），也不情绪化断交（伤供应链）。'},
+{q:'旺季大量退票集中爆发，退款压力导致现金流紧张。你的短期+长期组合措施是？',
+ o:['停止退款','短期：与航司确认非自愿全退政策、优先保障旅客体验；长期：建立退票率预警和资金储备机制','全部延迟退款','找高利贷周转'],
+ a:1,
+ x:'旺季退票集中时：1）区分自愿/非自愿，非自愿（航司原因）快速全退；2）自愿退票按规则收取退票费，既能覆盖损失也能降低冲动退票；3）现金流上保留「退票储备金」（通常按GMV的1-2%计提）；4）长期用数据预警：退票率连续两周超阈值就启动专项分析。'}
+];
+
+/* ================= 数据：PNR解读小测 ================= */
+var PNR_QUIZ = [
+{q:'这张PNR里旅客的完整行程是？',
+ o:['北京→法兰克福（CA931）','北京→法兰克福→伦敦（CA931 + LH1131）','法兰克福→伦敦（LH1131）','北京→巴黎'],
+ a:1,
+ x:'第2、3项是两个已确认航段：CA931北京-法兰克福（7月20日）、LH1131法兰克福-伦敦（7月22日），是一段联程行程。'},
+{q:'这张票的出票时限（TK TL）是？',
+ o:['7月22日','立即出票','7月20日','没有时限'],
+ a:2,
+ x:'第5项 TK TL20JUL 表示必须在7月20日（出发当天）前完成出票，否则座位可能被自动取消。'},
+{q:'两个航段的舱位代码和状态是？',
+ o:['B舱 候补','Y舱 已确认','Y舱 候补','C舱 已确认'],
+ a:1,
+ x:'两段都是Y舱，HK1表示「已确认（Holds Confirmed）、1个座位」。Y舱是经济舱全价舱位。'},
+{q:'两段航程由国航CA和汉莎LH共同承运，说明这张票是？',
+ o:['包机票','联运票（Interline）','团队票','切位票'],
+ a:1,
+ x:'两家航司共同承运一张票=联运（Interline），需要两航司间有联运协议，票价按协议分摊结算。很多低价国际票就是靠联运拼出来的。'}
+];
+
+/* ================= 数据：运价规则小测 ================= */
+var FARE_QUIZ = [
+{q:'旅客想周五出发，能否购买此票价？',
+ o:['可以','不可以（Cat 2仅限周二/三/四出发）','加钱就可以','只要提前7天购票就可以'],
+ a:1,
+ x:'Cat 2规定仅限周二/三/四出发，周五不在范围内，应换其他票价或舱位。查规则先看适用日期/时间。'},
+{q:'旅客3月1日购票、3月5日出发，符合规则吗？',
+ o:['符合','不符合（未满足Cat 5提前7天购票）','不符合（停留太长）','符合，都满足'],
+ a:1,
+ x:'3月1日购票到3月5日出发仅4天，未达到Cat 5要求的提前7天购票（AP）。特价票的「提前购票」是最容易踩坑的规则。'},
+{q:'旅客用此票价出票后自愿改签（无票价差），需付多少？',
+ o:['免费','500元改签费','800元','1300元'],
+ a:1,
+ x:'Cat 16规定改签费500元/次（若新票价更高还需补差价）。退票则收800元。Cat 16是退改业务最常查的条款。'}
+];
+
+/* ================= 数据：学习计划 ================= */
+var PLAN = [
+{wk:'第1周 · 行业与术语（打地基）',items:[
+ '通读「术语词典」全部卡片，标出陌生的术语',
+ '重点掌握「系统与出票」类：GDS / NDC / ATPCO / BSP / TTL / ADM',
+ '重点掌握「渠道与玩家」类：OTA / TMC / 批发商 / 包机 / 切位',
+ '重点掌握「经营与数据」类：P&L / GMV / 毛利净利 / KPI系列',
+ '浏览「GDS与系统」：三大系统指令速查 + 12条后台逻辑',
+ '浏览「航司规则」：LCC与FSC对比 + 每天5张航司速查卡',
+ '用「测验练习」检验术语掌握度（目标：快速热身10题≥80分）',
+ '周复盘：在白纸上画出产业链图（航司→批发商→代理→旅客）']},
+{wk:'第2周 · 经营与财务（P&L是分水岭）',items:[
+ '搞懂损益表结构，用「实操演练」的P&L测算器反复练习',
+ '牢记毛利/净利/GMV的区别与行业水平（毛利率2%-5%）',
+ 'KPI拆解练习：把「毛利提升20%」拆成量、价、成本、结构四杠杆',
+ '学习预算编制方法（自上而下定目标+自下而上验证）',
+ '亲手用Excel做一份模拟年度预算（GMV/毛利/费用/编制）',
+ '学习基础财务：现金流、资金周转、汇率对冲',
+ '周复盘：P&L自测题独立算对']},
+{wk:'第3周 · 系统、供应链与风控（生命线）',items:[
+ '精读NDC与ATPCO章节，理解行业变革的钱逻辑（GDS费用→DCC→NDC）',
+ '记住AA 2023年NDC战略和汉莎DCC两个标志性案例',
+ '完成「实操演练」的PNR解读和运价规则解读练习',
+ '学习供应商分级管理（核心/一般/末位淘汰）',
+ '学习风控：盗刷特征、拒付流程、申诉证据链',
+ '研究真实危机案例：搜索「航司破产 代理 退款」复盘处理流程',
+ '完成「实操演练」全部11个场景决策题',
+ '周复盘：画一张「风控三层防线」图（事前/事中/事后）']},
+{wk:'第4周 · 团队管理与面试冲刺',items:[
+ '学习组织架构设计（先定业务流，再定岗位）',
+ '学习人才梯队：选育用留、AB角制度',
+ '学习绩效激励设计（提成/奖金/晋升通道）',
+ '打磨自己的2个STAR成功案例（结果必须量化）',
+ '「模拟面试」每天至少练5题，开口说出来，不要默读',
+ '找朋友当面试官，完整模拟一遍（自我介绍→问答→反问）',
+ '总复习：全题库47题冲刺90分+，术语词典随机抽查全过']}
+];
+var PRE = {wk:'🔥 面试前3天 · 最后清单',items:[
+ '研究公司：主力航线、市场规模、竞争对手、最近新闻',
+ '准备2个STAR案例（关键词打印在卡片上）',
+ '准备3-5个反问问题（用「面试问答」页底部的清单）',
+ 'JD里每个关键词都能用一句话解释（对照术语词典自测）',
+ '准备「你还有什么想问的」和「期望薪资」的回答',
+ '前一天：早睡；简历打印2份；检查面试路线或会议链接']};
+
+/* ================= 工具函数 ================= */
+function $(s){ return document.querySelector(s); }
+function $$(s){ return document.querySelectorAll(s); }
+var store = {
+  get:function(k,d){ try{ var v=localStorage.getItem('ifm_'+k); return v===null?d:JSON.parse(v); }catch(e){ return d; } },
+  set:function(k,v){ try{ localStorage.setItem('ifm_'+k,JSON.stringify(v)); }catch(e){} },
+  del:function(k){ try{ localStorage.removeItem('ifm_'+k); }catch(e){} }
+};
+/* Fisher–Yates：比 sort(()=>Math.random()-.5) 更均匀 */
+function shuffle(list){
+  var a = list.slice();
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+/* 打乱选项并重算正确项下标（改写题面位置，避免“答案总在B”的规律） */
+function shuffleOptions(q){
+  var order = shuffle(q.o.map(function(_,i){ return i; }));
+  return {q:q.q, o:order.map(function(i){ return q.o[i]; }), a:order.indexOf(q.a), x:q.x, k:q.k};
+}
+
+/* ================= 标签切换（记忆位置 + 支持 #hash） ================= */
+var navEl = document.getElementById('mainNav');
+function syncNavHeight(){
+  if(navEl){ document.documentElement.style.setProperty('--navh', navEl.offsetHeight + 'px'); }
+}
+function activateTab(name, opts){
+  var btn = document.querySelector('nav button[data-tab="'+name+'"]');
+  var sec = document.getElementById('tab-'+name);
+  if(!btn || !sec){ return; }
+  $$('nav button').forEach(function(x){ x.classList.remove('active'); x.removeAttribute('aria-selected'); });
+  btn.classList.add('active'); btn.setAttribute('aria-selected','true');
+  $$('.tab').forEach(function(t){ t.classList.remove('active'); });
+  sec.classList.add('active');
+  if(!(opts && opts.silent)){
+    store.set('tab', name);
+    try{ history.replaceState(null, '', '#'+name); }catch(e){ location.hash = name; }
+  }
+  if(!(opts && opts.keepScroll)){ window.scrollTo(0,0); }
+  if(navEl && navEl.scrollWidth > navEl.clientWidth + 4){
+    try{ navEl.scrollTo({left: btn.offsetLeft - (navEl.clientWidth - btn.offsetWidth)/2, behavior:'smooth'}); }catch(e){}
+  }
+  syncNavHeight();
+}
+$$('nav button').forEach(function(b){
+  b.addEventListener('click', function(){ activateTab(b.dataset.tab); });
+});
+function centerActiveNav(){
+  if(!navEl || navEl.scrollWidth <= navEl.clientWidth + 4){ return; }
+  var b = navEl.querySelector('button.active');
+  if(!b){ return; }
+  try{ navEl.scrollTo({left: b.offsetLeft - (navEl.clientWidth - b.offsetWidth)/2}); }catch(e){}
+}
+window.addEventListener('resize', function(){ syncNavHeight(); centerActiveNav(); });
+window.addEventListener('orientationchange', function(){ setTimeout(function(){ syncNavHeight(); centerActiveNav(); }, 200); });
+(function initTab(){
+  try{ if('scrollRestoration' in history){ history.scrollRestoration = 'manual'; } }catch(e){}
+  var start = (location.hash || '').replace('#','');
+  if(!start || !document.getElementById('tab-'+start)){ start = store.get('tab','terms'); }
+  if(!start || !document.getElementById('tab-'+start)){ start = 'terms'; }
+  activateTab(start, {silent:true});
+})();
+
+/* ================= 术语词典 + 生词本 + 卡片抽查 ================= */
+var termGrid = $('#termGrid');
+var curCat = '全部';
+var weakTerms = store.get('termWeak', {});
+function weakCount(){
+  return Object.keys(weakTerms).filter(function(k){ return weakTerms[k] && TERMS[+k]; }).length;
+}
+function saveWeak(){ store.set('termWeak', weakTerms); }
+function refreshWeakUI(){
+  var n = weakCount();
+  var chip = document.getElementById('weakChip');
+  if(chip){ chip.textContent = '📕 生词本（'+n+'）'; }
+  var stat = document.getElementById('drillStat');
+  if(stat){ stat.textContent = n ? ('生词本 '+n+' 条，建议用「只抽生词本」过一遍') : '抽查时点「不熟」就会收进生词本'; }
+}
+function termMatch(t, kw){
+  if(!kw){ return true; }
+  return t.t.toLowerCase().indexOf(kw)>-1 || t.e.toLowerCase().indexOf(kw)>-1 ||
+         t.s.indexOf(kw)>-1 || t.w.indexOf(kw)>-1;
+}
+function renderTerms(){
+  var kw = $('#termSearch').value.trim().toLowerCase();
+  var rows = TERMS.map(function(t,i){ return {t:t,i:i}; }).filter(function(x){
+    if(curCat==='生词本'){ if(!weakTerms[x.i]){ return false; } }
+    else if(curCat!=='全部' && x.t.c!==curCat){ return false; }
+    return termMatch(x.t, kw);
+  });
+  var html = rows.map(function(x){
+    var t = x.t, on = !!weakTerms[x.i];
+    return '<div class="card term"><div class="t">'+t.t+'<span class="badge">'+t.c+'</span></div>'+
+      '<div class="e">'+t.e+'</div><div class="s">'+t.s+'</div><div class="w">🎯 面试要点：'+t.w+'</div>'+
+      '<button class="term-card-btn'+(on?' on':'')+'" data-ti="'+x.i+'">'+(on?'📕 已在生词本（点击移除）':'＋ 加入生词本')+'</button></div>';
+  }).join('');
+  if(!html){
+    html = '<div class="card muted" style="grid-column:1/-1;text-align:center;padding:28px">'+
+      (curCat==='生词本'
+        ? '生词本还是空的：点「🎴 卡片抽查」，遇到不熟的词点「📕 不熟」就会收进来。'
+        : '没有找到匹配的术语')+'</div>';
+  }
+  termGrid.innerHTML = html;
+  refreshWeakUI();
+}
+$('#termSearch').addEventListener('input',renderTerms);
+$$('#tab-terms .chip').forEach(function(c){
+  c.addEventListener('click',function(){
+    $$('#tab-terms .chip').forEach(function(x){ x.classList.remove('active'); });
+    c.classList.add('active');
+    curCat = c.dataset.cat;
+    renderTerms();
+  });
+});
+termGrid.addEventListener('click', function(e){
+  var b = e.target.closest ? e.target.closest('.term-card-btn') : null;
+  if(!b){ return; }
+  var i = +b.dataset.ti;
+  if(weakTerms[i]){ delete weakTerms[i]; } else { weakTerms[i] = true; }
+  saveWeak(); renderTerms();
+});
+
+/* ---- 卡片抽查 ---- */
+var drillPool = [], drillPos = 0, drillRevealed = false, drillOpen = false, drillStartCount = 0;
+function buildPool(){
+  var only = document.getElementById('drillWeakOnly').checked;
+  var idx = [];
+  for(var i=0;i<TERMS.length;i++){
+    if(!only || weakTerms[i]){ idx.push(i); }
+  }
+  drillPool = shuffle(idx);
+  drillPos = 0; drillRevealed = false;
+  return drillPool.length;
+}
+function startDrill(){
+  if(!buildPool()){
+    alert('生词本里还没有词。先取消勾选「只抽生词本」，用全部术语抽查吧。');
+    return;
+  }
+  drillOpen = true;
+  $('#drillCard').style.display = 'block';
+  renderDrill();
+  try{ $('#drillCard').scrollIntoView({block:'center', behavior:'smooth'}); }catch(e){ $('#drillCard').scrollIntoView(); }
+}
+function closeDrill(){
+  drillOpen = false;
+  $('#drillCard').style.display = 'none';
+}
+function endDrill(){
+  $('#drillProgress').textContent = '本轮完成';
+  $('#drillBody').innerHTML =
+    '<div class="drill-term" style="font-size:20px">🎉 这一轮 '+(drillPool.length)+' 张抽完了</div>'+
+    '<div class="drill-hint">生词本现在有 <b>'+weakCount()+'</b> 条。明天先抽「只抽生词本」，把不熟的清干净。</div>'+
+    '<div class="drill-actions"><button class="btn btn-p" id="drillAgain">🔁 再来一轮</button>'+
+    '<button class="btn btn-o" id="drillClose2">关闭</button></div>';
+  document.getElementById('drillAgain').addEventListener('click', startDrill);
+  document.getElementById('drillClose2').addEventListener('click', closeDrill);
+  refreshWeakUI();
+}
+function renderDrill(){
+  if(drillPos >= drillPool.length){ endDrill(); return; }
+  var i = drillPool[drillPos], t = TERMS[i];
+  $('#drillProgress').textContent = (drillPos+1)+' / '+drillPool.length + (weakTerms[i] ? ' · 生词本' : '');
+  $('#drillBody').innerHTML =
+    '<div class="drill-term">'+t.t+'</div>'+
+    '<div class="drill-hint">先在心里讲一遍：它是什么？面试里怎么用一句话说清楚？</div>'+
+    '<div class="drill-answer'+(drillRevealed?' show':'')+'">'+
+      '<div class="e">'+t.e+'</div>'+
+      '<div class="s">'+t.s+'</div>'+
+      '<div class="w">🎯 面试要点：'+t.w+'</div>'+
+    '</div>'+
+    '<div class="drill-actions">'+
+      (drillRevealed ? '' : '<button class="btn btn-p" id="drillReveal">👁 显示答案</button>')+
+      '<button class="btn btn-a" id="drillWeak">📕 不熟</button>'+
+      '<button class="btn btn-g" id="drillKnown">✅ 认识</button>'+
+      '<button class="btn btn-o" id="drillNext">下一张 →</button>'+
+    '</div>';
+  var rv = document.getElementById('drillReveal');
+  if(rv){ rv.addEventListener('click', function(){ drillRevealed = true; renderDrill(); }); }
+  document.getElementById('drillWeak').addEventListener('click', function(){ drillMark(false); });
+  document.getElementById('drillKnown').addEventListener('click', function(){ drillMark(true); });
+  document.getElementById('drillNext').addEventListener('click', function(){
+    drillRevealed = false; drillPos++; renderDrill();
+  });
+}
+function drillMark(known){
+  var i = drillPool[drillPos];
+  if(known){ delete weakTerms[i]; } else { weakTerms[i] = true; }
+  saveWeak();
+  renderTerms();             /* 同步卡片上的按钮状态 */
+  drillRevealed = false;
+  drillPos++;
+  renderDrill();
+}
+$('#drillStart').addEventListener('click', startDrill);
+$('#drillClose').addEventListener('click', closeDrill);
+$('#drillWeakOnly').addEventListener('change', function(){ if(drillOpen){ startDrill(); } });
+renderTerms();
+
+
+/* ================= GDS指令 ================= */
+$('#gdsCmdList').innerHTML = GDS_CMDS.map(function(g){
+  var rows = g.cmds.map(function(cmd){
+    return '<tr><td><code>'+cmd.c+'</code></td><td>'+cmd.d+'</td></tr>';
+  }).join('');
+  return '<div class="card"><div class="weekbar"><h3>💻 '+g.sys+'</h3><span class="badge blue">'+g.full+'</span></div>'+
+    '<table class="tbl"><tr><th style="width:220px">指令</th><th>作用</th></tr>'+rows+'</table></div>';
+}).join('');
+
+/* ================= 后台逻辑 ================= */
+$('#backofficeList').innerHTML = BACKOFFICE.map(function(b,i){
+  return '<div class="card acc" data-i="'+i+'">'+
+    '<div class="acc-head">'+(i+1)+'. '+b.n+'<span style="color:var(--muted);font-weight:normal">▾</span></div>'+
+    '<div class="acc-body"><p style="font-size:13.5px">'+b.d+'</p></div></div>';
+}).join('');
+
+/* ================= 航司规则 ================= */
+var carrierGrid = $('#carrierGrid');
+var curReg = '全部';
+var TYPE_BADGE = {FSC:'blue',LCC:'amber',ULCC:'red','混合':'green'};
+function typeLabel(t){ return t==='FSC'?'全服务FSC':t==='LCC'?'低成本LCC':t==='ULCC'?'超低成本ULCC':'混合型'; }
+function renderCarriers(){
+  var kw = $('#carSearch').value.trim().toLowerCase();
+  var list = CARRIERS.filter(function(c){
+    return (curReg==='全部'||c.region===curReg) &&
+      (!kw || c.code.toLowerCase().indexOf(kw)>-1 || c.name.toLowerCase().indexOf(kw)>-1);
+  });
+  var html = list.map(function(c){
+    return '<div class="card carrier">'+
+      '<div class="chead"><span class="code">'+c.code+'</span><span class="cname">'+c.name+'</span>'+
+      '<span class="badge '+TYPE_BADGE[c.type]+'">'+typeLabel(c.type)+'</span>'+
+      '<span class="badge">'+c.alliance+'</span></div>'+
+      '<div class="crows">'+
+      '<div><b>地区：</b>'+c.region+'　<b>基地：</b>'+c.base+'</div>'+
+      '<div><b>分销渠道：</b>'+c.channel+'</div>'+
+      '<div><b>行李：</b>'+c.bag+'</div>'+
+      '<div><b>改签：</b>'+c.change+'</div>'+
+      '<div><b>退票：</b>'+c.refund+'</div>'+
+      '<div><b>值机：</b>'+c.checkin+'</div>'+
+      '</div><div class="tip">💡 '+c.tip+'</div></div>';
+  }).join('');
+  if(!html){ html = '<div class="card muted" style="grid-column:1/-1;text-align:center">没有找到匹配的航司</div>'; }
+  carrierGrid.innerHTML = html;
+}
+$('#carSearch').addEventListener('input',renderCarriers);
+$$('#tab-carriers .chip').forEach(function(c){
+  c.addEventListener('click',function(){
+    $$('#tab-carriers .chip').forEach(function(x){ x.classList.remove('active'); });
+    c.classList.add('active');
+    curReg = c.dataset.reg;
+    renderCarriers();
+  });
+});
+renderCarriers();
+
+/* ================= 知识体系 ================= */
+$('#dimList').innerHTML = DIMS.map(function(d,i){
+  var items = d.items.map(function(it){ return '<div class="item"><b>▸ '+it.n+'：</b>'+it.d+'</div>'; }).join('');
+  return '<div class="card acc" data-i="'+i+'">'+
+    '<div class="acc-head">'+d.title+'<span style="color:var(--muted);font-weight:normal;font-size:12.5px">'+d.sub+' ▾</span></div>'+
+    '<div class="acc-body">'+items+'<div class="tip">'+d.tip+'</div></div></div>';
+}).join('');
+
+/* ================= 面试问答 ================= */
+$('#qaList').innerHTML = QA.map(function(q,i){
+  var points = q.p.map(function(x){ return '<li>'+x+'</li>'; }).join('');
+  return '<div class="card qa" data-i="'+i+'">'+
+    '<div class="qa-q">Q'+(i+1)+'. '+q.q+'</div>'+
+    '<div class="qa-a">'+
+    '<p style="margin-top:10px"><span class="lbl lbl-i">考官意图</span><span class="muted">'+q.i+'</span></p>'+
+    '<p style="margin-top:8px"><span class="lbl lbl-f">答题框架</span><span class="muted">'+q.f+'</span></p>'+
+    '<p style="margin-top:8px"><span class="lbl lbl-p">参考要点</span></p>'+
+    '<ul>'+points+'</ul>'+
+    '<div class="quote">💬 金句收尾：'+q.g+'</div>'+
+    '</div></div>';
+}).join('');
+/* ================= 模拟面试 ================= */
+var mTimerInt = null, mSeconds = 120;
+var mStatus = store.get('mock',{});
+function refreshMockStats(){
+  var a=0,b=0;
+  QA.forEach(function(_,i){ if(mStatus[i]==='ok')a++; if(mStatus[i]==='rv')b++; });
+  $('#mMastered').textContent = a;
+  $('#mReview').textContent = b;
+  $('#mTodo').textContent = QA.length-a-b;
+  $('#mBar').style.width = (a/QA.length*100)+'%';
+}
+function mStopTimer(){
+  if(mTimerInt){ clearInterval(mTimerInt); mTimerInt=null; }
+  var t = $('#mockCard .mock-timer');
+  if(t){ t.style.display='none'; }
+}
+function mPick(){
+  var todo = [];
+  QA.forEach(function(_,i){ if(!mStatus[i]) todo.push(i); });
+  var i = todo.length ? todo[Math.floor(Math.random()*todo.length)] : Math.floor(Math.random()*QA.length);
+  showMock(i);
+}
+function showMock(i){
+  mStopTimer();
+  var q = QA[i];
+  var st = '';
+  if(mStatus[i]==='ok'){ st = '<span class="badge green">已掌握</span>'; }
+  else if(mStatus[i]==='rv'){ st = '<span class="badge amber">需复习</span>'; }
+  var points = q.p.map(function(x){ return '<li style="font-size:13.5px;margin-bottom:5px">'+x+'</li>'; }).join('');
+  $('#mockCard').style.display = 'block';
+  $('#mockCard').innerHTML =
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">'+
+    '<div class="mock-q">Q'+(i+1)+'. '+q.q+'</div>'+st+'</div>'+
+    '<div id="mockA" style="display:none;margin-top:14px">'+
+    '<p><span class="lbl lbl-i">考官意图</span><span class="muted">'+q.i+'</span></p>'+
+    '<p style="margin-top:8px"><span class="lbl lbl-f">答题框架</span><span class="muted">'+q.f+'</span></p>'+
+    '<p style="margin-top:8px"><span class="lbl lbl-p">参考要点</span></p>'+
+    '<ul style="margin-left:18px">'+points+'</ul>'+
+    '<div class="quote">💬 金句收尾：'+q.g+'</div>'+
+    '<div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">'+
+    '<button class="btn btn-g" data-mk="ok">✅ 已掌握</button>'+
+    '<button class="btn btn-a" data-mk="rv">🔁 还需复习</button>'+
+    '<button class="btn btn-o" data-mk="cl">🔄 重新抽题</button>'+
+    '</div></div>'+
+    '<div class="mock-timer" style="display:none">02:00</div>';
+  $$('#mockCard [data-mk]').forEach(function(b){
+    b.addEventListener('click',function(){
+      if(b.dataset.mk==='ok'){ mStatus[i]='ok'; store.set('mock',mStatus); refreshMockStats(); mPick(); }
+      else if(b.dataset.mk==='rv'){ mStatus[i]='rv'; store.set('mock',mStatus); refreshMockStats(); mPick(); }
+      else { mPick(); }
+    });
+  });
+}
+$('#mNext').addEventListener('click',mPick);
+$('#mReveal').addEventListener('click',function(){
+  mStopTimer();
+  var a = $('#mockA');
+  if(a){ a.style.display='block'; }
+});
+$('#mTimerBtn').addEventListener('click',function(){
+  mStopTimer();
+  if(!$('#mockCard .mock-timer')){ mPick(); }          // 还没抽题时先抽一题
+  var t = $('#mockCard .mock-timer');
+  if(!t){ return; }
+  mSeconds = 120;
+  t.style.display = 'block';
+  t.classList.remove('timeup');
+  t.textContent = '02:00';
+  mTimerInt = setInterval(function(){
+    mSeconds--;
+    if(mSeconds<=0){
+      clearInterval(mTimerInt); mTimerInt = null;
+      t.classList.add('timeup');
+      t.textContent = '⏰ 时间到！先开口讲一遍，再点「👁 显示参考答案」';
+      return;
+    }
+    var m = String(Math.floor(mSeconds/60));
+    if(m.length<2){ m='0'+m; }
+    var s = String(mSeconds%60);
+    if(s.length<2){ s='0'+s; }
+    t.textContent = m+':'+s;
+  },1000);
+});
+$('#mReset').addEventListener('click',function(){
+  if(!confirm('重置模拟面试的「已掌握/需复习」标记？')){ return; }
+  Object.keys(mStatus).forEach(function(k){ delete mStatus[k]; });
+  store.set('mock',mStatus);
+  refreshMockStats();
+});
+refreshMockStats();
+
+/* ================= 测验 ================= */
+var qzList=[], qzIdx=0, qzScore=0, qzWrong=[];
+var wrongBank = store.get('wrong', {});          /* 错题本：id -> true */
+var topicStats = store.get('topicStats', {});    /* 知识点累计正确/错误 */
+function wrongCount(){
+  return Object.keys(wrongBank).filter(function(k){ return wrongBank[k] && QUIZ[+k]; }).length;
+}
+function refreshWrongUI(){
+  var el = document.getElementById('wrongCount');
+  if(el){ el.textContent = wrongCount(); }
+}
+function saveWrongBank(){ store.set('wrong', wrongBank); refreshWrongUI(); }
+function bumpTopic(k, ok){
+  if(!k){ return; }
+  var s = topicStats[k] || {r:0, w:0};
+  if(ok){ s.r++; } else { s.w++; }
+  topicStats[k] = s;
+  store.set('topicStats', topicStats);
+  renderTopics();
+}
+function topicAcc(k){
+  var s = topicStats[k];
+  if(!s){ return -1; }
+  var tot = s.r + s.w;
+  return tot ? s.r/tot*100 : -1;
+}
+function renderTopics(){
+  var el = document.getElementById('topicPanel');
+  if(!el){ return; }
+  var keys = Object.keys(topicStats).filter(function(k){ return topicStats[k] && (topicStats[k].r + topicStats[k].w) > 0; });
+  if(!keys.length){ el.innerHTML = ''; return; }
+  keys.sort(function(a,b){ return topicAcc(a) - topicAcc(b); });   /* 弱的排前面 */
+  var rows = keys.map(function(k){
+    var s = topicStats[k], tot = s.r + s.w, pct = Math.round(s.r/tot*100);
+    var color = pct>=80 ? 'var(--green)' : (pct>=60 ? 'var(--sky)' : 'var(--red)');
+    var weakBook = Object.keys(wrongBank).filter(function(w){ return wrongBank[w] && QUIZ[+w] && QUIZ[+w].k===k; }).length;
+    return '<div class="topic-row"><span class="topic-name">'+k+'</span>'+
+      '<span class="topic-bar"><i style="width:'+pct+'%;background:'+color+'"></i></span>'+
+      '<span class="topic-val">'+pct+'% · '+s.r+'/'+tot+(weakBook ? ' · 错题'+weakBook : '')+'</span></div>';
+  }).join('');
+  el.innerHTML = '<h4>📊 知识点掌握度（按正确率从低到高）</h4>'+rows+
+    '<p class="muted" style="font-size:12px;margin-top:8px">正确率低于 60% 的板块就是你的薄弱项，回对应标签页补一轮再回来测。</p>';
+}
+function qzMake(items){
+  return shuffle(items).map(function(x){ var v=shuffleOptions(x.q); v.idx = x.idx; return v; });
+}
+function qzStart(n){
+  var count = n==='all' ? QUIZ.length : (+n || 10);
+  count = Math.max(1, Math.min(count, QUIZ.length));
+  qzList = qzMake(QUIZ.map(function(q,i){ return {q:q, idx:i}; })).slice(0,count);
+  qzBegin();
+}
+function qzStartWrong(){
+  var items = Object.keys(wrongBank).filter(function(k){ return wrongBank[k] && QUIZ[+k]; })
+    .map(function(k){ return {q:QUIZ[+k], idx:+k}; });
+  if(!items.length){ alert('错题本还是空的，先做一轮测验吧。'); return; }
+  qzList = qzMake(items);
+  qzBegin();
+}
+function qzBegin(){
+  qzIdx = 0; qzScore = 0; qzWrong = [];
+  $('#quizHome').style.display = 'none';
+  $('#quizRun').style.display = 'block';
+  qzRender();
+}
+$$('#quizHome [data-n]').forEach(function(b){
+  b.addEventListener('click',function(){ qzStart(b.dataset.n); });
+});
+$('#wrongStart').addEventListener('click', qzStartWrong);
+function qzRender(){
+  var q = qzList[qzIdx];
+  var opts = q.o.map(function(opt,oi){
+    return '<button class="quiz-opt" data-oi="'+oi+'">'+'ABCD'[oi]+'. '+opt+'</button>';
+  }).join('');
+  $('#quizRun').innerHTML =
+    '<div class="card">'+
+    '<div class="muted" style="margin-bottom:8px">第 '+(qzIdx+1)+' / '+qzList.length+' 题 · 当前得分 '+qzScore+'</div>'+
+    '<div class="progress"><i style="width:'+(qzIdx/qzList.length*100)+'%"></i></div>'+
+    '<p style="font-size:16px;font-weight:700;margin:14px 0 12px">'+q.q+'</p>'+
+    opts+
+    '<div id="qzExp"></div>'+
+    '<div style="margin-top:12px"><button class="btn btn-p" id="qzNext" style="display:none">下一题 →</button></div>'+
+    '</div>';
+  $$('#quizRun .quiz-opt').forEach(function(b){
+    b.addEventListener('click',function(){
+      $$('#quizRun .quiz-opt').forEach(function(x){ x.disabled=true; });
+      var oi = +b.dataset.oi;
+      if(oi===q.a){
+        b.classList.add('correct');
+        qzScore++;
+        if(wrongBank[q.idx]){ delete wrongBank[q.idx]; saveWrongBank(); }
+        bumpTopic(q.k, true);
+      }
+      else {
+        b.classList.add('wrong');
+        $$('#quizRun .quiz-opt')[q.a].classList.add('correct');
+        qzWrong.push({q:q,chosen:oi});
+        wrongBank[q.idx] = true; saveWrongBank();
+        bumpTopic(q.k, false);
+      }
+      $('#qzExp').innerHTML = '<div class="quiz-exp">📖 解析：'+q.x+'</div>';
+      $('#qzNext').style.display = 'inline-block';
+    });
+  });
+  $('#qzNext').addEventListener('click',function(){
+    qzIdx++;
+    if(qzIdx<qzList.length){ qzRender(); }
+    else { qzEnd(); }
+  });
+}
+function qzEnd(){
+  var total = qzList.length;
+  var pct = Math.round(qzScore/total*100);
+  var best = store.get('quizbestpct', 0) || 0;
+  if(pct > best){
+    store.set('quizbestpct', pct);
+    store.set('quizbestmeta', {score:qzScore, total:total, at:Date.now()});
+  }
+  renderBest();
+  var msg = pct>=90?'🏆 优秀！可以去面试了':pct>=70?'👍 良好，错题复习一下更稳':pct>=50?'📚 及格线附近，建议回「术语词典」补课':'🔁 别灰心，先通读术语词典再回来';
+  var wrongHtml = '';
+  if(qzWrong.length){
+    wrongHtml = '<div style="text-align:left;margin-top:18px"><b>❌ 本轮错题（'+qzWrong.length+'题，已进入错题本）</b>'+
+      qzWrong.map(function(w){
+        return '<div style="border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:10px">'+
+          '<b>'+w.q.q+'</b><br>'+
+          '<span style="color:var(--red)">你选了：'+'ABCD'[w.chosen]+'. '+w.q.o[w.chosen]+'</span><br>'+
+          '<span style="color:var(--green)">正确答案：'+'ABCD'[w.q.a]+'. '+w.q.o[w.q.a]+'</span><br>'+
+          '<span class="muted">'+w.q.x+'</span></div>';
+      }).join('')+'</div>';
+  }
+  var wc = wrongCount();
+  $('#quizRun').innerHTML =
+    '<div class="card" style="text-align:center">'+
+    '<div class="score-big">'+qzScore+' / '+total+'</div>'+
+    '<p style="font-size:18px;font-weight:700;color:var(--blue)">'+pct+' 分 · '+msg+'</p>'+
+    wrongHtml+
+    '<div style="display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap">'+
+    '<button class="btn btn-p" id="qzAgain">🔄 返回首页</button>'+
+    (wc ? '<button class="btn btn-o" id="qzWrongOnly">🎯 只练错题（'+wc+'题）</button>' : '')+
+    '</div></div>';
+  $('#qzAgain').addEventListener('click',function(){
+    $('#quizRun').style.display = 'none';
+    $('#quizHome').style.display = 'block';
+    refreshWrongUI();
+  });
+  var wo = document.getElementById('qzWrongOnly');
+  if(wo){ wo.addEventListener('click', qzStartWrong); }
+}
+function renderBest(){
+  var pct = store.get('quizbestpct', 0) || 0;
+  var meta = store.get('quizbestmeta', null);
+  var el = document.getElementById('quizBest');
+  if(!el){ return; }
+  if(!pct){ el.textContent = '—'; return; }
+  el.textContent = pct + ' 分' + (meta && meta.total ? '（'+meta.score+'/'+meta.total+'）' : '');
+}
+$('#quizBestReset').addEventListener('click', function(){
+  if(!confirm('清除历史最高分记录？')){ return; }
+  store.del('quizbestpct'); store.del('quizbestmeta'); renderBest();
+});
+renderBest();
+refreshWrongUI();
+renderTopics();
+
+/* ================= 实操：P&L ================= */
+function bindCalc(id,idN){
+  var r = $(id), n = $(idN);
+  var min = parseFloat(r.min), max = parseFloat(r.max);
+  r.addEventListener('input', function(){ n.value = r.value; calc(); });
+  n.addEventListener('input', function(){
+    var v = parseFloat(n.value);
+    if(isNaN(v) || v < min || v > max){ return; }   /* 超范围先不抢，等失焦再纠正，避免打字被打断 */
+    r.value = v; calc();
+  });
+  n.addEventListener('change', function(){
+    var v = parseFloat(n.value);
+    if(isNaN(v)){ v = parseFloat(r.value); }
+    v = Math.min(max, Math.max(min, v));
+    n.value = v; r.value = v; calc();
+  });
+}
+bindCalc('#cGmv','#cGmvN');
+bindCalc('#cCost','#cCostN');
+bindCalc('#cRefund','#cRefundN');
+bindCalc('#cFee','#cFeeN');
+function numVal(sel, def){ var v = parseFloat($(sel).value); return isNaN(v) ? def : v; }
+function calc(){
+  var g = numVal('#cGmv',0);
+  var c = numVal('#cCost',0);
+  var r = numVal('#cRefund',0);
+  var f = numVal('#cFee',0);
+  var net = g*(1-r/100);
+  var cost = g*c/100;
+  var gp = net-cost;
+  var np = gp-f;
+  function fmt(v){ return (v<0?'−':'')+Math.abs(v).toFixed(1); }
+  $('#oNetRev').textContent = fmt(net);
+  $('#oGp').textContent = fmt(gp);
+  $('#oGpm').textContent = net>0?(gp/net*100).toFixed(2)+'%':'—';
+  $('#oNp').textContent = fmt(np);
+  var gpBox = $('#oGp').parentElement, npBox = $('#oNp').parentElement;
+  gpBox.style.background = gp>=0?'#eef4ff':'#fdeaea';
+  $('#oGp').style.color = gp>=0?'var(--navy)':'var(--red)';
+  npBox.style.background = np>=0?'#eef4ff':'#fdeaea';
+  $('#oNp').style.color = np>=0?'var(--navy)':'var(--red)';
+}
+calc();
+$('#selftestBtn').addEventListener('click',function(){
+  $('#selftestA').style.display = 'block';
+  $('#selftestBtn').style.display = 'none';
+});
+
+/* ================= 实操：退改签计算器 ================= */
+function refundCalc(){
+  var modeEl = document.querySelector('input[name=rcMode]:checked');
+  var mode = modeEl ? modeEl.value : 'refund';
+  var base = +$('#rcBase').value||0;
+  var refFee = +$('#rcRefFee').value||0;
+  var chgFee = +$('#rcChgFee').value||0;
+  var newFare = +$('#rcNewFare').value||0;
+  var out = '';
+  if(mode==='refund'){
+    var r = base-refFee;
+    out = '应退金额 = 原票价 '+base+' − 退票费 '+refFee+' = <b>'+(r>0?r:0)+' 元</b>';
+    if(r<0){ out += '（退票费高于票价，实际退0——低价票常见）'; }
+  } else if(mode==='change'){
+    var diff = Math.max(0,newFare-base);
+    var pay = chgFee+diff;
+    out = '改签应付 = 改签费 '+chgFee+' + 票价差 '+diff+' = <b>'+pay+' 元</b>';
+    if(newFare<base){ out += '（新票价更低，差额'+(base-newFare)+'元多数航司不退，部分可退到EMD杂费凭证）'; }
+  } else {
+    out = '<b>非自愿变更（航班取消/时刻变更）：免费退票或免费改签</b>；同航司改签更高舱位一般无需补差。';
+  }
+  $('#rcOut').innerHTML = out;
+}
+$$('input[name=rcMode]').forEach(function(r){ r.addEventListener('change',refundCalc); });
+['#rcBase','#rcRefFee','#rcChgFee','#rcNewFare'].forEach(function(id){
+  $(id).addEventListener('input',refundCalc);
+});
+refundCalc();
+$('#rcTestBtn').addEventListener('click',function(){
+  $('#rcTestA').style.display = 'block';
+  $('#rcTestBtn').style.display = 'none';
+});
+
+/* ================= 实操：场景 ================= */
+var SCEN_VIEW = SCEN.map(shuffleOptions);   /* 选项顺序打乱，避免“答案永远是B” */
+$('#scenarioList').innerHTML = SCEN_VIEW.map(function(s,i){
+  var opts = s.o.map(function(opt,oi){
+    return '<button class="sc-opt" data-oi="'+oi+'">'+'ABCD'[oi]+'. '+opt+'</button>';
+  }).join('');
+  return '<div class="card" id="sc'+i+'">'+
+    '<p style="font-size:14.5px;font-weight:700;margin-bottom:10px">📌 案例 '+(i+1)+'：'+s.q+'</p>'+
+    opts+'<div class="sc-exp"></div></div>';
+}).join('');
+$$('.sc-opt').forEach(function(b){
+  b.addEventListener('click',function(){
+    var card = b.parentElement;
+    var idx = +card.id.slice(2);
+    var s = SCEN_VIEW[idx];
+    $$('#'+card.id+' .sc-opt').forEach(function(x){ x.disabled=true; });
+    var oi = +b.dataset.oi;
+    if(oi===s.a){ b.classList.add('correct'); }
+    else {
+      b.classList.add('wrong');
+      $$('#'+card.id+' .sc-opt')[s.a].classList.add('correct');
+    }
+    var exp = card.querySelector('.sc-exp');
+    exp.innerHTML = '🧭 解析：'+s.x;
+    exp.classList.add('show');
+  });
+});
+
+/* ================= 实操：PNR与运价规则小测 ================= */
+function renderMiniQuiz(containerId,data){
+  var el = $(containerId);
+  var view = data.map(shuffleOptions);   /* 每次渲染都打乱选项 */
+  el.innerHTML = view.map(function(m,i){
+    var opts = m.o.map(function(opt,oi){
+      return '<button class="sc-opt" data-oi="'+oi+'">'+'ABCD'[oi]+'. '+opt+'</button>';
+    }).join('');
+    return '<div class="card" id="'+containerId.slice(1)+i+'" style="border:1px solid var(--line)">'+
+      '<p style="font-size:14px;font-weight:700;margin-bottom:8px">Q'+(i+1)+'. '+m.q+'</p>'+
+      opts+'<div class="sc-exp"></div></div>';
+  }).join('');
+  $$('#'+containerId.slice(1)+' .sc-opt').forEach(function(b){
+    b.addEventListener('click',function(){
+      var card = b.parentElement;
+      var idx = +card.id.replace(containerId.slice(1),'');
+      var m = view[idx];
+      $$('#'+card.id+' .sc-opt').forEach(function(x){ x.disabled=true; });
+      var oi = +b.dataset.oi;
+      if(oi===m.a){ b.classList.add('correct'); }
+      else {
+        b.classList.add('wrong');
+        $$('#'+card.id+' .sc-opt')[m.a].classList.add('correct');
+      }
+      var exp = card.querySelector('.sc-exp');
+      exp.innerHTML = '🧭 解析：'+m.x;
+      exp.classList.add('show');
+    });
+  });
+}
+renderMiniQuiz('#pnrQuiz',PNR_QUIZ);
+renderMiniQuiz('#fareQuiz',FARE_QUIZ);
+
+/* ================= 学习计划 ================= */
+var planState = store.get('plan',{});
+function planRender(){
+  var done = 0, total = 0;
+  function wkBlock(w){
+    var items = w.items.map(function(it,i){
+      var key = w.wk+'|'+i;
+      var on = !!planState[key];
+      total++; if(on){ done++; }
+      return '<label class="plan-item'+(on?' done':'')+'"><input type="checkbox" data-key="'+key+'"'+(on?' checked':'')+'><span>'+it+'</span></label>';
+    }).join('');
+    var wkTotal = w.items.length;
+    var wkDone = w.items.filter(function(_,i){ return planState[w.wk+'|'+i]; }).length;
+    return '<div class="card"><div class="weekbar"><h3>'+w.wk+'</h3><span class="badge">'+wkDone+'/'+wkTotal+'</span></div>'+
+      '<div class="progress"><i style="width:'+(wkDone/wkTotal*100)+'%"></i></div>'+items+'</div>';
+  }
+  $('#planList').innerHTML = wkBlock(PRE)+PLAN.map(wkBlock).join('');
+  $('#planBar').style.width = (total?done/total*100:0)+'%';
+  $('#planPct').textContent = '已完成 '+done+' / '+total+' 项';
+  $$('.plan-item input').forEach(function(ch){
+    ch.addEventListener('change',function(){
+      planState[ch.dataset.key] = ch.checked;
+      store.set('plan',planState);
+      planRender();
+    });
+  });
+}
+planRender();
+$('#planReset').addEventListener('click',function(){
+  if(!confirm('重置 30 天学习计划的全部勾选？')){ return; }
+  store.set('plan',{});
+  Object.keys(planState).forEach(function(k){ delete planState[k]; });
+  planRender();
+});
+
+/* ================= ETERM 指令速查数据 ================= */
+var ETERM_CMDS=[
+ {g:'🔑 登录与工作区',items:[
+  {c:'$$OPEN TIPC3',d:'打开系统（教学环境固定路径）'},
+  {c:'SI:工作号/密码',d:'营业员登录，如 SI:10086/ABC123'},
+  {c:'DA',d:'显示工作区与权限（BSP授权/出票/退票权限）'},
+  {c:'SO',d:'退出当前营业员'}
+ ]},
+ {g:'🔍 航班查询',items:[
+  {c:'AV:H/PEKPVG/20OCT',d:'按时刻查航班。AV:PEKPVG=当天全部；AV:RA/…=按到达时刻；AV:PEKPVG/20OCT/0900=指定时间；AV:CA/PEKPVG=指定航司'},
+  {c:'DS:PEKPVG/20OCT',d:'班期时刻（回显 1234567=每周几有航班）'},
+  {c:'SK:PEKPVG',d:'最新时刻表'},
+  {c:'FF:CA1501/20OCT',d:'航班经停信息（STOP:0=直飞）'},
+  {c:'DSG:C/PEKPVG',d:'按指定舱位查班期'}
+ ]},
+ {g:'🪑 建立订座（PNR）',items:[
+  {c:'SS:CA1501/Y/20OCT/PEKPVG/NN1',d:'订座：航班号/舱位/日期/航段/NN人数。回显 RR=直接确认、HK=已确认'},
+  {c:'SD:1',d:'查看第1个航段（订完立刻核对舱位/日期/时刻）'},
+  {c:'NM:1ZHANG/SAN',d:'姓名：人数+姓/名（姓在前）。CHD=儿童、INF=婴儿'},
+  {c:'CT:PEK/13800138000',d:'联系组：城市/电话'},
+  {c:'TK:TL/1200/20OCT/PEK',d:'出票时限：TL/时间/日期/城市'},
+  {c:'OSI:CA VIP',d:'航司备注（航司端可见）'},
+  {c:'RMK:MP/内容',d:'内部备注（航司不可见）'},
+  {c:'@',d:'封口保存（End Transaction）→ 返回6位记录编号；@I=封口并立即提取'}
+ ]},
+ {g:'📂 提取与修改',items:[
+  {c:'RT:H4J8KL',d:'按记录编号提取；RT:ZHANG/SAN/20OCT=按姓名+日期提取'},
+  {c:'XE:1',d:'取消第1个航段（改签第一步，需@封口生效）；XE:PN=取消全部航段'},
+  {c:'XEP:1',d:'取消姓名项'},
+  {c:'IG',d:'忽略：撤销未封口的修改，恢复上次封口状态'},
+  {c:'H',d:'PNR历史记录（谁在何时改了什么）'},
+  {c:'ML:H4J8KL',d:'名单显示（需授权）'}
+ ]},
+ {g:'💰 运价查询与输入',items:[
+  {c:'PAT:A',d:'查运价：各舱位票价列表'},
+  {c:'QTE:CA1501/Y/PEKPVG',d:'精确计价：航班号/舱位/城市对 → 票价+税费+总价'},
+  {c:'XS FSG',d:'显示票价组'},
+  {c:'XS FSD',d:'显示票价详情与规则（退改条款）'},
+  {c:'FN:FCNY1350.00/SCNY1350.00/C3.00/TCNY50.00CN/TCNY10.00YQ',d:'票价组：F票价/S实收/C代理费率/T税项'},
+  {c:'FC:PEK CA PVG 1350.00Y CNY1350.00END',d:'票价计算行（运价横式）'},
+  {c:'FP:CASH,CNY',d:'付款方式：CASH现金/CHECK支票/CC信用卡 + 币种'}
+ ]},
+ {g:'🎫 出票与售后',items:[
+  {c:'ETDZ:1',d:'电子客票出票（出票前确认FN/FC/FP齐全且在时限内）'},
+  {c:'DETR:TN/999-1234567890',d:'按票号查电子客票；加,H查历史版本'},
+  {c:'DETR:NI/110101199001011234',d:'按证件号（身份证）查票'},
+  {c:'DETR:NM/ZHANG/SAN',d:'按姓名查票（该旅客全部客票）'},
+  {c:'TKTT:TN/999-1234567890',d:'客票状态：OPEN FOR USE=可用 / USED=已使用 / REFUNDED=已退'},
+  {c:'TRFD:AM/1/D',d:'退票：AM/航段号/D（需退票权限，手续费按Cat16规则）'}
+ ]}
+];
+$('#etermCmdList').innerHTML = ETERM_CMDS.map(function(g){
+  var rows = g.items.map(function(it){
+    return '<tr><td style="width:320px"><code>'+it.c+'</code></td><td>'+it.d+'</td></tr>';
+  }).join('');
+  return '<div class="card"><div class="weekbar"><h3>'+g.g+'</h3></div><table class="tbl"><tr><th>指令</th><th>说明</th></tr>'+rows+'</table></div>';
+}).join('');
+
+/* ================= 折叠面板：统一委托 + 键盘可访问 ================= */
+function initDisclosures(){
+  $$('.acc-head, .qa-q').forEach(function(h){
+    h.setAttribute('role','button');
+    h.setAttribute('tabindex','0');
+    h.setAttribute('aria-expanded', h.parentElement.classList.contains('open') ? 'true' : 'false');
+  });
+}
+function toggleDisclosure(h){
+  var open = h.parentElement.classList.toggle('open');
+  h.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+document.addEventListener('click', function(e){
+  var h = e.target.closest ? e.target.closest('.acc-head, .qa-q') : null;
+  if(h){ toggleDisclosure(h); }
+});
+document.addEventListener('keydown', function(e){
+  if(e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar'){ return; }
+  var h = e.target.closest ? e.target.closest('.acc-head, .qa-q') : null;
+  if(h && h === e.target){ e.preventDefault(); toggleDisclosure(h); }
+});
+initDisclosures();
+
+/* ================= 仿真终端引擎（四套系统共用） ================= */
+function norm(s){ return s.replace(/^\s+|\s+$/g,'').replace(/\s+/g,' ').toUpperCase(); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function makeLab(cfg){
+  var wrap = $('#'+cfg.id);
+  wrap.innerHTML =
+    '<div class="lab-grid">'+
+      '<div class="card lab-task">'+
+        '<div class="weekbar"><h3>'+cfg.title+'</h3><span class="badge blue" id="'+cfg.id+'Prog">0/'+cfg.steps.length+'</span></div>'+
+        '<div class="progress"><i id="'+cfg.id+'Bar" style="width:0%"></i></div>'+
+        '<div class="lab-steps" id="'+cfg.id+'Steps"></div>'+
+        '<div class="lab-btns">'+
+          '<button class="btn btn-a" id="'+cfg.id+'Hint">💡 提示</button>'+
+          '<button class="btn btn-o" id="'+cfg.id+'Ans">📝 给我答案</button>'+
+          '<button class="btn btn-o" id="'+cfg.id+'Free">🎮 自由练习</button>'+
+          '<button class="btn btn-r" id="'+cfg.id+'Reset">🔄 重新开始</button>'+
+        '</div>'+
+      '</div>'+
+      '<div class="term-wrap">'+
+        '<div class="term-bar"><span>● ● ●</span><b>'+cfg.sys+' 仿真终端</b><span class="muted2">'+cfg.note+'</span></div>'+
+        '<div class="term-scr" id="'+cfg.id+'Out"></div>'+
+        '<div class="term-in"><span class="prompt">&gt;</span><input id="'+cfg.id+'In" autocomplete="off" spellcheck="false" placeholder="在此输入指令，按回车执行…"></div>'+
+      '</div>'+
+    '</div>';
+  var out=$('#'+cfg.id+'Out'), inp=$('#'+cfg.id+'In');
+  var cur=0, free=false, finished=false;
+  function print(html,cls){
+    var d=document.createElement('div');
+    d.className=cls||'sys';
+    d.textContent=html;
+    out.appendChild(d);
+    out.scrollTop=out.scrollHeight;
+  }
+  function refresh(){
+    var n=cfg.steps.length;
+    $('#'+cfg.id+'Prog').textContent=cur+'/'+n;
+    $('#'+cfg.id+'Bar').style.width=(cur/n*100)+'%';
+    var box=$('#'+cfg.id+'Steps');
+    box.innerHTML=cfg.steps.map(function(s,i){
+      var cls=i<cur?'done':(i===cur?'cur':''), ic=i<cur?'✅':(i===cur?'▶️':'○');
+      return '<div class="st '+cls+'"><span class="ic">'+ic+'</span><span>'+s.t+'</span></div>';
+    }).join('');
+    box.scrollTop=box.scrollHeight;
+  }
+  function banner(){
+    print(cfg.welcome,'big');
+    print('────────────────────────────────','sys');
+    print('当前任务：'+cfg.steps[0].t,'task');
+    print('输入 HELP 查看全部可用指令；卡住了点「💡 提示」。','hint');
+  }
+  function respond(){
+    var raw=inp.value, t=norm(raw);
+    inp.value='';
+    if(!t){ return; }
+    print('> '+raw,'echo');
+    if(finished && !free){
+      print('（流程已完成 🎉 点「🎮 自由练习」继续探索，或「🔄 重新开始」不看提示再来一遍）','warn');
+      return;
+    }
+    if(!free){
+      var s=cfg.steps[cur], ok=false;
+      if(typeof s.expect==='string'){ ok=(t===norm(s.expect)); }
+      else if(s.expect instanceof RegExp){ ok=s.expect.test(t); }
+      else if(typeof s.expect==='function'){ ok=s.expect(t); }
+      if(ok){
+        print(s.out,'ok');
+        cur++;
+        refresh();
+        if(cur>=cfg.steps.length){
+          finished=true;
+          print('','sys');
+          print(cfg.done,'big');
+        } else {
+          print('','sys');
+          print('当前任务：'+cfg.steps[cur].t,'task');
+        }
+        return;
+      }
+    }
+    var r=cfg.respond(t);
+    if(r){ print(r.html,r.cls||'sys'); }
+    if(!free && !finished){
+      print('（还未完成当前任务——继续尝试，或点「💡 提示」）','warn');
+    }
+  }
+  inp.addEventListener('keydown',function(e){ if(e.key==='Enter'){ respond(); } });
+  $('#'+cfg.id+'Hint').addEventListener('click',function(){
+    if(finished){ print('流程已完成 🎉','big'); return; }
+    print('💡 提示：'+cfg.steps[cur].hint,'hint');
+  });
+  $('#'+cfg.id+'Ans').addEventListener('click',function(){
+    if(finished){ return; }
+    inp.value=cfg.steps[cur].ans;
+    inp.focus();
+    print('已填入参考答案，按回车执行。','hint');
+  });
+  $('#'+cfg.id+'Free').addEventListener('click',function(){
+    free=!free;
+    this.textContent = free?'🎯 返回任务':'🎮 自由练习';
+    print(free?'── 已进入自由练习模式：输入任意指令（HELP 查看清单）──':'── 已返回任务模式 ──','hint');
+    inp.focus();
+  });
+  $('#'+cfg.id+'Reset').addEventListener('click',function(){
+    cur=0; free=false; finished=false;
+    $('#'+cfg.id+'Free').textContent='🎮 自由练习';
+    out.innerHTML='';
+    refresh(); banner(); inp.focus();
+  });
+  out.addEventListener('click',function(){ inp.focus(); });
+  refresh(); banner(); inp.focus();
+}
+
+/* ================= ETERM 实战任务（18步完整出票流程） ================= */
+var ETERM_STEPS=[
+ {t:'打开系统（输入系统路径指令）',hint:'教学环境固定路径：$$OPEN TIPC3',ans:'$$OPEN TIPC3',expect:'$$OPEN TIPC3',out:'SESSION PATH OPEN TO: TIPC3\n系统连接成功（教学演示环境）'},
+ {t:'用工作号 10086 / 密码 ABC123 登录',hint:'格式 SI:工作号/密码',ans:'SI:10086/ABC123',expect:'SI:10086/ABC123',out:'WELCOME TO ETERM\n营业员 ZHANG/SAN 工作号10086 已登录（PEK001）'},
+ {t:'查询 10月20日 北京→上海 的航班时刻',hint:'格式 AV:H/城市对/日期；北京=PEK、上海浦东=PVG',ans:'AV:H/PEKPVG/20OCT',expect:/^AV:(H\/)?PEKPVG\/20OCT$/,out:'AV:H/PEKPVG/20OCT（教学演示数据）\n1 CA1501 PEKPVG 1105 1350 738 0^B S E\n　F4 A4 P2 J2 C2 D2 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 U9 S9 T9 E9\n2 MU5183 PEKPVG 0800 1020 333 0 M\n　F4 A2 P0 J9 C9 D9 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 U9 S9 T9 E9\n3 HU7605 PEKPVG 1930 2210 789 0 M\n　F4 A4 P0 J2 C2 D2 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 U9 S9 T9 E9\n👉 行号1=CA1501国航；Y9=Y舱有9个以上座位'},
+ {t:'查看 CA1501 的经停信息',hint:'格式 FF:航班号/日期',ans:'FF:CA1501/20OCT',expect:/^FF:CA1501\/20OCT$/,out:'CA1501 PEKPVG 1105 1350 738\nSTOP: 0（无经停，直飞）'},
+ {t:'为旅客订 CA1501 的 Y舱 1个座位',hint:'格式 SS:航班号/舱位/日期/航段/NN人数',ans:'SS:CA1501/Y/20OCT/PEKPVG/NN1',expect:/^SS:CA1501\/Y\/20OCT\/PEKPVG\/NN1$/,out:'1. CA1501 Y 20OCT PEKPVG RR1 1105 1350 738 E 0R\n（RR=已确认，订座成功）'},
+ {t:'查看刚订的航段',hint:'格式 SD:航段号',ans:'SD:1',expect:'SD:1',out:'1. CA1501 Y 20OCT PEKPVG RR1 1105 1350 738 E 0R'},
+ {t:'录入旅客姓名：ZHANG/SAN（1人）',hint:'格式 NM:人数姓/名（姓在前，斜杠后是名）',ans:'NM:1ZHANG/SAN',expect:'NM:1ZHANG/SAN',out:'1.ZHANG/SAN（姓名已录入）'},
+ {t:'录入联系电话',hint:'格式 CT:城市/电话',ans:'CT:PEK/13800138000',expect:'CT:PEK/13800138000',out:'3.PEK/T 13800138000（联系组已录入）'},
+ {t:'设置出票时限：10月20日 12:00 前',hint:'格式 TK:TL/时间/日期/城市',ans:'TK:TL/1200/20OCT/PEK',expect:'TK:TL/1200/20OCT/PEK',out:'4.TL/1200/20OCT/PEK（12:00前必须出票，否则座位可能被系统取消）'},
+ {t:'封口保存（生成记录编号）',hint:'封口指令就是 @ 符号（End Transaction）',ans:'@',expect:'@',out:'记录编号: H4J8KL\n✔ PNR已保存——记下这个6位编号！'},
+ {t:'用记录编号提取 PNR',hint:'格式 RT:记录编号',ans:'RT:H4J8KL',expect:'RT:H4J8KL',out:'H4J8KL\n1.ZHANG/SAN\n2.CA1501 Y 20OCT PEKPVG RR1 1105 1350 738 E 0R\n3.PEK/T 13800138000\n4.TL/1200/20OCT/PEK'},
+ {t:'查询该航段的运价',hint:'指令 PAT:A',ans:'PAT:A',expect:'PAT:A',out:'PAT:A\n01 Y CNY1350.00 20OCT PEKPVG\n02 B CNY2430.00 20OCT PEKPVG\n03 M CNY2030.00 20OCT PEKPVG\n04 H CNY1730.00 20OCT PEKPVG\n（Y舱票价1350元）'},
+ {t:'精确计算 CA1501 Y舱 的运价',hint:'格式 QTE:航班号/舱位/城市对',ans:'QTE:CA1501/Y/PEKPVG',expect:/^QTE:CA1501\/Y\/PEKPVG$/,out:'QTE:\n01 Y CNY1350.00\nTAX: CNY50.00CN CNY10.00YQ\nTOTAL: CNY1410.00\n（票价1350+税费60=总价1410元）'},
+ {t:'输入票价组 FN（照抄答案）',hint:'FN:FCNY1350.00/SCNY1350.00/C3.00/TCNY50.00CN/TCNY10.00YQ',ans:'FN:FCNY1350.00/SCNY1350.00/C3.00/TCNY50.00CN/TCNY10.00YQ',expect:'FN:FCNY1350.00/SCNY1350.00/C3.00/TCNY50.00CN/TCNY10.00YQ',out:'FN已输入：FCNY1350.00/SCNY1350.00/C3.00/TCNY50.00CN/TCNY10.00YQ\n（F=票价 S=实收 C=代理费率3% T=税项）'},
+ {t:'输入票价计算行 FC',hint:'FC:PEK CA PVG 1350.00Y CNY1350.00END',ans:'FC:PEK CA PVG 1350.00Y CNY1350.00END',expect:'FC:PEK CA PVG 1350.00Y CNY1350.00END',out:'FC已输入：PEK CA PVG 1350.00Y CNY1350.00END'},
+ {t:'输入付款方式 FP',hint:'FP:CASH,CNY（现金/人民币）',ans:'FP:CASH,CNY',expect:'FP:CASH,CNY',out:'FP已输入：CASH,CNY'},
+ {t:'出票！',hint:'指令 ETDZ:1（ETDZ=电子客票打票）',ans:'ETDZ:1',expect:'ETDZ:1',out:'✔ 电子客票出票成功\nTKTN: 999-1234567890'},
+ {t:'查验电子客票（按票号）',hint:'格式 DETR:TN/票号',ans:'DETR:TN/999-1234567890',expect:'DETR:TN/999-1234567890',out:'ISSUED BY: AIR CHINA\nORG/DST: PEK/PVG\nNAME: ZHANG/SAN\nFLIGHT: CA1501 Y 20OCT PEKPVG 1105 1350\nSTATUS: OPEN FOR USE\n（客票有效可用 ✔）'}
+];
+
+function etermRespond(t){
+  var EXACT={
+    'HELP':{html:'可用指令（练习用）：\n$$OPEN TIPC3 | SI:工作号/密码 | DA | SO\nAV:H/城市对/日期 | AV:城市对 | AV:RA/… | DS:城市对/日期 | SK:城市对 | FF:航班号/日期 | DSG:城市对\nSS:航班号/舱位/日期/航段/NN人数 | SD:1 | NM:1姓/名 | CT:城市/电话 | TK:TL/时间/日期/城市 | OSI:航司 内容 | RMK:内容\n@（封口）| @I | RT:记录编号 | XE:1 | XEP:1 | IG | H | ML:记录编号\nPAT:A | QTE:航班号/舱位/城市对 | XS FSG | XS FSD | FN:… | FC:… | FP:…\nETDZ:1 | DETR:TN/票号 | DETR:NI/证件号 | DETR:NM/姓名 | TKTT:TN/票号 | TRFD:AM/1/D'},
+    '$$OPEN TIPC3':{html:'SESSION PATH OPEN TO: TIPC3\n系统连接成功（教学演示环境）',cls:'ok'},
+    'SI:10086/ABC123':{html:'WELCOME TO ETERM\n营业员 ZHANG/SAN 工作号10086 已登录（PEK001）',cls:'ok'},
+    'DA':{html:'A 10086 ABC123 ZHANG/SAN 00 PEK001\nBSP授权: Y  出票: Y  退票: Y  改签: Y',cls:'sys'},
+    'SO':{html:'工作号10086已退出登录（重新登录用 SI:工作号/密码）',cls:'sys'},
+    '@':{html:'记录编号: H4J8KL\n✔ PNR已封口保存——记录编号是这张票的唯一"订单号"',cls:'ok'},
+    '@I':{html:'记录编号: H4J8KL（已封口并自动提取）',cls:'ok'},
+    'H':{html:'HISTORY:\n001 20OCT 0912 10086 SS CA1501 Y 20OCT PEKPVG NN1\n002 20OCT 0913 10086 NM 1ZHANG/SAN\n（历史记录用于追溯"谁在什么时间改了什么"）',cls:'sys'},
+    'SD:1':{html:'1. CA1501 Y 20OCT PEKPVG RR1 1105 1350 738 E 0R\n（RR=已确认 Y=舱位 738=机型 0R=无经停）',cls:'sys'},
+    'NM:1ZHANG/SAN':{html:'1.ZHANG/SAN（姓名已录入，注意姓在前名在后）',cls:'ok'},
+    'CT:PEK/13800138000':{html:'3.PEK/T 13800138000（联系组已录入）',cls:'ok'},
+    'TK:TL/1200/20OCT/PEK':{html:'4.TL/1200/20OCT/PEK（12:00前必须出票）',cls:'ok'},
+    'OSI:CA VIP':{html:'OSI CA VIP（航司备注已录入——航司端可见）',cls:'ok'},
+    'RMK:MP/教学演示':{html:'RMK已录入（内部备注，航司不可见）',cls:'ok'},
+    'PAT:A':{html:'PAT:A\n01 Y CNY1350.00 20OCT PEKPVG\n02 B CNY2430.00 20OCT PEKPVG\n03 M CNY2030.00 20OCT PEKPVG\n04 H CNY1730.00 20OCT PEKPVG\n（教学演示运价：Y舱1350元）',cls:'sys'},
+    'QTE:CA1501/Y/PEKPVG':{html:'QTE:\n01 Y CNY1350.00\nTAX: CNY50.00CN CNY10.00YQ\nTOTAL: CNY1410.00\n（票价+税=总价 1410元）',cls:'sys'},
+    'FN:FCNY1350.00/SCNY1350.00/C3.00/TCNY50.00CN/TCNY10.00YQ':{html:'FN已输入：FCNY1350.00/SCNY1350.00/C3.00/TCNY50.00CN/TCNY10.00YQ\n（F=票价 S=实收 C=代理费率3% T=税项）',cls:'ok'},
+    'FC:PEK CA PVG 1350.00Y CNY1350.00END':{html:'FC已输入：PEK CA PVG 1350.00Y CNY1350.00END（票价计算行）',cls:'ok'},
+    'FP:CASH,CNY':{html:'FP已输入：CASH,CNY（现金支付/人民币）',cls:'ok'},
+    'ETDZ:1':{html:'✔ 电子客票出票成功\nTKTN: 999-1234567890\n（票号13位：前3位999=国航票证代码）',cls:'ok'},
+    'DETR:TN/999-1234567890':{html:'ISSUED BY: AIR CHINA\nORG/DST: PEK/PVG\nNAME: ZHANG/SAN\nFLIGHT: CA1501 Y 20OCT PEKPVG 1105 1350\nSTATUS: OPEN FOR USE\n（OPEN FOR USE=客票有效可用）',cls:'sys'},
+    'DETR:NI/110101199001011234':{html:'NAME: ZHANG/SAN\nTKTN: 999-1234567890\nFLIGHT: CA1501 Y 20OCT PEKPVG 1105\nSTATUS: OPEN FOR USE',cls:'sys'},
+    'DETR:NM/ZHANG/SAN':{html:'DETR:NM/ZHANG/SAN\n01  999-1234567890  CA1501 Y 20OCT PEKPVG  OPEN FOR USE',cls:'sys'},
+    'TKTT:TN/999-1234567890':{html:'TKTN: 999-1234567890  STATUS: OPEN FOR USE',cls:'sys'},
+    'TRFD:AM/1/D':{html:'退票申请已受理（演示）：航段1已退票\n应退金额按运价规则Cat16计算（票价-退票手续费）',cls:'ok'},
+    'XE:1':{html:'航段1已取消（需 @ 封口后生效）',cls:'ok'},
+    'XEP:1':{html:'姓名项已取消（需 @ 封口后生效）',cls:'ok'},
+    'IG':{html:'修改已忽略，PNR恢复为上次封口状态',cls:'sys'},
+    'ML:H4J8KL':{html:'ML:H4J8KL\n1.ZHANG/SAN  CA1501 Y 20OCT PEKPVG RR1 1105 1350',cls:'sys'},
+    'RT:H4J8KL':{html:'H4J8KL\n1.ZHANG/SAN\n2.CA1501 Y 20OCT PEKPVG RR1 1105 1350 738 E 0R\n3.PEK/T 13800138000\n4.TL/1200/20OCT/PEK',cls:'sys'},
+    'XS FSG':{html:'XS FSG\n01 PEKPVG Y CNY1350.00\n（票价组显示：航线/舱位/票价）',cls:'sys'},
+    'XS FSD':{html:'XS FSD\nFARE RULES:\nCAT16 CHANGE: CNY200.00  REFUND: CNY300.00\n（票价规则：改签费200元/退票费300元——教学演示）',cls:'sys'}
+  };
+  if(EXACT[t]){ return EXACT[t]; }
+  if(/^SI:/.test(t)){ return {html:'工作号或密码错误（练习用工作号：SI:10086/ABC123）',cls:'err'}; }
+  if(/^AV:H\//.test(t) || /^AV:RA\//.test(t)){
+    var m=t.split('/');
+    var cp=m[1]||'PEKPVG', dt=m[2]||'20OCT';
+    var tag=(t.indexOf('AV:RA')===0)?'按到达时刻查询':'按起飞时刻查询';
+    return {html:tag+' '+dt+' '+cp+'（教学演示数据）\n1 CA1501 '+cp+' 1105 1350 738 0^B S E\n　F4 A4 P2 J2 C2 D2 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 U9 S9 T9 E9\n2 MU5183 '+cp+' 0800 1020 333 0 M\n　F4 A2 P0 J9 C9 D9 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 U9 S9 T9 E9\n3 HU7605 '+cp+' 1930 2210 789 0 M\n　F4 A4 P0 J2 C2 D2 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 U9 S9 T9 E9\n（行号1/2/3供SS订座引用；Y9=有9个以上座位；P0=关舱）',cls:'sys'};
+  }
+  if(/^AV:/.test(t)){
+    return {html:'AV 查询（教学演示数据）\n20OCT(SUN) PEKPVG\n1 CA1501 PEKPVG 1105 1350 738 0^B S E\n　F4 A4 P2 J2 C2 D2 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 U9 S9 T9 E9\n2 MU5183 PEKPVG 0800 1020 333 0 M\n　Y9 B9 M9 H9 K9 L9 Q9 G9 V9 U9 S9 T9 E9',cls:'sys'};
+  }
+  if(/^DS:|^DSG:|^SK:/.test(t)){
+    return {html:'班期时刻（教学演示数据）\nCA1501 1234567 1105 1350 738\nMU5183 1234567 0800 1020 333\nHU7605 1357 1930 2210 789\n（1234567=每天执行；1357=周一/三/五/日执行）',cls:'sys'};
+  }
+  if(/^FF:/.test(t)){
+    return {html:'CA1501 PEKPVG 1105 1350 738\nSTOP: 0（无经停，直飞）',cls:'sys'};
+  }
+  if(/^SS:/.test(t)){
+    if(/^SS:[A-Z0-9]{2,6}\/[A-Z]\/\d{1,2}[A-Z]{3}\/[A-Z]{6}\/NN\d$/.test(t)){
+      var p=t.slice(3).split('/');
+      return {html:'1. '+p[0]+' '+p[1]+' '+p[2]+' '+p[3]+' RR1 1105 1350 738 E 0R\n（RR=已确认，订座成功 ✔）',cls:'ok'};
+    }
+    return {html:'格式错误：SS:航班号/舱位/日期/航段/NN人数\n例：SS:CA1501/Y/20OCT/PEKPVG/NN1',cls:'err'};
+  }
+  if(/^SD:/.test(t)){
+    return {html:'1. CA1501 Y 20OCT PEKPVG RR1 1105 1350 738 E 0R',cls:'sys'};
+  }
+  if(/^NM:/.test(t)){
+    return {html:'姓名格式：NM:人数姓/名\n例：NM:1ZHANG/SAN（姓在前、斜杠后是名）',cls:'err'};
+  }
+  if(/^CT:/.test(t)){
+    return {html:'联系组格式：CT:城市/电话\n例：CT:PEK/13800138000',cls:'err'};
+  }
+  if(/^TK:/.test(t)){
+    return {html:'时限格式：TK:TL/时间/日期/城市\n例：TK:TL/1200/20OCT/PEK',cls:'err'};
+  }
+  if(/^QTE:/.test(t)){
+    return {html:'QTE:\n01 Y CNY1350.00\nTAX: CNY50.00CN CNY10.00YQ\nTOTAL: CNY1410.00\n（教学演示运价）',cls:'sys'};
+  }
+  if(/^XS FSG/.test(t)){ return {html:'XS FSG\n01 PEKPVG Y CNY1350.00\n（票价组显示：航线/舱位/票价）',cls:'sys'}; }
+  if(/^XS FSD/.test(t)){ return {html:'XS FSD\nFARE RULES:\nCAT16 CHANGE: CNY200.00  REFUND: CNY300.00\n（票价规则：改签费200元/退票费300元——教学演示）',cls:'sys'}; }
+  if(/^FN:/.test(t)){ return {html:'FN已输入 ✔\n（教学演示格式：FN:FCNY1350.00/SCNY1350.00/C3.00/TCNY50.00CN/TCNY10.00YQ）',cls:'ok'}; }
+  if(/^FC:/.test(t)){ return {html:'FC已输入 ✔\n（教学演示格式：FC:PEK CA PVG 1350.00Y CNY1350.00END）',cls:'ok'}; }
+  if(/^FP:/.test(t)){ return {html:'FP已输入 ✔\n（教学演示格式：FP:CASH,CNY）',cls:'ok'}; }
+  if(/^ETDZ:/.test(t)){ return {html:'✔ 电子客票出票成功\nTKTN: 999-1234567890',cls:'ok'}; }
+  if(/^DETR:/.test(t)){
+    if(t.indexOf('TN/')===5){ return {html:'ISSUED BY: AIR CHINA\nORG/DST: PEK/PVG\nNAME: ZHANG/SAN\nFLIGHT: CA1501 Y 20OCT PEKPVG 1105 1350\nSTATUS: OPEN FOR USE',cls:'sys'}; }
+    if(t.indexOf('NI/')===5){ return {html:'NAME: ZHANG/SAN\nTKTN: 999-1234567890\nFLIGHT: CA1501 Y 20OCT PEKPVG 1105\nSTATUS: OPEN FOR USE',cls:'sys'}; }
+    if(t.indexOf('NM/')===5){ return {html:'DETR:NM/ZHANG/SAN\n01  999-1234567890  CA1501 Y 20OCT PEKPVG  OPEN FOR USE',cls:'sys'}; }
+    return {html:'DETR格式：DETR:TN/票号 | DETR:NI/证件号 | DETR:NM/姓名',cls:'err'};
+  }
+  if(/^TKTT:/.test(t)){ return {html:'TKTN: 999-1234567890  STATUS: OPEN FOR USE',cls:'sys'}; }
+  if(/^TRFD:/.test(t)){ return {html:'退票申请已受理（演示）\n应退金额按运价规则Cat16计算',cls:'ok'}; }
+  if(/^XE:/.test(t)){ return {html:'航段已取消（需 @ 封口后生效）',cls:'ok'}; }
+  if(/^XEP:/.test(t)){ return {html:'姓名项已取消（需 @ 封口后生效）',cls:'ok'}; }
+  if(/^RT:/.test(t)){ return {html:'无此记录编号（练习用记录编号：H4J8KL）',cls:'err'}; }
+  if(/^ML:/.test(t)){ return {html:'ML:H4J8KL\n1.ZHANG/SAN  CA1501 Y 20OCT PEKPVG RR1 1105 1350',cls:'sys'}; }
+  if(/^RMK:/.test(t)){ return {html:'RMK已录入 ✔',cls:'ok'}; }
+  if(/^OSI:/.test(t)){ return {html:'OSI已录入 ✔',cls:'ok'}; }
+  return {html:'COMMAND NOT VALID（指令无法识别）\n输入 HELP 查看支持指令；或点「💡 提示」看当前任务线索',cls:'err'};
+}
+
+makeLab({
+  id:'etermLab',
+  sys:'ETERM（中航信）',
+  title:'🖥️ 实战任务：完整出票流程',
+  note:'18步 · 教学仿真',
+  welcome:'┌────────────────────────────┐\n│   欢迎使用 ETERM 仿真终端   │\n│   目标：从登录到出票全流程   │\n│   （教学演示数据）          │\n└────────────────────────────┘',
+  steps:ETERM_STEPS,
+  done:'🏆 全流程完成！\n你已完成：登录 → 查航班AV → 订座SS → 建PNR(NM/CT/TK) → 封口@ → 提取RT → 查价(PAT:A/QTE) → 输价(FN/FC/FP) → 出票ETDZ → 验票DETR\n现在点「🎮 自由练习」复习任意指令，或「🔄 重新开始」不看提示再来一遍。',
+  respond:etermRespond
+});
+
+/* ================= Amadeus (1A) 实战任务 ================= */
+var AMA_STEPS=[
+ {t:'登录系统（工作号1001AB）',hint:'格式 JI工作号/SU',ans:'JI1001AB/SU',expect:'JI1001AB/SU',out:'AGENT SIGN IN COMPLETE（教学演示）'},
+ {t:'查询 10月20日 北京→法兰克福 可用航班',hint:'格式 AN日期城市对：AN20OCTPEKFRA',ans:'AN20OCTPEKFRA',expect:'AN20OCTPEKFRA',out:'AN20OCTPEKFRA（教学演示数据）\n1 CA931 PEKFRA 1345 1835 E0/77W J9 C9 D9 Z9 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9\n2 LH721 PEKFRA 1030 1435 E0/388 J9 C9 D9 Z9 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9\n3 HU489 PEKFRA 0200 0540 E0/789 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9\n（行号1=CA931；Y9=Y舱有9个以上座位）'},
+ {t:'查看第1行 CA931 的航班详情',hint:'格式 DO+行号：DO1',ans:'DO1',expect:'DO1',out:'CA931 PEKFRA 1345 1835 77W\nMEAL: HOT MEAL  STOP: 0（教学演示）'},
+ {t:'从第1行订 1个 Y舱座位',hint:'格式 SS行号舱位人数：SS1Y1',ans:'SS1Y1',expect:'SS1Y1',out:'1 CA931 Y 20OCT PEKFRA HK1 1345 1835 77W\n（HK=已确认）'},
+ {t:'录入姓名',hint:'格式 NM1姓/名 称谓：NM1ZHANG/SAN MR',ans:'NM1ZHANG/SAN MR',expect:'NM1ZHANG/SAN MR',out:'1.ZHANG/SAN MR（姓名已录入，MR=先生）'},
+ {t:'录入电话',hint:'格式 AP 城市 号码：AP PEK 13800138000',ans:'AP PEK 13800138000',expect:'AP PEK 13800138000',out:'AP PEK 13800138000（联系电话已录入）'},
+ {t:'设置出票时限：10月20日',hint:'指令 TKTL20OCT',ans:'TKTL20OCT',expect:'TKTL20OCT',out:'TK TL20OCT（10月20日前出票）'},
+ {t:'封口保存（End Transaction）',hint:'指令 ET',ans:'ET',expect:'ET',out:'--- RLR ---\nRP/PEK001/PEK001 20OCT26/0915Z 2ABC3D\n✔ PNR保存成功：2ABC3D'},
+ {t:'提取PNR',hint:'指令 RT2ABC3D',ans:'RT2ABC3D',expect:'RT2ABC3D',out:'--- RLR ---\nRP/PEK001/PEK001 20OCT26/0915Z 2ABC3D\n1.ZHANG/SAN MR\n2 CA931 Y 20OCT PEKFRA HK1 1345 1835 77W\n3 AP PEK 13800138000\n4 TK TL20OCT'},
+ {t:'对PNR计价',hint:'指令 FXP',ans:'FXP',expect:'FXP',out:'FXP\nFARE: CNY4680.00  TAX: CNY420.00XT  TOTAL: CNY5100.00\n（票价4680+税费420=总价5100元）'},
+ {t:'出电子票',hint:'指令 TTP',ans:'TTP',expect:'TTP',out:'✔ TICKET ISSUED\nTKT: 125-1234567890'}
+];
+function amaRespond(t){
+  var EXACT={
+    'HELP':{html:'Amadeus 练习指令：\nJI1001AB/SU 登录 | JO 退出\nAN20OCTPEKFRA 查可用 | SN20OCTPEKFRA 查时刻 | DO1 航班详情\nSS1Y1 订座 | NM1ZHANG/SAN MR 姓名 | AP PEK 13800138000 电话 | APE- EMAIL@XX.COM 邮箱 | TKTL20OCT 时限 | TKOK 无时限\nET 封口 | ER 封口并提取 | RT2ABC3D 提取 | XE1 取消 | IG 忽略 | RH 历史\nFQD PEKFRA 运价显示 | FXP 计价 | TQT 看计价记录 | TTP 出票 | TWD/TKT125-1234567890 查票'},
+    'JI1001AB/SU':{html:'AGENT SIGN IN COMPLETE（教学演示）',cls:'ok'},
+    'JO':{html:'AGENT SIGN OUT COMPLETE',cls:'sys'},
+    'AN20OCTPEKFRA':{html:'AN20OCTPEKFRA（教学演示数据）\n1 CA931 PEKFRA 1345 1835 E0/77W J9 C9 D9 Z9 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9\n2 LH721 PEKFRA 1030 1435 E0/388 J9 C9 D9 Z9 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9\n3 HU489 PEKFRA 0200 0540 E0/789 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9',cls:'sys'},
+    'SN20OCTPEKFRA':{html:'SN20OCTPEKFRA（教学演示数据）\nCA931 1234567 PEK1345 FRA1835 77W\nLH721 1234567 PEK1030 FRA1435 388\n（1234567=每天执行）',cls:'sys'},
+    'DO1':{html:'CA931 PEKFRA 1345 1835 77W\nMEAL: HOT MEAL  STOP: 0（教学演示）',cls:'sys'},
+    'SS1Y1':{html:'1 CA931 Y 20OCT PEKFRA HK1 1345 1835 77W\n（HK=已确认）',cls:'ok'},
+    'NM1ZHANG/SAN MR':{html:'1.ZHANG/SAN MR（姓名已录入，MR=先生称谓）',cls:'ok'},
+    'AP PEK 13800138000':{html:'AP PEK 13800138000（联系电话已录入）',cls:'ok'},
+    'APE- EMAIL@XX.COM':{html:'APE- EMAIL@XX.COM（邮箱已录入）',cls:'ok'},
+    'TKTL20OCT':{html:'TK TL20OCT（出票时限：10月20日前）',cls:'ok'},
+    'TKOK':{html:'TK OK（无出票时限）',cls:'ok'},
+    'RF ZHANG':{html:'RF ZHANG（收到自：ZHANG）',cls:'ok'},
+    'ET':{html:'--- RLR ---\nRP/PEK001/PEK001 20OCT26/0915Z 2ABC3D\n✔ PNR保存成功：2ABC3D',cls:'ok'},
+    'ER':{html:'--- RLR ---\nRP/PEK001/PEK001 20OCT26/0915Z 2ABC3D\n✔ 已封口并提取',cls:'ok'},
+    'RT2ABC3D':{html:'--- RLR ---\nRP/PEK001/PEK001 20OCT26/0915Z 2ABC3D\n1.ZHANG/SAN MR\n2 CA931 Y 20OCT PEKFRA HK1 1345 1835 77W\n3 AP PEK 13800138000\n4 TK TL20OCT',cls:'sys'},
+    'XE1':{html:'ELEMENT 1 CANCELLED（已取消第1项，ET封口后生效）',cls:'ok'},
+    'IG':{html:'IGNORED（修改已忽略）',cls:'sys'},
+    'RH':{html:'HISTORY:\n001 20OCT 0912 SS CA931 Y 20OCT PEKFRA HK1\n002 20OCT 0913 NM 1ZHANG/SAN MR',cls:'sys'},
+    'FQD PEKFRA':{html:'FQD PEKFRA（教学演示）\nCA Y CNY4680.00\nCA B CNY6120.00\nLH Y CNY5230.00',cls:'sys'},
+    'FXP':{html:'FXP\nFARE: CNY4680.00  TAX: CNY420.00XT  TOTAL: CNY5100.00',cls:'sys'},
+    'TQT':{html:'TST 001 - FARE CNY4680.00 + TAX CNY420.00 = CNY5100.00',cls:'sys'},
+    'TTP':{html:'✔ TICKET ISSUED\nTKT: 125-1234567890',cls:'ok'},
+    'TWD/TKT125-1234567890':{html:'TKT 125-1234567890\nNAME: ZHANG/SAN MR\nCA931 Y 20OCT PEKFRA 1345\nSTATUS: OPEN FOR USE',cls:'sys'}
+  };
+  if(EXACT[t]){ return EXACT[t]; }
+  if(/^JI/.test(t)){ return {html:'AGENT SIGN IN FAILED（练习用工作号：JI1001AB/SU）',cls:'err'}; }
+  if(/^AN/.test(t)){ return {html:'AN查询（教学演示数据）\n1 CA931 PEKFRA 1345 1835 E0/77W J9 C9 D9 Z9 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9\n2 LH721 PEKFRA 1030 1435 E0/388 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9',cls:'sys'}; }
+  if(/^SN/.test(t)){ return {html:'SN时刻表（教学演示数据）\nCA931 1234567 PEK1345 FRA1835 77W',cls:'sys'}; }
+  if(/^DO\d/.test(t)){ return {html:'CA931 PEKFRA 1345 1835 77W\nMEAL: HOT MEAL  STOP: 0（教学演示）',cls:'sys'}; }
+  if(/^SS\d/.test(t)){ return {html:'1 CA931 Y 20OCT PEKFRA HK1 1345 1835 77W（订座成功）',cls:'ok'}; }
+  if(/^NM1/.test(t)){ return {html:'1.ZHANG/SAN MR（姓名已录入）',cls:'ok'}; }
+  if(/^AP /.test(t)){ return {html:'AP已录入 ✔',cls:'ok'}; }
+  if(/^TK/.test(t)){ return {html:'TK已录入 ✔（TKTL20OCT=有时限 / TKOK=无时限）',cls:'ok'}; }
+  if(/^RT/.test(t)){ return {html:'（练习记录编号为 2ABC3D：请输入 RT2ABC3D）',cls:'warn'}; }
+  if(/^FQ/.test(t) && !/^FQD/.test(t)){ return {html:'FXP=对PNR整体计价；FQD=查询运价显示',cls:'warn'}; }
+  if(/^FQD/.test(t)){ return {html:'FQD（教学演示）\nCA Y CNY4680.00\nCA B CNY6120.00\nLH Y CNY5230.00',cls:'sys'}; }
+  return {html:'FORMAT（指令无法识别）\n输入 HELP 查看 Amadeus 练习指令',cls:'err'};
+}
+makeLab({
+  id:'amaLab',
+  sys:'Amadeus（1A）',
+  title:'🌐 实战任务：Amadeus 订票出票',
+  note:'11步 · 教学仿真',
+  welcome:'┌────────────────────────────┐\n│   Amadeus 仿真终端（1A）    │\n│   目标：完成国际机票订票出票 │\n│   （教学演示数据）          │\n└────────────────────────────┘',
+  steps:AMA_STEPS,
+  done:'🏆 Amadeus 流程完成！\n你已完成：JI登录 → AN查航班 → DO看详情 → SS订座 → NM/AP/TKTL建PNR → ET封口 → RT提取 → FXP计价 → TTP出票\n三大系统流程相通：查询、订座、封口、计价、出票——指令不同，逻辑一样。',
+  respond:amaRespond
+});
+
+/* ================= Galileo (1G) 实战任务 ================= */
+var GAL_STEPS=[
+ {t:'登录系统',hint:'格式 SON/Z1PEK（格式随公司配置）',ans:'SON/Z1PEK',expect:'SON/Z1PEK',out:'SIGN ON COMPLETE（教学演示）'},
+ {t:'查询 10月20日 北京→广州 可用航班',hint:'格式 A日期城市对：A20OCTPEKCAN',ans:'A20OCTPEKCAN',expect:'A20OCTPEKCAN',out:'A20OCTPEKCAN（教学演示数据）\n1 CA1301 PEKCAN 0700 1025 333 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9\n2 CZ3100 PEKCAN 0800 1120 380 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9\n3 HU7803 PEKCAN 0915 1235 789 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9'},
+ {t:'从第1行订 1个 Y舱座位',hint:'格式 N行号舱位人数：N1Y1',ans:'N1Y1',expect:'N1Y1',out:'1 CA1301 Y 20OCT PEKCAN HK1 0700 1025 333\n（HK=已确认）'},
+ {t:'录入姓名',hint:'格式 N.人数姓/名 称谓：N.N1ZHANG/SAN MR',ans:'N.N1ZHANG/SAN MR',expect:'N.N1ZHANG/SAN MR',out:'N.1ZHANG/SAN MR（姓名已录入）'},
+ {t:'录入电话',hint:'格式 P.城市号码：P.PEK13800138000',ans:'P.PEK13800138000',expect:'P.PEK13800138000',out:'P.PEK13800138000（联系电话已录入）'},
+ {t:'录入出票安排',hint:'指令 T.TAU/',ans:'T.TAU/',expect:'T.TAU/',out:'T.TAU/（出票安排已录入）'},
+ {t:'封口保存',hint:'指令 E',ans:'E',expect:'E',out:'PNR: AB12CD\n✔ 保存成功'},
+ {t:'提取PNR',hint:'格式 *记录编号：*AB12CD',ans:'*AB12CD',expect:'*AB12CD',out:'AB12CD\n1. ZHANG/SAN MR\n2. CA1301 Y 20OCT PEKCAN HK1 0700 1025 333\n3. P.PEK13800138000'},
+ {t:'对PNR计价',hint:'指令 FQ',ans:'FQ',expect:'FQ',out:'FQ（教学演示）\nFARE: CNY1980.00 + TAX CNY120.00 = CNY2100.00'},
+ {t:'出票',hint:'指令 TKP',ans:'TKP',expect:'TKP',out:'✔ TICKET ISSUED\nTKT: 999-8765432109'}
+];
+function galRespond(t){
+  var EXACT={
+    'HELP':{html:'Galileo 练习指令：\nSON/Z1PEK 登录 | SOF 退出\nA20OCTPEKCAN 查可用 | T20OCTPEKCAN 查时刻\nN1Y1 订座 | N.N1ZHANG/SAN MR 姓名 | P.PEK13800138000 电话 | T.TAU/ 出票安排\nE 封口 | *AB12CD 提取 | X1 取消 | I 忽略 | *H 历史\nFDPEKPVG-20OCT 运价显示 | FQ 计价 | TKP 出票'},
+    'SON/Z1PEK':{html:'SIGN ON COMPLETE（教学演示）',cls:'ok'},
+    'SOF':{html:'SIGN OFF COMPLETE',cls:'sys'},
+    'A20OCTPEKCAN':{html:'A20OCTPEKCAN（教学演示数据）\n1 CA1301 PEKCAN 0700 1025 333 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9\n2 CZ3100 PEKCAN 0800 1120 380 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9\n3 HU7803 PEKCAN 0915 1235 789 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9',cls:'sys'},
+    'T20OCTPEKCAN':{html:'T20OCTPEKCAN（教学演示数据）\nCA1301 1234567 PEK0700 CAN1025 333\nCZ3100 1234567 PEK0800 CAN1120 380\n（1234567=每天执行）',cls:'sys'},
+    'N1Y1':{html:'1 CA1301 Y 20OCT PEKCAN HK1 0700 1025 333\n（HK=已确认）',cls:'ok'},
+    'N.N1ZHANG/SAN MR':{html:'N.1ZHANG/SAN MR（姓名已录入）',cls:'ok'},
+    'P.PEK13800138000':{html:'P.PEK13800138000（联系电话已录入）',cls:'ok'},
+    'T.TAU/':{html:'T.TAU/（出票安排已录入）',cls:'ok'},
+    'E':{html:'PNR: AB12CD\n✔ 保存成功',cls:'ok'},
+    '*AB12CD':{html:'AB12CD\n1. ZHANG/SAN MR\n2. CA1301 Y 20OCT PEKCAN HK1 0700 1025 333\n3. P.PEK13800138000',cls:'sys'},
+    'X1':{html:'ITEM 1 CANCELLED（E封口后生效）',cls:'ok'},
+    'I':{html:'IGNORED（修改已忽略）',cls:'sys'},
+    '*H':{html:'HISTORY:\n001 20OCT 0912 N1Y1\n002 20OCT 0913 N.N1ZHANG/SAN MR',cls:'sys'},
+    'FQ':{html:'FQ（教学演示）\nFARE: CNY1980.00 + TAX CNY120.00 = CNY2100.00',cls:'sys'},
+    'TKP':{html:'✔ TICKET ISSUED\nTKT: 999-8765432109',cls:'ok'}
+  };
+  if(EXACT[t]){ return EXACT[t]; }
+  if(/^A\d/.test(t)){ return {html:'A查询（教学演示数据）\n1 CA1301 PEKCAN 0700 1025 333 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9\n2 CZ3100 PEKCAN 0800 1120 380 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9',cls:'sys'}; }
+  if(/^T\d/.test(t)){ return {html:'T时刻表（教学演示数据）\nCA1301 1234567 PEK0700 CAN1025 333',cls:'sys'}; }
+  if(/^N\d/.test(t)){ return {html:'1 CA1301 Y 20OCT PEKCAN HK1 0700 1025 333（订座成功）',cls:'ok'}; }
+  if(/^N\./.test(t)){ return {html:'N.1ZHANG/SAN MR（姓名已录入）',cls:'ok'}; }
+  if(/^P\./.test(t)){ return {html:'P.PEK13800138000（联系电话已录入）',cls:'ok'}; }
+  if(/^\*/.test(t)){ return {html:'（练习记录编号为 AB12CD：请输入 *AB12CD）',cls:'warn'}; }
+  if(/^FD/.test(t)){ return {html:'FD运价显示（教学演示）\nCA Y CNY1980.00\nCZ Y CNY1880.00',cls:'sys'}; }
+  return {html:'COMMAND NOT VALID（指令无法识别）\n输入 HELP 查看 Galileo 练习指令',cls:'err'};
+}
+makeLab({
+  id:'galLab',
+  sys:'Galileo（1G）',
+  title:'🌐 实战任务：Galileo 订票出票',
+  note:'10步 · 教学仿真',
+  welcome:'┌────────────────────────────┐\n│   Galileo 仿真终端（1G）    │\n│   目标：完成订票计价出票流程 │\n│   （教学演示数据）          │\n└────────────────────────────┘',
+  steps:GAL_STEPS,
+  done:'🏆 Galileo 流程完成！\n你已完成：SON登录 → A查航班 → N1Y1订座 → N./P./T.建PNR → E封口 → *提取 → FQ计价 → TKP出票\n记住Galileo特色：点号字段（N.姓名 P.电话 T.出票安排）、封口只有E、提取用*。',
+  respond:galRespond
+});
+
+/* ================= Sabre (1S) 实战任务 ================= */
+var SAB_STEPS=[
+ {t:'登录系统（工作号1001AB）',hint:'格式 SI工作号/密码：SI1001AB/SU',ans:'SI1001AB/SU',expect:'SI1001AB/SU',out:'AGENT SIGN IN COMPLETE（教学演示）'},
+ {t:'查询 10月20日 北京→上海 可用航班',hint:'格式 1日期城市对：120OCTPEKSHA',ans:'120OCTPEKSHA',expect:'120OCTPEKSHA',out:'120OCTPEKSHA（教学演示数据）\n1 CA1501 PEKSHA 1105 1350 738 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9\n2 MU5138 PEKSHA 0900 1120 332 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9'},
+ {t:'从第1行订 1个 Y舱座位',hint:'格式 0舱位行号：0Y1',ans:'0Y1',expect:'0Y1',out:'1 CA1501 Y 20OCT PEKSHA HK1 1105 1350 738\n（HK=已确认）'},
+ {t:'录入姓名',hint:'格式 1姓/名 称谓：1ZHANG/SAN MR',ans:'1ZHANG/SAN MR',expect:'1ZHANG/SAN MR',out:'1.1ZHANG/SAN MR（姓名已录入）'},
+ {t:'录入电话',hint:'格式 9城市号码：9PEK13800138000',ans:'9PEK13800138000',expect:'9PEK13800138000',out:'9PEK13800138000（联系电话已录入）'},
+ {t:'录入收到自',hint:'格式 6姓名：6ZHANG',ans:'6ZHANG',expect:'6ZHANG',out:'6ZHANG（收到自：ZHANG）'},
+ {t:'封口保存',hint:'指令 6*（E 亦可）',ans:'6*',expect:'6*',out:'PNR: AB12CD\n✔ 保存成功'},
+ {t:'提取PNR',hint:'格式 *记录编号：*AB12CD',ans:'*AB12CD',expect:'*AB12CD',out:'AB12CD\n1.1ZHANG/SAN MR\n2. CA1501 Y 20OCT PEKSHA HK1 1105 1350 738\n3. 9PEK13800138000'},
+ {t:'对PNR计价',hint:'指令 WP',ans:'WP',expect:'WP',out:'WP（教学演示）\nFARE: CNY1210.00 + TAX CNY100.00 = CNY1310.00'}
+];
+function sabRespond(t){
+  var EXACT={
+    'HELP':{html:'Sabre 练习指令：\nSI1001AB/SU 登录 | SOF 退出\n120OCTPEKSHA 查可用 | 1S20OCTPEKSHA 查时刻\n0Y1 订座 | 1ZHANG/SAN MR 姓名 | 9PEK13800138000 电话 | 7TAW/ 出票安排 | 6ZHANG 收到自\n6* 封口 | *AB12CD 提取 | XE1 取消 | I 忽略 | *H 历史\nFQPEKSHA-20OCT 运价显示 | WP 计价 | PQ 看计价记录'},
+    'SI1001AB/SU':{html:'AGENT SIGN IN COMPLETE（教学演示）',cls:'ok'},
+    'SOF':{html:'AGENT SIGN OUT COMPLETE',cls:'sys'},
+    '120OCTPEKSHA':{html:'120OCTPEKSHA（教学演示数据）\n1 CA1501 PEKSHA 1105 1350 738 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9\n2 MU5138 PEKSHA 0900 1120 332 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9',cls:'sys'},
+    '1S20OCTPEKSHA':{html:'1S20OCTPEKSHA（教学演示数据）\nCA1501 1234567 PEK1105 SHA1350 738\nMU5138 1234567 PEK0900 SHA1120 332\n（1234567=每天执行）',cls:'sys'},
+    '0Y1':{html:'1 CA1501 Y 20OCT PEKSHA HK1 1105 1350 738\n（HK=已确认）',cls:'ok'},
+    '1ZHANG/SAN MR':{html:'1.1ZHANG/SAN MR（姓名已录入）',cls:'ok'},
+    '9PEK13800138000':{html:'9PEK13800138000（联系电话已录入）',cls:'ok'},
+    '7TAW/':{html:'7TAW/（出票安排已录入）',cls:'ok'},
+    '6ZHANG':{html:'6ZHANG（收到自：ZHANG）',cls:'ok'},
+    '6*':{html:'PNR: AB12CD\n✔ 保存成功（E 亦可封口）',cls:'ok'},
+    '*AB12CD':{html:'AB12CD\n1.1ZHANG/SAN MR\n2. CA1501 Y 20OCT PEKSHA HK1 1105 1350 738\n3. 9PEK13800138000',cls:'sys'},
+    'XE1':{html:'ELEMENT 1 CANCELLED',cls:'ok'},
+    'I':{html:'IGNORED（修改已忽略）',cls:'sys'},
+    '*H':{html:'HISTORY:\n001 20OCT 0912 0Y1\n002 20OCT 0913 1ZHANG/SAN MR',cls:'sys'},
+    'FQPEKSHA-20OCT':{html:'FQPEKSHA-20OCT（教学演示）\nCA Y CNY1210.00\nMU Y CNY1150.00',cls:'sys'},
+    'WP':{html:'WP（教学演示）\nFARE: CNY1210.00 + TAX CNY100.00 = CNY1310.00',cls:'sys'},
+    'PQ':{html:'PQ（已保存计价记录）\n01 FARE CNY1210.00 TAX CNY100.00 TOTAL CNY1310.00',cls:'sys'}
+  };
+  if(EXACT[t]){ return EXACT[t]; }
+  if(/^SI/.test(t)){ return {html:'AGENT SIGN IN FAILED（练习用工作号：SI1001AB/SU）',cls:'err'}; }
+  if(/^1[0-9]/.test(t)){ return {html:'1可用查询（教学演示数据）\n1 CA1501 PEKSHA 1105 1350 738 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9\n2 MU5138 PEKSHA 0900 1120 332 Y9 B9 M9 H9 K9 L9 Q9 G9 V9 S9',cls:'sys'}; }
+  if(/^0/.test(t)){ return {html:'1 CA1501 Y 20OCT PEKSHA HK1 1105 1350 738（订座成功）',cls:'ok'}; }
+  if(/^1[A-Z]/.test(t)){ return {html:'1.1ZHANG/SAN MR（姓名已录入）',cls:'ok'}; }
+  if(/^9/.test(t)){ return {html:'9PEK13800138000（联系电话已录入）',cls:'ok'}; }
+  if(/^6/.test(t)){ return {html:'6ZHANG（收到自已录入）',cls:'ok'}; }
+  if(/^\*/.test(t)){ return {html:'（练习记录编号为 AB12CD：请输入 *AB12CD）',cls:'warn'}; }
+  if(/^FQ/.test(t)){ return {html:'FQ运价显示（教学演示）\nCA Y CNY1210.00\nMU Y CNY1150.00',cls:'sys'}; }
+  return {html:'COMMAND NOT VALID（指令无法识别）\n输入 HELP 查看 Sabre 练习指令',cls:'err'};
+}
+makeLab({
+  id:'sabLab',
+  sys:'Sabre（1S）',
+  title:'🌐 实战任务：Sabre 订票计价',
+  note:'9步 · 教学仿真',
+  welcome:'┌────────────────────────────┐\n│    Sabre 仿真终端（1S）     │\n│   目标：完成订票计价流程     │\n│   （教学演示数据）          │\n└────────────────────────────┘',
+  steps:SAB_STEPS,
+  done:'🏆 Sabre 流程完成！\n你已完成：SI登录 → 1查航班 → 0Y1订座 → 1姓名 → 9电话 → 6ZHANG → 6*封口 → *提取 → WP计价\n记住Sabre特色：数字指令——1查、0订、9电话、6封口；出票指令因配置而异，入职后按公司手册执行。',
+  respond:sabRespond
+});
+
+/* ================= 退改签专题 ================= */
+var CHG_RULES=[
+ {code:'CA',name:'中国国航',tag:{t:'宽松',c:'y'},rows:[
+  ['退票','Y舱起飞前免费退；B/M/H等按票价5%~30%梯度；起飞后费率更高'],
+  ['改签','同舱改期一般免费或≤200元；升舱补差价'],
+  ['特价舱','S/U/T/E等低折扣：退改限制多，部分不退不改']]},
+ {code:'MU',name:'中国东航',tag:{t:'宽松',c:'y'},rows:[
+  ['退票','Y舱起飞前免费退；折扣舱按舱位梯度5%~30%'],
+  ['改签','同舱改期免费或小额；跨舱补差+手续费'],
+  ['特价舱','X/N/R等特价：不退不改或只退税费']]},
+ {code:'CZ',name:'中国南航',tag:{t:'宽松',c:'y'},rows:[
+  ['退票','Y舱起飞前免费；折扣舱梯度收费，起飞后40%起'],
+  ['改签','同舱改期费低；改签后再退按原票规则'],
+  ['特价舱','特价舱不退不改；误机费另计']]},
+ {code:'HU',name:'海南航空',tag:{t:'中等',c:'m'},rows:[
+  ['退票','按舱位+距离起飞时间梯度；Y舱较宽松'],
+  ['改签','同舱改期费约5%~10%；升舱补差'],
+  ['特价舱','低价舱不退不改']]},
+ {code:'ZH',name:'深圳航空',tag:{t:'中等',c:'m'},rows:[
+  ['退票','按舱位梯度10%~50%；起飞后更贵'],
+  ['改签','同舱改期费低；部分舱位免费'],
+  ['特价舱','特价不退不改']]},
+ {code:'MF',name:'厦门航空',tag:{t:'中等',c:'m'},rows:[
+  ['退票','按舱位梯度；会员等级有退改优惠'],
+  ['改签','同舱改期费约5%~15%'],
+  ['特价舱','特价不退不改']]},
+ {code:'3U',name:'四川航空',tag:{t:'中等',c:'m'},rows:[
+  ['退票','按舱位梯度10%~40%'],
+  ['改签','同舱改期费较低'],
+  ['特价舱','特价不退不改']]},
+ {code:'SC',name:'山东航空',tag:{t:'中等',c:'m'},rows:[
+  ['退票','按舱位梯度；Y舱起飞前免费'],
+  ['改签','同舱改期费约5%~10%'],
+  ['特价舱','特价不退不改']]},
+ {code:'HO',name:'吉祥航空',tag:{t:'严格',c:'r'},rows:[
+  ['退票','按舱位梯度；低价舱高费率'],
+  ['改签','同舱改期费5%~15%'],
+  ['特价舱','特价不退不改']]},
+ {code:'9C',name:'春秋航空（廉航）',tag:{t:'严格',c:'r'},rows:[
+  ['退票','特价票不退不改（只退税费）；高价票按梯度'],
+  ['改签','改期费高；改签后再退按新票价规则'],
+  ['行李','免费行李额少，退改均严格']]},
+ {code:'LH',name:'汉莎航空（国际代表）',tag:{t:'中等',c:'m'},rows:[
+  ['退票','Economy Light 不退；Classic/Flex 按规则，部分可退'],
+  ['改签','Light 改签费高；Flex 免费改'],
+  ['特点','国际票改期普遍走 Reissue（换开）']]},
+ {code:'EK',name:'阿联酋航空（国际代表）',tag:{t:'中等',c:'m'},rows:[
+  ['退票','Special 不退；Saver 退票费高；Flex 宽松'],
+  ['改签','Saver 改签费约200~400美元档；Flex 免费'],
+  ['特点','高舱位规则宽松，服务型航司']]},
+ {code:'SQ',name:'新加坡航空（国际代表）',tag:{t:'中等',c:'m'},rows:[
+  ['退票','Lite 不退；Value 按规则；Flex 可退'],
+  ['改签','Lite 高额改签费；Flex 免费改'],
+  ['特点','规则按票价品牌（Lite/Value/Flex）划分']]},
+ {code:'AA',name:'美国航空（国际代表）',tag:{t:'严格',c:'r'},rows:[
+  ['退票','Basic Economy 不退；Main Cabin 部分可退'],
+  ['改签','Basic 不可改；其他舱按规则收费'],
+  ['特点','美线 no-show 惩罚重，误机可能全损']]},
+ {code:'FR',name:'瑞安航空 Ryanair（欧洲ULCC）',tag:{t:'严格',c:'r'},rows:[
+  ['类型','超低成本（ULCC）· 欧洲最大低成本航司 · 点对点为主，不保障联程衔接'],
+  ['退票','基础票不退，仅退未使用税费；航班取消/大幅延误属非自愿，可免费改签或全额退款'],
+  ['改签','收改签费+票价差，越临近起飞越贵；部分促销票种不可改'],
+  ['行李','仅1件40×25×20cm小包免费；登机箱与托运必须提前在线购买，机场现买最贵'],
+  ['值机','强制在线值机，机场柜台值机收费且可能被拒；迟到不候、不退不改'],
+  ['注意','不进传统GDS主流分销，靠官网/NDC/聚合商接入；证件签证查验严格，代理售后多需回官网办理']]},
+ {code:'VY',name:'伏林航空 Vueling（IAG旗下LCC）',tag:{t:'严格',c:'r'},rows:[
+  ['类型','低成本（LCC）· IAG集团旗下（与英航BA、伊比利亚IB同集团）· 基地巴塞罗那BCN'],
+  ['退票','Basic 基础票不退，仅退税费；Optima/TimeFlex 等票种可退，按票种规则扣费'],
+  ['改签','收改签费+差价，票种等级越高越宽松；Basic 改签限制多'],
+  ['行李','基础票仅随身小包；登机箱/托运行李另购，提前在线买比机场便宜'],
+  ['值机','以在线值机为主，机场柜台值机可能收费；部分票种选座、打印登机牌另收费'],
+  ['注意','欧洲内部网络密集，常与IAG成员组合联程；OTA出票后退改一般回原渠道办理']]},
+ {code:'AS',name:'阿拉斯加航空 Alaska（美国FSC）',tag:{t:'中等',c:'m'},rows:[
+  ['类型','全服务（FSC）· 2021年加入寰宇一家 · 2024年完成收购夏威夷航空HA'],
+  ['退票','可退票种按运价规则退；Saver/Basic 等低价票种不可退或扣费；美国DOT规则：起飞前7天以上购票，24小时内可免费取消'],
+  ['改签','主舱（Main）改签免改签费，只补票价差；Saver/Basic 限制多，按票种规则'],
+  ['行李','首件托运约$35起（提前在线更便宜），随身1件+个人物品；部分票价不含托运'],
+  ['值机','在线/机场均可，美国国内建议提前24小时在线值机；AA代码共享航班按其规则执行'],
+  ['注意','与美航AA深度代码共享，美线联程常与AA/寰宇成员组合；Mileage Plan 里程计划口碑好']]}
+];
+$('#chgRuleGrid').innerHTML = CHG_RULES.map(function(r){
+  var rows = r.rows.map(function(x){ return '<div><b>'+x[0]+'：</b><span>'+x[1]+'</span></div>'; }).join('');
+  return '<div class="card rule-card"><div class="rhead"><span class="rcode">'+r.code+'</span><span class="rname">'+r.name+'</span><span class="rtag '+r.tag.c+'">'+r.tag.t+'</span></div><div class="rrows">'+rows+'</div></div>';
+}).join('');
+
+/* 退改签金额计算器 */
+function chgCalcRender(){
+  var oldF=+$('#chgOld').value||0, newF=+$('#chgNew').value||0;
+  var chgFee=+$('#chgFee').value||0, refFee=+$('#chgRefFee').value||0;
+  var ex=newF-oldF+chgFee;
+  $('#chgOutEx').textContent = ex>0?'CNY '+ex.toFixed(0):'—';
+  $('#chgOutEmd').textContent = ex<0?'CNY '+(-ex).toFixed(0):'无残值';
+  $('#chgOutRef').textContent = 'CNY '+(oldF-refFee).toFixed(0);
+  var a;
+  if(newF===0){
+    a='💡 提示：填上新票价后自动给出换开建议。';
+  } else if(ex<0){
+    a='💡 换开应收为负 → 旅客拿到 CNY '+(-ex).toFixed(0)+' 残值（出 EMD 凭证）。对比退票重买：退票应退 CNY '+(oldF-refFee).toFixed(0)+'（其中退票费 '+refFee+'）——若退票费高于改签费，换开出EMD更划算；反之可建议退票。';
+  } else if(ex>0){
+    a='💡 换开需补收 CNY '+ex.toFixed(0)+'（新票价−原票价+手续费）。先报价再操作，收款后换开。对比退票重买：退票应退 CNY '+(oldF-refFee).toFixed(0)+'，多数情况下换开比退票重买更省钱。';
+  } else {
+    a='💡 票价无差额，换开只需手续费 CNY '+chgFee.toFixed(0)+'。';
+  }
+  $('#chgAdvice').textContent=a;
+}
+$$('#chgOld,#chgNew,#chgFee,#chgRefFee').forEach(function(i){ i.addEventListener('input',chgCalcRender); });
+chgCalcRender();
+
+/* 换开计算小测 */
+var REISSUE_QUIZ=[
+ {q:'原票 CNY4680，改期后新票价 CNY5380，换开手续费 CNY200，旅客应补多少？',o:['CNY 200','CNY 700','CNY 900','CNY 900 + 税差'],a:2,x:'换开应收 = 新票价5380 − 原票价4680 + 手续费200 = CNY900。'},
+ {q:'原票 CNY4680 改到更低价航班（新票价 CNY3980），手续费 CNY200，结果如何处理？',o:['旅客补 CNY200','退旅客 CNY500，出 EMD','退旅客 CNY200','作废重买'],a:1,x:'3980−4680+200 = −500 → 应退 CNY500 残值，以 EMD 凭证形式给旅客。'},
+ {q:'航班因天气取消，旅客要求退票，正确的处理是？',o:['按特价舱扣退票费','免费全退（非自愿变更）','只退税费','收取改签费后退'],a:1,x:'航司原因的延误/取消属于非自愿变更，旅客免费改退。误收手续费会被航司开 ADM 罚单。'},
+ {q:'改签的"六字诀"是？',o:['先查、再订、后收','先取、再改、后封','先退、再订、后封','先问、再报、后出'],a:1,x:'RT 提取 → XE 取消旧段 → SS 订新段 → @ 封口：先取、再改、后封。'},
+ {q:'国际票改期普遍采用哪种处理方式？',o:['直接改 PNR 即可','换开（Reissue），旧票价值结转','只能退票重买','无需任何操作'],a:1,x:'国际票改期多数航司要求换开：新票号生成、原票状态 EXCHANGED、原票价值经 FO 行结转。'}
+];
+renderMiniQuiz('#reissueQuiz',REISSUE_QUIZ);
+
+/* ================= 场景A：ETERM 同舱改期 ================= */
+var ETERM_CHG_STEPS=[
+ {t:'提取原票 PNR',hint:'RT:H4J8KL',ans:'RT:H4J8KL',expect:'RT:H4J8KL',out:'H4J8KL\n1.ZHANG/SAN\n2.CA1501 Y 20OCT PEKPVG RR1 1105 1350 738 E 0R\n3.PEK/T 13800138000\n4.TL/1200/20OCT/PEK'},
+ {t:'取消旧航段（10月20日的）',hint:'XE:航段号',ans:'XE:1',expect:'XE:1',out:'航段1已取消（需 @ 封口后生效）'},
+ {t:'订新的航段：10月21日 B舱',hint:'SS:CA1501/B/21OCT/PEKPVG/NN1',ans:'SS:CA1501/B/21OCT/PEKPVG/NN1',expect:/^SS:CA1501\/B\/21OCT\/PEKPVG\/NN1$/,out:'1. CA1501 B 21OCT PEKPVG RR1 1105 1350 738 E 0R\n（RR=已确认，新航段订座成功）'},
+ {t:'查看航段确认无误',hint:'SD:1',ans:'SD:1',expect:'SD:1',out:'1. CA1501 B 21OCT PEKPVG RR1 1105 1350 738 E 0R'},
+ {t:'封口保存改签结果',hint:'@',ans:'@',expect:'@',out:'记录编号: H4J8KL\n✔ 改签完成（同舱改期教学演示：假设无差价，仅收改签手续费）'},
+ {t:'查验电子客票状态',hint:'DETR:TN/999-1234567890',ans:'DETR:TN/999-1234567890',expect:'DETR:TN/999-1234567890',out:'ISSUED BY: AIR CHINA\nORG/DST: PEK/PVG\nNAME: ZHANG/SAN\nFLIGHT: CA1501 B 21OCT PEKPVG 1105 1350\nSTATUS: OPEN FOR USE\n（客票有效 ✔ 新日期已生效）'}
+];
+function etermChgRespond(t){
+  if(t==='DETR:TN/999-1234567890'){ return {html:'ISSUED BY: AIR CHINA\nORG/DST: PEK/PVG\nNAME: ZHANG/SAN\nFLIGHT: CA1501 B 21OCT PEKPVG 1105 1350\nSTATUS: OPEN FOR USE\n（客票有效 ✔ 新日期已生效）',cls:'sys'}; }
+  return etermRespond(t);
+}
+makeLab({
+  id:'etermChgLab',
+  sys:'ETERM（中航信）',
+  title:'🔄 场景A：同舱改期',
+  note:'6步 · 教学仿真',
+  welcome:'┌────────────────────────────┐\n│  场景A：客人要把票改到21日  │\n│  流程：RT提取→XE取消→SS订新 │\n│  →SD核对→@封口→DETR验票   │\n│   （教学演示数据）          │\n└────────────────────────────┘',
+  steps:ETERM_CHG_STEPS,
+  done:'🏆 改签完成！\n同舱改期：改 PNR 即生效、票号不变、仅收手续费。若票价发生变化（升舱/降价），则必须走换开（看场景C）。\n记住六字诀：先取、再改、后封。',
+  respond:etermChgRespond
+});
+
+/* ================= 场景B：ETERM 退票 ================= */
+var ETERM_REF_STEPS=[
+ {t:'先验票：查客票当前状态',hint:'DETR:TN/999-1234567890',ans:'DETR:TN/999-1234567890',expect:'DETR:TN/999-1234567890',out:'ISSUED BY: AIR CHINA\nORG/DST: PEK/PVG\nNAME: ZHANG/SAN\nFLIGHT: CA1501 Y 20OCT PEKPVG 1105 1350\nSTATUS: OPEN FOR USE\n（票有效，可退）'},
+ {t:'提取原票 PNR',hint:'RT:H4J8KL',ans:'RT:H4J8KL',expect:'RT:H4J8KL',out:'H4J8KL\n1.ZHANG/SAN\n2.CA1501 Y 20OCT PEKPVG RR1 1105 1350 738 E 0R'},
+ {t:'查票价规则（退票条款）',hint:'XS FSD',ans:'XS FSD',expect:'XS FSD',out:'XS FSD\nFARE RULES:\nCAT16 CHANGE: CNY200.00  REFUND: CNY300.00\n（退票手续费：CNY300 —— 按此报价）'},
+ {t:'执行退票：第1航段、退票',hint:'TRFD:AM/1/D',ans:'TRFD:AM/1/D',expect:'TRFD:AM/1/D',out:'退票申请已受理（演示）：航段1已退票\n应退金额：CNY1350 − CNY300 = CNY1050.00'},
+ {t:'复核：再查客票状态',hint:'DETR:TN/999-1234567890',ans:'DETR:TN/999-1234567890',expect:'DETR:TN/999-1234567890',out:'ISSUED BY: AIR CHINA\nNAME: ZHANG/SAN\nFLIGHT: CA1501 Y 20OCT PEKPVG 1105 1350\nSTATUS: REFUNDED\n（已退票 ✔ 应退 CNY1050 原路退回）'}
+];
+function etermRefRespond(t){
+  if(t==='DETR:TN/999-1234567890'){ return {html:'ISSUED BY: AIR CHINA\nORG/DST: PEK/PVG\nNAME: ZHANG/SAN\nFLIGHT: CA1501 Y 20OCT PEKPVG 1105 1350\nSTATUS: REFUNDED\n（已退票 ✔ 票款按规则退回原支付渠道）',cls:'sys'}; }
+  return etermRespond(t);
+}
+makeLab({
+  id:'etermRefLab',
+  sys:'ETERM（中航信）',
+  title:'🔄 场景B：退票',
+  note:'5步 · 教学仿真',
+  welcome:'┌────────────────────────────┐\n│  场景B：客人要退掉20日的票  │\n│  流程：验票→提取→查规则→   │\n│  TRFD退票→DETR复核        │\n│   （教学演示数据）          │\n└────────────────────────────┘',
+  steps:ETERM_REF_STEPS,
+  done:'🏆 退票完成！\n关键动作：先验票（OPEN FOR USE才可退）→ 查 Cat16 规则报价 → TRFD 执行 → DETR 复核（REFUNDED）。\n红线：非自愿变更（航司原因）免费退，误收手续费会吃 ADM。',
+  respond:etermRefRespond
+});
+
+/* ================= 场景C：Amadeus 国际换开 ================= */
+var AMA_CHG_STEPS=[
+ {t:'提取原票 PNR',hint:'RT2ABC3D',ans:'RT2ABC3D',expect:'RT2ABC3D',out:'--- RLR ---\n1.ZHANG/SAN MR\n2 CA931 Y 20OCT PEKFRA HK1 1345 1835 77W\n3 AP PEK 13800138000\n4 TK TL20OCT'},
+ {t:'取消旧航段',hint:'XE1',ans:'XE1',expect:'XE1',out:'ELEMENT 1 CANCELLED（ET封口后生效）'},
+ {t:'订新日期航段（10月21日 Y舱）',hint:'SS1Y1',ans:'SS1Y1',expect:'SS1Y1',out:'1 CA931 Y 21OCT PEKFRA HK1 1345 1835 77W\n（HK=已确认，新日期航段）'},
+ {t:'封口保存',hint:'ET',ans:'ET',expect:'ET',out:'--- RLR ---\nRP/PEK001/PEK001 20OCT26/0915Z 2ABC3D\n✔ PNR已更新'},
+ {t:'重新计价（看新票价与差额）',hint:'FXP',ans:'FXP',expect:'FXP',out:'FXP\nNEW FARE: CNY5380.00\nOLD FARE: CNY4680.00\nDIFF: CNY700.00 + PENALTY CNY200.00 = CNY900.00\n（教学演示：需补收CNY900）'},
+ {t:'输入原票价值 FO 行',hint:'FO125-1234567890PEK20OCT16/4680.00',ans:'FO125-1234567890PEK20OCT16/4680.00',expect:'FO125-1234567890PEK20OCT16/4680.00',out:'FO已输入：原票 125-1234567890 价值 CNY4680.00 已结转（FO行）'},
+ {t:'换开出票',hint:'TTP/EXCH',ans:'TTP/EXCH',expect:'TTP/EXCH',out:'✔ EXCHANGE ISSUED\nOLD TKT: 125-1234567890\nNEW TKT: 125-9876543210\n（旧票状态EXCHANGED，新票生成）'},
+ {t:'验证新票（看 EXCHANGED FROM）',hint:'TWD/TKT125-9876543210',ans:'TWD/TKT125-9876543210',expect:'TWD/TKT125-9876543210',out:'TKT 125-9876543210\nNAME: ZHANG/SAN MR\nCA931 Y 21OCT PEKFRA 1345\nSTATUS: OPEN FOR USE\nEXCHANGED FROM: 125-1234567890\n（换开验证完成 ✔）'}
+];
+function amaChgRespond(t){
+  if(t==='SS1Y1'){ return {html:'1 CA931 Y 21OCT PEKFRA HK1 1345 1835 77W（新日期航段订座成功）',cls:'ok'}; }
+  if(t==='FXP'){ return {html:'FXP\nNEW FARE: CNY5380.00  OLD FARE: CNY4680.00\nDIFF: CNY700.00 + PENALTY CNY200.00 = CNY900.00',cls:'sys'}; }
+  if(t==='FO125-1234567890PEK20OCT16/4680.00'){ return {html:'FO已输入：原票 125-1234567890 价值 CNY4680.00 已结转（FO行）',cls:'ok'}; }
+  if(t==='TTP/EXCH'){ return {html:'✔ EXCHANGE ISSUED\nOLD TKT: 125-1234567890\nNEW TKT: 125-9876543210',cls:'ok'}; }
+  if(t==='TWD/TKT125-9876543210'){ return {html:'TKT 125-9876543210\nNAME: ZHANG/SAN MR\nCA931 Y 21OCT PEKFRA 1345\nSTATUS: OPEN FOR USE\nEXCHANGED FROM: 125-1234567890',cls:'sys'}; }
+  return amaRespond(t);
+}
+makeLab({
+  id:'amaChgLab',
+  sys:'Amadeus（1A）',
+  title:'🔄 场景C：国际换开（Reissue）',
+  note:'8步 · 教学仿真',
+  welcome:'┌────────────────────────────┐\n│ 场景C：国际票改期，票价变化 │\n│ 流程：改PNR→FXP计价→输FO行 │\n│ →TTP/EXCH→TWD验证新票    │\n│   （教学演示数据）          │\n└────────────────────────────┘',
+  steps:AMA_CHG_STEPS,
+  done:'🏆 换开完成！\n换开四要素：原票价值（FO行）→ 新票价（FXP）→ 手续费（Cat16）→ 差额/残值。\n本案例：5380−4680+200 = 补收CNY900，旧票125-1234567890已EXCHANGED，新票125-9876543210生成。\nADM 提示：FO行票号和金额必须与 DETR 核对无误。',
+  respond:amaChgRespond
+});
+
+/* ================= 数量同步（避免写死数字） ================= */
+function setText(id, val){ var el = document.getElementById(id); if(el){ el.textContent = val; } }
+setText('quizTotal', QUIZ.length);
+setText('qaTotal', QA.length);
+setText('carrierCount', CARRIERS.length);
+var qAll = document.getElementById('quizAllBtn');
+if(qAll){ qAll.textContent = '全题库 · '+QUIZ.length+'题'; }
+
+/* ================= 进度管理：导出 / 导入 / 清空 ================= */
+var BACKUP_KEYS = ['mock','plan','quizbestpct','quizbestmeta','wrong','topicStats','termWeak','tab'];
+function refreshStoreInfo(){
+  var el = document.getElementById('storeInfo');
+  if(!el){ return; }
+  var n = 0;
+  BACKUP_KEYS.forEach(function(k){ try{ if(localStorage.getItem('ifm_'+k) !== null){ n++; } }catch(e){} });
+  el.textContent = '当前本机已保存 '+n+' 项进度。换电脑或清理浏览器数据前，记得先导出。';
+}
+refreshStoreInfo();
+if(document.getElementById('exportBtn')){
+  document.getElementById('exportBtn').addEventListener('click', function(){
+    var data = {}, n = 0;
+    BACKUP_KEYS.forEach(function(k){ var v = store.get(k, null); if(v !== null){ data[k] = v; n++; } });
+    if(!n){ alert('还没有可导出的进度，先去勾几个计划或做一轮测验吧。'); return; }
+    var payload = {app:'国际机票面试学习助手', version:2, exportedAt:new Date().toISOString(), data:data};
+    try{
+      var blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = '机票面试学习进度_'+new Date().toISOString().slice(0,10)+'.json';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 3000);
+    }catch(e){ alert('导出失败：'+e.message); }
+  });
+  document.getElementById('importBtn').addEventListener('click', function(){
+    document.getElementById('importFile').click();
+  });
+  document.getElementById('importFile').addEventListener('change', function(){
+    var f = this.files && this.files[0];
+    if(!f){ return; }
+    var input = this;
+    var rd = new FileReader();
+    rd.onload = function(){
+      var obj;
+      try{ obj = JSON.parse(String(rd.result)); }catch(e){ alert('导入失败：不是有效的 JSON 文件'); return; }
+      var d = (obj && obj.data) ? obj.data : obj;
+      if(!d || typeof d !== 'object'){ alert('导入失败：文件内容不符合格式'); return; }
+      var n = 0;
+      BACKUP_KEYS.forEach(function(k){
+        if(Object.prototype.hasOwnProperty.call(d, k)){ store.set(k, d[k]); n++; }
+      });
+      alert('导入成功：恢复 '+n+' 项进度，页面将重新加载。');
+      location.reload();
+    };
+    rd.readAsText(f, 'utf-8');
+    input.value = '';
+  });
+  document.getElementById('clearAllBtn').addEventListener('click', function(){
+    if(!confirm('确定清空全部学习进度？（计划勾选、面试标记、最高分、错题本、上次打开的标签）\n此操作不可撤销，建议先导出备份。')){ return; }
+    BACKUP_KEYS.forEach(function(k){ store.del(k); });
+    location.reload();
+  });
+}
+/* ================= 打印速查表（由数据实时生成） ================= */
+function buildSheet(){
+  var el = document.getElementById('sheetBody');
+  if(!el){ return; }
+  var d = new Date();
+  var dateStr = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+
+  var termHtml = TERMS.map(function(t){
+    return '<div class="sh-term"><b>'+t.t+'</b><span>'+t.e+'</span></div>';
+  }).join('');
+
+  var etermRows = [];
+  ETERM_CMDS.forEach(function(g){
+    etermRows.push('<tr><th colspan="2">'+g.g+'</th></tr>');
+    g.items.forEach(function(it){
+      var desc = it.d.length > 46 ? it.d.slice(0, 45) + '…' : it.d;
+      etermRows.push('<tr><td><code>'+it.c+'</code></td><td>'+desc+'</td></tr>');
+    });
+  });
+
+  var gdsRows = [];
+  GDS_CMDS.forEach(function(g){
+    gdsRows.push('<tr><th colspan="2">'+g.sys+'</th></tr>');
+    g.cmds.slice(0, 9).forEach(function(c){
+      gdsRows.push('<tr><td><code>'+c.c+'</code></td><td>'+c.d+'</td></tr>');
+    });
+  });
+
+  var ruleRows = CHG_RULES.map(function(r){
+    return '<tr><td><b>'+r.code+'</b> '+r.name+'</td><td>'+
+      r.rows.map(function(x){ return '<b>'+x[0]+'</b>：'+x[1]; }).join('<br>')+'</td></tr>';
+  }).join('');
+
+  var quotes = QA.map(function(q,i){
+    return '<div class="sh-quote"><b>'+(i+1)+'.</b> '+q.g+'</div>';
+  }).join('');
+
+  el.innerHTML =
+    '<h2>国际机票业务 · 面试速查</h2>'+
+    '<div class="sh-meta">'+
+      '使用日期 '+dateStr+' · 数据为教学参考，实际以运价规则与航司官网为准</div>'+
+
+    '<div class="sh-block"><h3>一、核心术语（'+TERMS.length+'）</h3><div class="sh-grid">'+termHtml+'</div></div>'+
+
+    '<div class="sh-block"><h3>二、ETERM 常用指令</h3>'+
+      '<table class="sh-table">'+etermRows.join('')+'</table></div>'+
+
+    '<div class="sh-block"><h3>三、三大 GDS 核心指令</h3>'+
+      '<table class="sh-table">'+gdsRows.join('')+'</table></div>'+
+
+    '<div class="sh-block"><h3>四、退改 / 换开算法</h3>'+
+      '<div class="sh-quote">自愿退票：应退 = 原票价 − 退票费（为负按 0 退，低价票常见）</div>'+
+      '<div class="sh-quote">自愿改签：应付 = 改签费 + max(0, 新票价 − 原票价)；新票价更低多数不退，部分出 EMD</div>'+
+      '<div class="sh-quote">换开（Reissue）：应收 = 新票价 − 原票价 + 换开手续费；结果为负 → 残值出 EMD</div>'+
+      '<div class="sh-quote">非自愿变更（航司原因）：免费退改，同航司改高舱位一般无需补差</div>'+
+      '<div class="sh-quote">出票四确认：FN/FC/FP 齐全 · 在 TK 时限内 · 姓名与证件一致 · 舱位航段无误</div>'+
+    '</div>'+
+
+    '<div class="sh-block"><h3>五、航司退改速查（'+CHG_RULES.length+'家 · 教学参考）</h3>'+
+      '<table class="sh-table"><tr><th style="width:22%">航司</th><th>退票 / 改签 / 特价说明</th></tr>'+ruleRows+'</table></div>'+
+
+    '<div class="sh-block"><h3>六、面试金句（收尾用）</h3>'+quotes+'</div>';
+}
+buildSheet();
+var printBtn = document.getElementById('printBtn');
+if(printBtn){
+  printBtn.addEventListener('click', function(){
+    var area = document.getElementById('printArea');
+    var src = document.getElementById('sheetBody');
+    if(!area || !src){ return; }
+    area.innerHTML = src.innerHTML;
+    document.body.classList.add('printing');
+    var cleaned = false;
+    function cleanup(){
+      if(cleaned){ return; }
+      cleaned = true;
+      document.body.classList.remove('printing');
+      area.innerHTML = '';
+      window.removeEventListener('afterprint', cleanup);
+    }
+    window.addEventListener('afterprint', cleanup);
+    setTimeout(function(){
+      try{ window.print(); }catch(e){}
+      setTimeout(cleanup, 1500);
+    }, 60);
+  });
+}
+
+window.addEventListener('load', function(){ syncNavHeight(); window.scrollTo(0,0); });
+</script>
+</body>
+</html>
